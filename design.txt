@@ -1,5 +1,9 @@
+Deduplication and Compression Benchmarking Support in Filebench
 
-	rcation and Compression Benchmarking Support in Filebench
+Submitted by:
+Nikhil Patwardhan (107646738), Rami Al-Rfou' (107906719), Phanindra Bhagavatula (107956866)
+
+npatwardhan@cs.stonybrook.edu, ralrfou@cs.stonybrook.edu, pbhagavatula@cs.stonybrook.edu
 
 -------------------
 Goal of the Project
@@ -31,10 +35,6 @@ In this project we assume that the event is an emission of a new byte by a data 
 Since each byte [8 bits/byte] can have 256 states, according to the equation above,
 the range of entropy is from 0 to 8 bits/byte. The more the value of the entropy,
 the more random the data is, which means it is less predictable.
-
-Currently, Filebench writes '0x00' bytes when any write occurs. The entropy
-(a.k.a. "randomness") of such data stream is 0, since the same character appears
-throughout the data.
 
 The entropy of a typical English text is about 0.6 - 1.5 bits/character. By picking
 the distribution with which the data source generates bytes, we can produce data
