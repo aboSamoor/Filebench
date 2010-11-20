@@ -1,16 +1,55 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#define PDF_SIZE 256
+#include "entropy.h"
 
-double pdf_entropy(double pdf[], int size){
+double pdf_entropy(double pdf[], unsigned int size){
+	
 	double entropy =0;
 	int i= 0;
+
+	if(size <= 0)
+		return -1;
+
 	for(i=0; i<size; i++){
 		if(pdf[i] > 0)
 			entropy+= pdf[i]*log2(1.0/pdf[i]);
 	}
 	return entropy;
+}
+
+int binary_search(double key, double array[], unsigned int size){
+
+	int start = 0;
+	int end = size-1;
+	int mid;
+
+	if(size <= 0)
+		return -2;
+
+	while(end-start < 2){
+		mid = (end+start)/2;
+		if(key == array[mid])
+			return mid;
+		if(key < array[mid])
+			end = mid;
+		else
+			start = mid;
+	}
+	return end;	
+}
+
+int calculate_cdf(double pdf[], unsigned int size, double cdf[]){
+
+	if (size <= 0)
+		return -1;
+
+	cdf[0] = pdf[0];
+	for(i=1; i < size; i++){
+		cdf[i] = cdf[i-1] + pdf[i];
+	}
+	return 0;
 }
 
 double secant_method(double (*func)(double, double, double), double n, double e, double start, double end){
@@ -38,7 +77,10 @@ double numerical_solve(double (*func)(double, double, double), double n, double 
 }
 
 int generate_pdf(double pdf[], int size , double e){
+	
 	int i = 0;
+	if(size <= 0)
+		return -1;
 	for(i=0; i< size; i++)
 		pdf[i]=0.0;
     double num_sym = (int) ceil(pow(2.0,e));
@@ -62,6 +104,13 @@ int main(int argc, char* argv[]){
 	int i=0;
 	
 	double pdf[PDF_SIZE];
+	double cdf[PDF_SIZE];
+	double key = .455;
+	generate_pdf(pdf, PDF_SIZE, i/100.0);
+	calculate_cdf(pdf, PDF_SIZE, cdf);
+	int index = binary_search(key, cdf, PDF_SIZE);
+	print_pdf(cdf, PDF_SIZE);
+	printf("%f is found at %d, which is between %f and %f\n", key, index, cdf[index-1], cdf[index]);
 	for(i=0; i< 801; i++){
 		generate_pdf(pdf, PDF_SIZE, i/100.0);
 		printf("Entropy requested: %f\n",i/100.0);
