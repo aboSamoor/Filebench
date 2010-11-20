@@ -1,0 +1,684 @@
+****************** Release of 1.4.8.fsl.0.8 ************************
+
+2010-08-24 19:09  vass
+
+	* NEWS: Updating the NEWS file for the fresh FB release.
+
+2010-07-13 23:45  vass
+
+	* fb_random.c: fb_urandom() must return value less or equal than
+	  (max - round).
+
+2010-07-10 23:14  vass
+
+	* ipc.c, ipc.h: Arranging ipc_malloc/ipc_free code in a consisten
+	  way.
+
+2010-07-10 20:57  vass
+
+	* fileset.c: filesizegamma was used instead of dirsizegamma,
+	  resulting in wrong directory depth. E.g., setting dirsizegamma to
+	  0, haven't had an expected result of fixed number of files in
+	  every dir.
+
+2010-07-10 20:33  vass
+
+	* ipc.h, procflow.c: Moving all main FB object lists & locks to the
+	  opening part of filbench_shm.  Renaming proclist to procflowlist,
+	  as it is supposed to be.
+
+2010-07-10 20:10  vass
+
+	* ipc.h: seting shm_marker size to 0, since it is only used to mark
+	  zeroed region.
+
+2010-07-10 19:55  vass
+
+	* auto_comp.h, eventgen.h, fb_avl.h, filebench.h, fileset.h,
+	  flowop.h, gamma_dist.h, ipc.h, misc.h, parsertypes.h, procflow.h,
+	  stats.h, threadflow.h, utils.h: removing annoying #ifdef
+	  __cplusplus
+
+****************** Release of 1.4.8.fsl.0.6 ************************
+
+2010-06-18 17:52  vass
+
+	* NEWS, README, configure.ac: Update version to 0.6, posset feature
+	  description, NEWS updated.
+
+2010-06-18 17:19  vass
+
+	* flowop.c, flowop_library.c, parser_gram.y, posset.c, posset.h:
+	  First version of possition set feature is completed.
+
+2010-06-18 02:34  vass
+
+	* TODO, fb_random.c, flowop.c, flowop.h, ipc.c, ipc.h,
+	  parser_gram.y, parser_lex.l, posset.c, posset.h: Propagating the
+	  posssetname to each flowop instance.
+
+2010-06-17 21:24  vass
+
+	* fb_random.c, ipc.c, parser_gram.y, posset.c, posset.h: some bug
+	  fixes related to previous commit.
+
+2010-06-17 19:19  vass
+
+	* TODO, fb_localfs.c, fb_random.c, fb_random.h, filebench.h,
+	  fileset.c, flowop_library.c, misc.c, parser_gram.y, posset.c,
+	  posset.h: 1) functions related to /dev/urandom reworked 2) more
+	  code for posset support.
+
+2010-06-16 21:57  vass
+
+	* ipc.c, ipc.h, posset.c, posset.h, vars.h: 1) ipc_malloc()
+	  function now gets the number of preallocated	  entries through
+	  the new preallocated_entries() function 2) posset_alloc()
+	  function allocates posset and sets up    all the fields in
+	  posset.
+
+2010-06-14 00:53  vass
+
+	* procflow.c: Patch from Evgeny Budilovsky that fixes deadlock when
+	  spanning process instances. Observed especially on Ubuntu, but
+	  possible everythere. Citation from Evgeny's e-mail:
+
+	  "I think I discovered what is causing the deadlock in the code.
+	  The problem was in "procflow_init" function which creates thread
+	  "procflow_createnwait" which is responsible to notify condition
+	  on which "procflow_init" waits next.
+
+	  The problem is that the notify happens before the first thread
+	  has chance to call wait, since there is no proper locking."
+
+****************** Release of 1.4.8.fsl.0.5 ************************
+
+2010-04-06 20:24  vass
+
+	* configure.ac: Updated to version 0.5
+
+2010-04-06 20:22  vass
+
+	* Makefile.am, configure.ac, filebench.h: Fixes to be compilable by
+	  SUN Studio compilers.
+
+****************** Release of 1.4.8.fsl.0.4 ************************
+
+2010-04-05 16:40  vass
+
+	* configure.ac: Updating the version to 0.4
+
+2010-04-05 16:36  vass
+
+	* Makefile.am, README_COND_COMP, TODO, configure.ac, fb_localfs.c,
+	  filebench.h, fileset.c, flowop.c, flowop_library.c, ipc.c,
+	  misc.c, parser_gram.y, procflow.c: - After switching to
+	  PROCESS_MODEL we need to make certain hacks	on FreeBSD:
+	  a) emulate waitid() by waitpid()	  b) no posix_fadvise()
+	  support, so just print a warning  c) no PROCESS_SHARED attribute
+	  for pthread	      objects. Not considering it as a fatal
+	  problem now, just printing a warning.	    If we have
+	  multiple processes (not threads)	       in a workload, we
+	  might have problems because of that.	- Use directio() on Solaris
+	  to perform direct I/O - compilation warnings
+
+2010-04-01 17:39  vass
+
+	* flowop_library.c: Enabling O_DIRECT and readahead options for raw
+	  devices.
+
+2010-03-31 23:33  psehgal
+
+	* fileset.c, flowop.h, flowop_library.c, parser_gram.y,
+	  parser_lex.l: Added code to advise the kernel to switch off read
+	  aheads
+
+2010-03-31 18:29  vass
+
+	* stats.c: Incraesing the ops/sec precision.
+
+2010-03-31 17:18  vass
+
+	* fileset.c, flowop_library.c: working O_DIRECT support.
+
+2010-03-25 20:48  vass
+
+	* fileset.c, flowop_library.c: Support of RAW devices for Filebench
+	  resurected.
+
+2010-03-24 22:58  vass
+
+	* TODO: dd fs imaging to Filebench TODO list
+
+2010-03-24 20:58  vass
+
+	* TODO: Adding remark on Filebench hang to TODO list.
+
+2010-03-21 15:11  vass
+
+	* stats.c: Removing some of new-lines in Filebench output.
+
+2010-03-11 11:26  vass
+
+	* stats.c, stats.h: Making it possible to snap the statistics
+	  multiple times during the run.
+
+2010-03-11 10:37  vass
+
+	* stats.c, stats.h: flowstats.fs_children is not used - remove.
+
+2010-03-11 10:28  vass
+
+	* flowop.c, stats.h, threadflow.h: .fs_stime and .fs_etime are used
+	  ONLY to note the statistics collection period in globalstats. So,
+	  no need to update these fields in per-thread or per-flowop
+	  flowstat.
+
+****************** Release of 1.4.8.fsl.0.3 ************************
+
+2010-02-04 17:28  vass
+
+	* configure.ac: Changing the Filebench version to 0.3.
+
+2010-02-04 17:24  vass
+
+	* README_COND_COMP, TODO, configure.ac: Switching to more accurate
+	  process model.
+
+2010-02-04 11:51  vass
+
+	* stats.c: Compilation warnings in OSPROF part.
+
+2010-01-08 13:57  vass
+
+	* TODO: process vs thread model verification to TODO
+
+2010-01-06 16:07  vass
+
+	* TODO: Updating TODO.
+
+2010-01-06 12:17  vass
+
+	* TODO: Some additional points to the TODO list.
+
+2010-01-05 20:49  saumitra
+
+	* filebench.h, flowop.c, parser_gram.y, parser_lex.l, stats.c,
+	  stats.h: Added osprof_enable/disable commands in filebench to
+	  facilitate the display of histogram per flowop if desired.
+
+2010-01-05 12:43  vass
+
+	* README: Updating README with info about ENOMEM on
+	  pthread_create().
+
+2010-01-05 02:29  vass
+
+	* procflow.c, threadflow.c: Adding correct error propagation if we
+	  use thread model and thread creation failed. This allows to
+	  properly detect that we ran out of virtual memory on OLTP
+	  workload (if we use thread model). This can be workaround by
+	  setting the stack ulimit to unlimited (indirectly affects the
+	  amount of memory pthread_create mmaps for stack).
+
+2010-01-05 01:56  vass
+
+	* README_COND_COMP, configure.ac, parser_gram.y: Increasing
+	  /proc/sys/kernel/shmmax to 256MB in FileBench.
+
+2010-01-05 01:10  vass
+
+	* parser_gram.y: Increasing the ulimit for number of opened files.
+
+2010-01-04 15:52  vass
+
+	* fb_localfs.c: Fixing aio operations in FileBench on Linux: we
+	  just need to bzero aiocb.
+
+2010-01-04 00:17  vass
+
+	* README_COND_COMP, filebench.h, flowop.c, ipc.c, misc.c,
+	  procflow.c: Improving error reporting slightly (added while
+	  fixing OLTP problem):     1) report tid, not pid on Linux in logs
+		  2) report error code of some functions.
+
+2009-12-18 14:55  vass
+
+	* README_COND_COMP, auto_comp.h, configure.ac, eventgen.h,
+	  fb_avl.h, fb_random.h, filebench.h, fileset.h, flowop.h,
+	  fsplug.h, gamma_dist.h, ipc.h, misc.h, parsertypes.h, procflow.h,
+	  stats.h, threadflow.h, utils.h, vars.h: To compile on OpenSolaris
+	  for 64 bit we need to specify:  ./configure CFLAFS="-g -O2 -m64"
+	  During this compilation the problem arises: if compiling for
+	  64bit, Solaris redefines aio_write64 as aio_write, so configure
+	  doesn't detect aio_write64. That is correct, but configure
+	  detects aiocb64_t (in a separate check), so we got compilation
+	  errors: aio_write(aoicb64_t). To fix it we assume that whenever
+	  aio_write64 is not defined, aiocb64_t is also not defined.
+
+	  The small change described above revealed a lot of mess in header
+	  files. It is fixed in this commit too.	everything is in
+	  filbench.h
+
+2009-12-17 00:42  vass
+
+	* .cvsignore, ChangeLog, README_COND_COMP, configure.ac: Updating
+	  version to 0.2 and generating ChangeLog
+
+****************** Release of 1.4.8.fsl.0.2 ************************
+
+2009-12-16 13:32  sujay
+
+	* stats.c, vars.c: added 64bit wordsize check in fscanf/printf code
+	  to print or read hrtime_t correctly for all architectures.
+
+2009-12-16 11:29  vass
+
+	* Makefile.am, README_COND_COMP, configure.ac, flowop.c,
+	  parser_gram.y: Fixing the compilation of FreeBSD:
+
+	  1) sigignore() is not available on FreeBSD, so emulate it    via
+	  sigaction
+
+	  2) -Werror removed, because yacc on FreeBSD does not generate
+	  the declaration of yyparse, so we error on:	  warning: implicit
+	  declaration of function 'yyparse'
+
+	  3) other minor things
+
+2009-12-15 22:14  vass
+
+	* README_COND_COMP, configure.ac, filebench.h, flowop.c, misc.c:
+	  Fixing compilation for OpenSolaris.
+
+2009-12-15 21:49  vass
+
+	* README_COND_COMP, configure.ac, filebench.h, flowop.c: some
+	  clean-up for the FreeBSD compilation.
+
+2009-12-15 21:12  sujay
+
+	* configure.ac, filebench.h, flowop.c: Added changes to support
+	  compilation for FreeBSD
+
+	  - added condition check for various 64bit related functionality
+	  in Linux and added code to filebench.h to act accordingly.
+
+2009-12-14 23:01  sujay
+
+	* fb_localfs.c: fixed small typo mistake LOG_ERR to LOG_ERROR
+
+2009-12-14 20:50  vass
+
+	* Makefile.am, TODO, fb_localfs.c, fb_random.c, fileset.c,
+	  flowop.c, flowop_library.c, ipc.c, misc.c, multi_client_sync.c,
+	  parser_gram.y, parser_lex.l, procflow.c, vars.c: Adding -Wall
+	  -Werror -Wno-unknown-pragmas to compilation and fixing all
+	  corresponding warnings. Most of them are simply missing brackets,
+	  not used variables, non-initialized vars, etc.
+
+	  But some errors are quite interesting. Was:
+
+	  ncompleted < todom, aio != NULL; (in the loop condition!)
+
+	  fixed to:
+
+	  ncompleted < todo && aio != NULL;
+
+	  That might have triggered AIO bug.
+
+2009-12-14 20:24  vass
+
+	* fb_avl.h: Fixing my nasty mistake in ifdefs: ifdef -> ifndef
+
+2009-12-14 18:30  vass
+
+	* README_COND_COMP, TODO, configure.ac: Fixing the AIO comilation.
+	  This finalizes all current conditional compilation. Woo-hooo :)
+	  Just need to keep this list up-to-date.
+
+2009-12-14 15:23  vass
+
+	* README_COND_COMP, fb_avl.c, fb_avl.h: AVL trees implementation
+	  depends on 64/32 bit arch. Explain this case and add ||
+	  __WORDSIZE in the missing places.
+
+2009-12-14 14:20  vass
+
+	* README_COND_COMP, filebench.h: Explaining __STDC__ usage: we only
+	  use it correctly handle the filbench_log() with variable number
+	  of arguments.
+
+2009-12-14 13:54  vass
+
+	* Makefile.am, README_COND_COMP, configure.ac, fb_random.c:
+	  --user-process conditional compilation added
+	  (USER_PROCESS_MODEL).  Additionally, while fixing the compilation
+	  the following thing came up: we should never use __SOME_MACRO,
+	  since they are internal to libc. E.g., instead __USE_GNU,
+	  _GNU_SOURCE should be used.  This things are fixed accordingly.
+
+2009-12-14 13:21  vass
+
+	* README_COND_COMP, filebench.h, threadflow.h: Fixing all the
+	  conditional compilations related to various types definitions.
+
+2009-12-14 12:50  vass
+
+	* README_COND_COMP, configure.ac: USE_SYSTEM autoconfiguration, if
+	  we want system() to be used instead of execlp().
+
+2009-12-13 17:11  sujay
+
+	* configure.ac, flowop.c, flowop.h: changes to support correct per
+	  thread CPU usage for Linux flaovors.	This gives correct op-cpu
+	  value in final stats.
+
+2009-12-12 23:57  vass
+
+	* flowop.c, threadflow.h: Removing LINUX_PORT: we don't need it any
+	  more.
+
+2009-12-12 23:54  vass
+
+	* README_COND_COMP, configure.ac, fileset.c, parser_gram.y,
+	  parsertypes.h, utils.c, utils.h: Eliminatint "sun" conditional
+	  compilation:
+
+	  1) HAVE_STL[cat|cpy] introduced 2) O_SYNC used for sync
+	  operations, not O_DSYNC/O_FSYNC 3) Not using directio() function
+	  on Solaris 4) Don't use uchar_t, use just unsigned char
+
+2009-12-12 23:08  vass
+
+	* misc.c: Allowing to use filbench_log() even before filebench_shm
+	  is not initialized.
+
+2009-12-12 23:04  vass
+
+	* README_COND_COMP, configure.ac, misc.c, misc.h, stats.h:
+	  gethrtime() related problems solved:
+
+	  1) Nasty linking problem solved: for functions that return
+	  uint64_t,    function definition must be in the file, where it is
+	  called.
+
+	  2) All conditional compilation through HAVE_GETHRTIME and
+	  USE_RDTSC.
+
+	  3) RDTSC instruction fixed: overflow issue is fixed.
+
+	  4) hrtime_t type is used consistently
+
+2009-12-10 19:38  vass
+
+	* README_COND_COMP, TODO, configure.ac, fb_localfs.c, threadflow.c:
+	  List of the conditional compilation constats is created and
+	  appropriate additional changes:
+
+	  - IPC_RMID detection for semget() - Redundant HAVE_LWP is removed
+	  - Warning when off64_t to off_t conversion in ftruncate() - TODO
+	  updated
+
+2009-12-10 17:33  vass
+
+	* TODO: TODO update
+
+2009-12-10 13:56  sujay
+
+	* configure.ac, flowop.c, threadflow.h: convert all definitions of
+	  HAVE_PROCFS to HAVE_PROC_PID_LWP
+
+2009-12-10 00:03  vass
+
+	* TODO: Updating TODO
+
+2009-12-09 23:38  vass
+
+	* fileset.c: Follow-up fix for the prev. patch: not %lld, but %llu
+	  shoud be used.
+
+2009-12-09 23:14  vass
+
+	* fileset.c: Fixing the printf() format for Fileset info, so that
+	  it displays Fileset size and other correctly.
+
+2009-12-09 23:13  vass
+
+	* Makefile.am, configure.ac, fb_localfs.c, filebench.h, fileset.h:
+	  On Linux we should use -D_LARGEFILE64_SOURCE to have off64_t, but
+	  not the tricks that were used before.
+
+2009-12-09 20:52  vass
+
+	* auto_comp.c: Fixing the compilation warnings in the
+	  auto-completion code.
+
+2009-12-09 20:34  vass
+
+	* fb_random.c: Preventing the warning about undefined round()
+	  funcion.
+
+2009-12-09 19:43  vass
+
+	* configure.ac, misc.h, stats.c: Fixing the /proc/stat related
+	  functionality on Linux:
+
+	  1) Use libkstat ifdef HAVE_LIBKSTAT (on Solaris), use
+	  /proc/stat ifdef HAVE_PROC_STAT (on Linux), dont    use anything
+	  otherwise (on FreeBSD). Corresponding    cleanup.
+
+	  2) Return hrtime_t type from kstats_read_cpu() function,    as it
+	  is supposed to be. Also removed one unnecessary    HAVE_HRTIME
+	  check.
+
+	  3) Close /proc/stat after each read, otherwise we    read from
+	  the wrong offset. rewind() doesnt work on    /proc files.
+
+	  4) Correct check of error if couldn't open /proc/stat    and if
+	  scanf() didn't succeed.
+
+	  5) Fixing conversion from Jiffies to Nanoseconds (one zero	was
+	  missing)
+
+	  6) Use of %llu everythere, so that input/output happens
+	  correctly.
+
+	  As a result, global mumber of cpu microseconds per operation is
+	  calculated and displayed correctly on Linux.
+
+
+****************** Release of 1.4.8.fsl.0.1 ************************
+
+2009-12-03 01:02  vass
+
+	* filebench.h: Reporting correct FileBench version in the prompt.
+
+2009-12-03 00:21  vass
+
+	* TODO: TODO list added.
+
+2009-12-03 00:20  vass
+
+	* Makefile.am: Adding _REENTRANT definition for now
+
+2009-12-03 00:07  vass
+
+	* configure.ac: Handling pthreads and semaphores related stuff
+	  properly.
+
+2009-12-02 23:22  vass
+
+	* Makefile.am, configure.ac: adding -lm and -lpthreads through the
+	  .ac file, not hardcoding
+
+2009-12-02 21:46  vass
+
+	* flowop_library.c: Removing sys/asynch.h as it is excessive.
+
+2009-12-02 21:41  vass
+
+	* configure.ac, fb_localfs.c, threadflow.h: Adding the support of
+	  async operations if librt supports it.
+
+2009-12-02 20:19  vass
+
+	* configure.ac: Use ftruncate64 when available.
+
+2009-12-02 20:13  vass
+
+	* Makefile.am, configure.ac: Adding autocompletion support if
+	  libtecla is available.
+
+2009-12-02 19:13  vass
+
+	* configure.ac: Use /proc/<PID>/lwp/* for per-thread accounting on
+	  Solaris.
+
+2009-12-02 16:47  vass
+
+	* configure.ac: use mkstemp() instead tempnam() if possible.
+
+2009-12-02 16:36  vass
+
+	* configure.ac: Use cftime() if available instead of strftime()
+
+2009-12-02 16:28  vass
+
+	* configure.ac: Use libkstat or /proc/stat for obtaining CPU usage
+	  statistics.
+
+2009-12-02 16:12  vass
+
+	* stats.c: sys/sysinfo.h is not required ever.
+
+2009-12-02 16:10  vass
+
+	* fileset.c, flowop_library.c: Remove RAW device support (works(?)
+	  only on Solaris, we don't need it).  We may resurect this later.
+
+2009-12-02 15:44  vass
+
+	* configure.ac: Use semtimedop() instead semop() if possible.
+
+2009-12-02 15:31  vass
+
+	* configure.ac: Using SYSV semaphores if available. Otherwise use
+	  POSIX semaphores.
+
+2009-12-02 15:17  vass
+
+	* flowop_library.c: We dont care about utility.h
+
+2009-12-02 15:05  vass
+
+	* configure.ac: Use sigsend() on Solaris.
+
+2009-12-02 14:57  vass
+
+	* workloads/.cvsignore: Adding Makefile to .cvsignore
+
+2009-12-02 14:56  vass
+
+	* configure.ac: using set/getrilimit to set the maximum number of
+	  files per process.
+
+2009-12-02 14:45  vass
+
+	* configure.ac: Using fork1() on Solaris  if possible.
+
+2009-12-02 14:34  vass
+
+	* configure.ac: Cleaning up configure.ac
+
+2009-12-02 04:09  vass
+
+	* Makefile.am, configure.ac, workloads/.cvsignore,
+	  workloads/Makefile.am: Adding workloads directory to distribution
+	  pacakage.
+
+2009-12-02 03:04  vass
+
+	* workloads/: bringover.f, compflow_demo.f, copyfiles.f,
+	  createfiles.f, deletefiles.f, filemicro_create.f,
+	  filemicro_createfiles.f, filemicro_createrand.f,
+	  filemicro_delete.f, filemicro_rread.f, filemicro_rwrite.f,
+	  filemicro_rwritedsync.f, filemicro_rwritefsync.f,
+	  filemicro_seqread.f, filemicro_seqwrite.f,
+	  filemicro_seqwriterand.f, filemicro_seqwriterandvargam.f,
+	  filemicro_seqwriterandvartab.f, filemicro_statfile.f,
+	  filemicro_writefsync.f, fileserver.f, listdirs.f, makedirs.f,
+	  mongo.f, multistreamread.f, multistreamreaddirect.f,
+	  multistreamwrite.f, multistreamwritedirect.f, netsfs.f,
+	  networkfs.f, oltp.f, openfiles.f, postmark.f, randomfileaccess.f,
+	  randomread.f, randomrw.f, randomwrite.f, ratelimcopyfiles.f,
+	  removedirs.f, singlestreamread.f, singlestreamreaddirect.f,
+	  singlestreamwrite.f, singlestreamwritedirect.f, tpcso.f,
+	  varmail.f, videoserver.f, webproxy.f, webserver.f: Adding
+	  workload personalities.
+
+2009-12-02 03:01  vass
+
+	* .cvsignore: Adding package archive to .cvsignore.
+
+2009-12-02 02:49  vass
+
+	* Makefile.am: Dont remove parser_gram.c and similar on distclean,
+	  because they should go to the distribution.
+
+2009-12-02 02:46  vass
+
+	* .cvsignore, filebench.h, multi_client_sync.c,
+	  multi_client_sync.h, parser_gram.y: Fixing the compilation on
+	  Linux by:
+
+	  1) Disabling multi client sync with master node 2) Disabling
+	  fscheck command 3) Moving off64_t up 4) removing UINT64_MAX
+	  definition
+
+	  Plus appropriate records are added to .cvsignore.
+
+2009-12-02 02:20  vass
+
+	* .cvsignore: Adding .cvsignore with the entries that appear during
+
+	  aclocal && autoconf && autoheader && automake && configure
+
+2009-12-02 02:09  vass
+
+	* AUTHORS, COPYING, ChangeLog, INSTALL, LICENSE, Makefile.am,
+	  Makefile.in, NEWS, README, configure.ac: Adding our building
+	  infrastructure based on the Autotoolsset.  We only store files
+	  that we can't regenerate. E.g. configure script can be
+	  regenerated, so we don't store it. configure.ac on the othe hand
+	  can't be regenerated, so we store it. According to this principle
+	  Makefile.in was removed.
+
+	  - AUTHORS, COPYING, and LICESE files come from FileBench
+	  distibution.	- README is also from FileBench ditribution, but
+	  slightly adjusted to the fact that we maintain only go_filebench,
+	  not the whole FileBench.  - ChangeLog, NEWS are empty at the
+	  moment, but required by autotools
+
+2009-12-02 01:27  vass
+
+	* config_solaris.h: We dont need a separate config for Solaris.
+
+2009-12-02 01:23  vass
+
+	* Makefile.am, Makefile.in, auto_comp.c, auto_comp.h,
+	  config_solaris.h, eventgen.c, eventgen.h, fb_avl.c, fb_avl.h,
+	  fb_localfs.c, fb_random.c, fb_random.h, filebench.h, fileset.c,
+	  fileset.h, flowop.c, flowop.h, flowop_library.c, fsplug.h,
+	  gamma_dist.c, gamma_dist.h, ipc.c, ipc.h, misc.c, misc.h,
+	  multi_client_sync.c, multi_client_sync.h, parser_gram.y,
+	  parser_lex.l, parsertypes.h, procflow.c, procflow.h, stats.c,
+	  stats.h, threadflow.c, threadflow.h, utils.c, utils.h, vars.c,
+	  vars.h: Original code from FileBench-1.4.8 package from
+	  Sourceforge.	We import only filebench/ subdirectory that
+	  contains sources for go_filebench binary.
+
+	  In this commit we do only minimal cosmetic changes
+	  (filebench.h.BAK and .deps/ are removed, plus permissions
+	  changed), so that in the following commits we can track the
+	  changes we add on top of legacy FileBench.
