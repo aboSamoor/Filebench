@@ -41,15 +41,15 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 	//Calculate pdf according to the given entropy
 	generate_pdf(pdf, PDF_SIZE, ds-> s_entropy);
 
+	printf("PDF entropy is: %f\n" ,pdf_entropy(pdf, PDF_SIZE));
 	//Calculate cdf from the pdf
 	calculate_cdf(pdf, PDF_SIZE, cdf);
 
 	//initializing the symbol table
 	for(i=0; i< PDF_SIZE; i++)
-		symbols_table[i] = (char)i;
+		symbols_table[i] = (unsigned char)i;
 	//filling the buffer depending on the cdf
 	for(i=0; i < size; i++){
-		printf("Integer %d\n",i);	
 		((char *)buf)[i] = symbols_table[binary_search(rand()/(double)RAND_MAX, cdf, PDF_SIZE)];
 	}
 	
@@ -60,9 +60,9 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 int main(int argc, char **argv){
 	
 	struct source ds;
-	unsigned int size = 1024*2;
+	unsigned int size = 1024*1024;
 	unsigned char buf[size];
-	ds.s_entropy = 3.56;
+	ds.s_entropy = 1.45;
 	entropy_fill(&ds, &buf, size);
 	printf("The entropy of buf: %f\n", buf_entropy(&buf, size));
 	return 0;

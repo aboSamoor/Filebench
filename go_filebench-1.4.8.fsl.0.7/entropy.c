@@ -23,11 +23,10 @@ double buf_entropy(void *buf, unsigned int size){
 	
 	int i=0;
 	double pdf[PDF_SIZE];
-	for(i=0; i < size; i++)
-		pdf[i] = 0;
+	for(i=0; i < PDF_SIZE; i++)
+		pdf[i] = 0.0;
 	for(i=0; i < size; i++)
 		pdf[((unsigned char*)buf)[i]]+= 1.0/size;
-
 	return pdf_entropy(pdf, PDF_SIZE);
 }
 
