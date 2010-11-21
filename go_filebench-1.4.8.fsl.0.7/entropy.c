@@ -4,6 +4,7 @@
 #include <string.h>
 #include "entropy.h"
 
+
 double pdf_entropy(double pdf[], unsigned int size){
 	
 	double entropy =0;
@@ -27,6 +28,7 @@ double buf_entropy(void *buf, unsigned int size){
 		pdf[i] = 0.0;
 	for(i=0; i < size; i++)
 		pdf[((unsigned char*)buf)[i]]+= 1.0/size;
+	print_pdf(pdf, 5);
 	return pdf_entropy(pdf, PDF_SIZE);
 }
 
@@ -38,7 +40,8 @@ int binary_search(double key, double array[], unsigned int size){
 
 	if(size <= 0)
 		return -2;
-
+	if(key <= array[0])
+		return 0;
 	while(end-start > 1){
 //		printf("End point is: %d\n", end);
 		mid = (end+start)/2;
@@ -106,7 +109,7 @@ int generate_pdf(double pdf[], int size , double e){
 	return 0;
 }
 
-void print_pdf(double pdf[], int size){
+void print_pdf(double pdf[], unsigned int size){
 	int i;
 	for(i=0; i< size; i++)
 		printf("%f, ", pdf[i]);
