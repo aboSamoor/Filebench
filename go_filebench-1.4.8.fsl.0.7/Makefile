@@ -58,10 +58,11 @@ am__go_filebench_SOURCES_DIST = eventgen.c fb_avl.c fb_localfs.c \
 	fb_random.c fileset.c flowop.c flowop_library.c gamma_dist.c \
 	ipc.c misc.c multi_client_sync.c parser_gram.y parser_lex.l \
 	procflow.c stats.c threadflow.c utils.c vars.c posset.c \
-	eventgen.h fb_random.h fileset.h fsplug.h ipc.h \
-	multi_client_sync.h parsertypes.h stats.h utils.h config.h \
-	fb_avl.h filebench.h flowop.h gamma_dist.h misc.h procflow.h \
-	threadflow.h vars.h posset.h auto_comp.c auto_comp.h
+	entropy.c sources.c eventgen.h fb_random.h fileset.h fsplug.h \
+	ipc.h multi_client_sync.h parsertypes.h stats.h utils.h \
+	config.h fb_avl.h filebench.h flowop.h gamma_dist.h misc.h \
+	procflow.h threadflow.h vars.h posset.h entropy.h sources.h \
+	auto_comp.c auto_comp.h
 #am__objects_1 = auto_comp.$(OBJEXT)
 am_go_filebench_OBJECTS = eventgen.$(OBJEXT) fb_avl.$(OBJEXT) \
 	fb_localfs.$(OBJEXT) fb_random.$(OBJEXT) fileset.$(OBJEXT) \
@@ -69,7 +70,8 @@ am_go_filebench_OBJECTS = eventgen.$(OBJEXT) fb_avl.$(OBJEXT) \
 	ipc.$(OBJEXT) misc.$(OBJEXT) multi_client_sync.$(OBJEXT) \
 	parser_gram.$(OBJEXT) parser_lex.$(OBJEXT) procflow.$(OBJEXT) \
 	stats.$(OBJEXT) threadflow.$(OBJEXT) utils.$(OBJEXT) \
-	vars.$(OBJEXT) posset.$(OBJEXT) $(am__objects_1)
+	vars.$(OBJEXT) posset.$(OBJEXT) entropy.$(OBJEXT) \
+	sources.$(OBJEXT) $(am__objects_1)
 go_filebench_OBJECTS = $(am_go_filebench_OBJECTS)
 go_filebench_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
@@ -103,20 +105,20 @@ DIST_ARCHIVES = $(distdir).tar.gz
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /home/nikhil/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run aclocal-1.9
+ACLOCAL = ${SHELL} /home/eid/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run aclocal-1.9
 ALLOCA = 
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /home/nikhil/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run tar
+AMTAR = ${SHELL} /home/eid/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run tar
 AUTOCOMP_LIBTECLA_FALSE = 
 AUTOCOMP_LIBTECLA_TRUE = #
-AUTOCONF = ${SHELL} /home/nikhil/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run autoconf
-AUTOHEADER = ${SHELL} /home/nikhil/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run autoheader
-AUTOMAKE = ${SHELL} /home/nikhil/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run automake-1.9
+AUTOCONF = ${SHELL} /home/eid/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/eid/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/eid/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run automake-1.9
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2 -DCONFIG_ENTROPY_DATA_EXPERIMENTAL
+CFLAGS = -g -O2
 CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
@@ -129,6 +131,7 @@ EGREP = grep -E
 EXEEXT = 
 GCC_USED_FALSE = #
 GCC_USED_TRUE = 
+GREP = @GREP@
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
@@ -138,25 +141,26 @@ LEX = :
 LEXLIB = 
 LEX_OUTPUT_ROOT = 
 LIBOBJS = 
-LIBS = -lpthread -lm -lrt
+LIBS = -lpthread -lm -lrt 
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /home/nikhil/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/eid/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run makeinfo
 OBJEXT = o
 PACKAGE = go_filebench
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = go_filebench
 PACKAGE_STRING = go_filebench 1.4.8.fsl.0.7
 PACKAGE_TARNAME = go_filebench
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = 1.4.8.fsl.0.7
 PATH_SEPARATOR = :
 POW_LIB = 
 SET_MAKE = 
-SHELL = /bin/sh
+SHELL = /bin/bash
 STRIP = 
 VERSION = 1.4.8.fsl.0.7
 YACC = yacc
+YFLAGS = @YFLAGS@
 ac_ct_CC = gcc
-ac_ct_STRIP = 
 am__fastdepCC_FALSE = #
 am__fastdepCC_TRUE = 
 am__include = include
@@ -167,19 +171,26 @@ am__untar = ${AMTAR} xf -
 bindir = ${exec_prefix}/bin
 build_alias = 
 datadir = ${prefix}/share
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
 exec_prefix = ${prefix}
 host_alias = 
+htmldir = @htmldir@
 includedir = ${prefix}/include
 infodir = ${prefix}/info
-install_sh = /home/nikhil/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/install-sh
+install_sh = /home/eid/Desktop/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
+localedir = @localedir@
 localstatedir = ${prefix}/var
 mandir = ${prefix}/man
 mkdir_p = mkdir -p --
 oldincludedir = /usr/include
+pdfdir = @pdfdir@
 prefix = /usr/local
 program_transform_name = s,x,x,
+psdir = @psdir@
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
@@ -191,11 +202,12 @@ BUILT_SOURCES = parser_gram.h
 go_filebench_SOURCES = eventgen.c fb_avl.c fb_localfs.c fb_random.c \
 	fileset.c flowop.c flowop_library.c gamma_dist.c ipc.c misc.c \
 	multi_client_sync.c parser_gram.y parser_lex.l procflow.c \
-	stats.c threadflow.c utils.c vars.c posset.c eventgen.h \
-	fb_random.h fileset.h fsplug.h ipc.h multi_client_sync.h \
-	parsertypes.h stats.h utils.h config.h fb_avl.h filebench.h \
-	flowop.h gamma_dist.h misc.h procflow.h threadflow.h vars.h \
-	posset.h $(am__append_1)
+	stats.c threadflow.c utils.c vars.c posset.c entropy.c \
+	sources.c eventgen.h fb_random.h fileset.h fsplug.h ipc.h \
+	multi_client_sync.h parsertypes.h stats.h utils.h config.h \
+	fb_avl.h filebench.h flowop.h gamma_dist.h misc.h procflow.h \
+	threadflow.h vars.h posset.h entropy.h sources.h \
+	$(am__append_1)
 AM_YFLAGS = -d
 #AM_LDFLAGS = 
 AM_CFLAGS = -Wall -Wno-unknown-pragmas
@@ -293,6 +305,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/auto_comp.Po
+include ./$(DEPDIR)/entropy.Po
 include ./$(DEPDIR)/eventgen.Po
 include ./$(DEPDIR)/fb_avl.Po
 include ./$(DEPDIR)/fb_localfs.Po
@@ -308,6 +321,7 @@ include ./$(DEPDIR)/parser_gram.Po
 include ./$(DEPDIR)/parser_lex.Po
 include ./$(DEPDIR)/posset.Po
 include ./$(DEPDIR)/procflow.Po
+include ./$(DEPDIR)/sources.Po
 include ./$(DEPDIR)/stats.Po
 include ./$(DEPDIR)/threadflow.Po
 include ./$(DEPDIR)/utils.Po
@@ -530,7 +544,7 @@ distdir: $(DISTFILES)
 	      || exit 1; \
 	  fi; \
 	done
-	-find $(distdir) -type d ! -perm -755 -exec chmod a+rwx,go+rx {} \; -o \
+	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
 	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \

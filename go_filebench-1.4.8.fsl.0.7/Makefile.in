@@ -58,10 +58,11 @@ am__go_filebench_SOURCES_DIST = eventgen.c fb_avl.c fb_localfs.c \
 	fb_random.c fileset.c flowop.c flowop_library.c gamma_dist.c \
 	ipc.c misc.c multi_client_sync.c parser_gram.y parser_lex.l \
 	procflow.c stats.c threadflow.c utils.c vars.c posset.c \
-	eventgen.h fb_random.h fileset.h fsplug.h ipc.h \
-	multi_client_sync.h parsertypes.h stats.h utils.h config.h \
-	fb_avl.h filebench.h flowop.h gamma_dist.h misc.h procflow.h \
-	threadflow.h vars.h posset.h auto_comp.c auto_comp.h
+	entropy.c sources.c eventgen.h fb_random.h fileset.h fsplug.h \
+	ipc.h multi_client_sync.h parsertypes.h stats.h utils.h \
+	config.h fb_avl.h filebench.h flowop.h gamma_dist.h misc.h \
+	procflow.h threadflow.h vars.h posset.h entropy.h sources.h \
+	auto_comp.c auto_comp.h
 @AUTOCOMP_LIBTECLA_TRUE@am__objects_1 = auto_comp.$(OBJEXT)
 am_go_filebench_OBJECTS = eventgen.$(OBJEXT) fb_avl.$(OBJEXT) \
 	fb_localfs.$(OBJEXT) fb_random.$(OBJEXT) fileset.$(OBJEXT) \
@@ -69,7 +70,8 @@ am_go_filebench_OBJECTS = eventgen.$(OBJEXT) fb_avl.$(OBJEXT) \
 	ipc.$(OBJEXT) misc.$(OBJEXT) multi_client_sync.$(OBJEXT) \
 	parser_gram.$(OBJEXT) parser_lex.$(OBJEXT) procflow.$(OBJEXT) \
 	stats.$(OBJEXT) threadflow.$(OBJEXT) utils.$(OBJEXT) \
-	vars.$(OBJEXT) posset.$(OBJEXT) $(am__objects_1)
+	vars.$(OBJEXT) posset.$(OBJEXT) entropy.$(OBJEXT) \
+	sources.$(OBJEXT) $(am__objects_1)
 go_filebench_OBJECTS = $(am_go_filebench_OBJECTS)
 go_filebench_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
@@ -129,6 +131,7 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GCC_USED_FALSE = @GCC_USED_FALSE@
 GCC_USED_TRUE = @GCC_USED_TRUE@
+GREP = @GREP@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -147,6 +150,7 @@ PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
+PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 POW_LIB = @POW_LIB@
@@ -155,8 +159,8 @@ SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
 YACC = @YACC@
+YFLAGS = @YFLAGS@
 ac_ct_CC = @ac_ct_CC@
-ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__include = @am__include@
@@ -167,19 +171,26 @@ am__untar = @am__untar@
 bindir = @bindir@
 build_alias = @build_alias@
 datadir = @datadir@
+datarootdir = @datarootdir@
+docdir = @docdir@
+dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 host_alias = @host_alias@
+htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
+localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
+pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
+psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
@@ -191,11 +202,12 @@ BUILT_SOURCES = parser_gram.h
 go_filebench_SOURCES = eventgen.c fb_avl.c fb_localfs.c fb_random.c \
 	fileset.c flowop.c flowop_library.c gamma_dist.c ipc.c misc.c \
 	multi_client_sync.c parser_gram.y parser_lex.l procflow.c \
-	stats.c threadflow.c utils.c vars.c posset.c eventgen.h \
-	fb_random.h fileset.h fsplug.h ipc.h multi_client_sync.h \
-	parsertypes.h stats.h utils.h config.h fb_avl.h filebench.h \
-	flowop.h gamma_dist.h misc.h procflow.h threadflow.h vars.h \
-	posset.h $(am__append_1)
+	stats.c threadflow.c utils.c vars.c posset.c entropy.c \
+	sources.c eventgen.h fb_random.h fileset.h fsplug.h ipc.h \
+	multi_client_sync.h parsertypes.h stats.h utils.h config.h \
+	fb_avl.h filebench.h flowop.h gamma_dist.h misc.h procflow.h \
+	threadflow.h vars.h posset.h entropy.h sources.h \
+	$(am__append_1)
 AM_YFLAGS = -d
 #AM_LDFLAGS = 
 @GCC_USED_TRUE@AM_CFLAGS = -Wall -Wno-unknown-pragmas
@@ -293,6 +305,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/auto_comp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/entropy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eventgen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fb_avl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fb_localfs.Po@am__quote@
@@ -308,6 +321,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parser_lex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/procflow.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sources.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/threadflow.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Po@am__quote@
@@ -530,7 +544,7 @@ distdir: $(DISTFILES)
 	      || exit 1; \
 	  fi; \
 	done
-	-find $(distdir) -type d ! -perm -755 -exec chmod a+rwx,go+rx {} \; -o \
+	-find $(distdir) -type d ! -perm -777 -exec chmod a+rwx {} \; -o \
 	  ! -type d ! -perm -444 -links 1 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
 	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
