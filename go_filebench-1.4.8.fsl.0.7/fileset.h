@@ -106,6 +106,9 @@ typedef struct fileset {
 	avd_t		fs_reuse;	/* Attr */
 	avd_t		fs_readonly;	/* Attr */
 	avd_t		fs_trust_tree;	/* Attr */
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+	struct src_attr* fs_sourceinfo;	/* Data Source Attribute e.g. entropy */
+#endif
 	double		fs_meandepth;	/* Computed mean depth */
 	double		fs_meanwidth;	/* Specified mean dir width */
 	double		fs_meansize;	/* Specified mean file size */

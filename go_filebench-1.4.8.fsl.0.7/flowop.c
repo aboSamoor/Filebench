@@ -29,13 +29,13 @@
 #include <sys/lwp.h>
 #endif
 #include <fcntl.h>
+#include <string.h>
 #include "filebench.h"
 #include "flowop.h"
 #include "stats.h"
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-#include "sources.c"
-extern struct source ds;
+#include "sources.h"
 #endif
 
 static flowop_t *flowop_define_common(threadflow_t *threadflow, char *name,
@@ -43,7 +43,7 @@ static flowop_t *flowop_define_common(threadflow_t *threadflow, char *name,
 static int flowop_composite(threadflow_t *threadflow, flowop_t *flowop);
 static int flowop_composite_init(flowop_t *flowop);
 static void flowop_composite_destruct(flowop_t *flowop);
-
+ 
 /*
  * A collection of flowop support functions. The actual code that
  * implements the various flowops is in flowop_library.c.
@@ -367,6 +367,11 @@ flowop_create_runtime_flowops(threadflow_t *threadflow, flowop_t **ops_list_ptr)
 				    newflowop->fo_name, name);
 				filebench_shutdown(1);
 			}
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+			flowop_init_datasource(flowop->fo_ds, flowop->fo_fileset);
+			if (register_datasource(flowop->fo_ds))
+				return (FILEBENCH_ERROR);
+#endif
 		}
 
 		/* check for fo_possetname attribute, and resolve if present */
@@ -1250,7 +1255,6 @@ flowop_destruct_generic(flowop_t *flowop)
 		free(buf);
 }
 
-
 /*
  * Loops through the supplied list of flowops and creates and initializes
  * a flowop for each one by calling flowop_define. As a side effect of
@@ -1281,7 +1285,24 @@ flowop_flow_init(flowop_proto_t *list, int nops)
 		flowop->fo_destruct = fl->fl_destruct;
 		flowop->fo_attrs = fl->fl_attrs;
 	}
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	init_ds("entropy", 4.0);	/* 4.0 to be replaced by user value */
-#endif
+}
+
+/*
+ * Initialize the struct source with data
+ */
+void
+flowop_init_datasource(struct source* source, struct fileset* fileset) {
+	if (strcmp(fileset->fs_sourceinfo->source, "entropy") == 0) {
+		source->s_entropy = fileset->fs_sourceinfo->entropy;
+		source->s_ops = &entropy_operations;
+	} else if (strcmp(fileset->fs_sourceinfo->source, "default") == 0) {
+		source->s_entropy = -1.0;
+		source->s_ops = &constant_operations;
+	} else if (strcmp(fileset->fs_sourceinfo->source, "null") == 0) {
+		source->s_entropy = -1.0;
+		source->s_ops = &dummy_operations;
+	} else {
+		source->s_entropy = -1.0;
+		source->s_ops = &constant_operations;
+	}
 }

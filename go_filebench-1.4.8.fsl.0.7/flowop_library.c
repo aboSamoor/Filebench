@@ -50,8 +50,7 @@
 #include "fsplug.h"
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-#include "sources.c"
-extern struct source ds;
+#include "sources.h"
 #endif
 
 /*
@@ -495,7 +494,7 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 
 		/* Code to call entropy-based buffer fill */
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-		if (ds.s_ops->fill(&ds, flowop->fo_buf, iosize) != 0) {
+		if (ds->s_ops->fill(ds, flowop->fo_buf, iosize) != 0) {
 			return (FILEBENCH_ERROR);
 		}
 #endif
