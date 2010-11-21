@@ -34,7 +34,8 @@
 #include "stats.h"
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-#include "sources.h"
+#include "sources.c"
+extern struct source ds;
 #endif
 
 static flowop_t *flowop_define_common(threadflow_t *threadflow, char *name,
@@ -1281,8 +1282,7 @@ flowop_flow_init(flowop_proto_t *list, int nops)
 		flowop->fo_attrs = fl->fl_attrs;
 	}
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	struct source* ds = (struct source*)malloc(sizeof(struct source));
-	init_ds(ds, "entropy", 4.0);	/* 4.0 to be replaced by user value */
-	register_new_datasource(ds);
+	init_ds(&ds, "entropy", 4.0);	/* 4.0 to be replaced by user value */
+	register_new_datasource(&ds);
 #endif
 }
