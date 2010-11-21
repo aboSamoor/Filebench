@@ -1282,7 +1282,6 @@ flowop_flow_init(flowop_proto_t *list, int nops)
 		flowop->fo_attrs = fl->fl_attrs;
 	}
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	init_ds(&ds, "entropy", 4.0);	/* 4.0 to be replaced by user value */
-	register_new_datasource(&ds);
+	init_ds("entropy", 4.0);	/* 4.0 to be replaced by user value */
 #endif
 }
