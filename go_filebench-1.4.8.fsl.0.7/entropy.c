@@ -19,6 +19,18 @@ double pdf_entropy(double pdf[], unsigned int size){
 	return entropy;
 }
 
+double buf_entropy(void *buf, unsigned int size){
+	
+	int i=0;
+	double pdf[PDF_SIZE];
+	for(i=0; i < size; i++)
+		pdf[i] = 0;
+	for(i=0; i < size; i++)
+		pdf[((unsigned char*)buf)[i]]+= 1.0/size;
+
+	return pdf_entropy(pdf, PDF_SIZE);
+}
+
 int binary_search(double key, double array[], unsigned int size){
 
 	int start = 0;
@@ -28,7 +40,8 @@ int binary_search(double key, double array[], unsigned int size){
 	if(size <= 0)
 		return -2;
 
-	while(end-start < 2){
+	while(end-start > 1){
+//		printf("End point is: %d\n", end);
 		mid = (end+start)/2;
 		if(key == array[mid])
 			return mid;
@@ -42,6 +55,7 @@ int binary_search(double key, double array[], unsigned int size){
 
 int calculate_cdf(double pdf[], unsigned int size, double cdf[]){
 
+	int i;
 	if (size <= 0)
 		return -1;
 
@@ -100,17 +114,19 @@ void print_pdf(double pdf[], int size){
 	printf("\n");
 }
 
+/*
 int main(int argc, char* argv[]){
-	int i=0;
+	//int i=0;
 	
 	double pdf[PDF_SIZE];
 	double cdf[PDF_SIZE];
-	double key = .455;
-	generate_pdf(pdf, PDF_SIZE, i/100.0);
+	double key = .99;
+	generate_pdf(pdf, PDF_SIZE, 7.5);
 	calculate_cdf(pdf, PDF_SIZE, cdf);
 	int index = binary_search(key, cdf, PDF_SIZE);
 	print_pdf(cdf, PDF_SIZE);
 	printf("%f is found at %d, which is between %f and %f\n", key, index, cdf[index-1], cdf[index]);
+
 	for(i=0; i< 801; i++){
 		generate_pdf(pdf, PDF_SIZE, i/100.0);
 		printf("Entropy requested: %f\n",i/100.0);
@@ -118,4 +134,4 @@ int main(int argc, char* argv[]){
 		printf("Entropy generated: %f\n\n", pdf_entropy(pdf, PDF_SIZE));
 	}
 	return 0;
-}
+}*/
