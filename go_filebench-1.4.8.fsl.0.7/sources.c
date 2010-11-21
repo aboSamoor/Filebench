@@ -2,6 +2,10 @@
 #include <stdio.h>
 #include "sources.h"
 #include "entropy.h"
+#include <string.h>
+
+struct source ds;
+struct source_operations s_ops;
 
 /*
 	This function will not change the buffer allocated in the memory.
@@ -56,7 +60,20 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 	return 0;
 }
 
-
+/*
+	Initialize the ds and s_ops structures according to the user-
+	-specified values for data source and its value
+*/
+void init_ds(char* name, double value) {
+	ds.s_name = (char*)malloc(sizeof(strlen(name) + 1));
+	strcpy(ds.s_name, name);
+	if (strcmp(name, "entropy") == 0) {
+		s_ops.fill = entropy_fill;
+		ds.s_entropy = value;
+		ds.s_ops = &s_ops;
+	}
+}
+/*
 int main(int argc, char **argv){
 	
 	struct source ds;
@@ -68,3 +85,4 @@ int main(int argc, char **argv){
 	free(buf);
 	return 0;
 }
+*/
