@@ -162,6 +162,7 @@ static void parser_abort(int arg);
 static void parser_version(cmd_t *cmd);
 static void parser_osprof_enable(cmd_t *cmd);
 static void parser_osprof_disable(cmd_t *cmd);
+static void source_file_define(cmd_t *cmd);
 
 %}
 
@@ -207,6 +208,7 @@ static void parser_osprof_disable(cmd_t *cmd);
 %token FSA_ALLDONE FSA_FIRSTDONE FSA_TIMEOUT
 %token FSC_OSPROF_ENABLE FSC_OSPROF_DISABLE
 %token FSA_NOREADAHEAD 
+%token FSA_DSRC FSA_ENTROPY
 
 %type <ival> FSV_VAL_INT
 %type <bval> FSV_VAL_BOOLEAN
@@ -216,6 +218,7 @@ static void parser_osprof_disable(cmd_t *cmd);
 %type <sval> FSV_RANDVAR
 %type <sval> FSK_ASSIGN
 %type <sval> FSV_SET_LOCAL_VAR
+%type <sval> FSA_DSRC
 
 %type <ival> FSC_LIST FSC_DEFINE FSC_SET FSC_LOAD FSC_RUN FSC_ENABLE
 %type <ival> FSC_DOMULTISYNC
@@ -237,6 +240,7 @@ static void parser_osprof_disable(cmd_t *cmd);
 %type <cmd> set_integer_command set_other_command
 %type <cmd> osprof_enable_command osprof_disable_command
 
+%type <attr> source_define_params source_define_param source_type
 %type <attr> files_attr_op files_attr_ops posset_attr_ops posset_attr_op pt_attr_op pt_attr_ops
 %type <attr> fo_attr_op fo_attr_ops ev_attr_op ev_attr_ops
 %type <attr> randvar_attr_op randvar_attr_ops randvar_attr_typop
@@ -253,6 +257,7 @@ static void parser_osprof_disable(cmd_t *cmd);
 %type <ival> randsrc_name FSA_RANDSRC randvar_attr_tsp em_attr_name
 %type <ival> FSS_TYPE FSS_SEED FSS_GAMMA FSS_MEAN FSS_MIN FSS_SRC
 %type <ival> fscheck_attr_name FSA_FSTYPE binary_op
+%type <ival> source_params_name
 
 %type <rndtb>  probtabentry_list probtabentry
 %type <avd> var_int_val
@@ -326,7 +331,7 @@ command:
 | osprof_disable_command
 | enable_command
 | multisync_command
-| quit_command;
+| quit_command
 
 foreach_command: FSC_FOREACH
 {
@@ -1103,7 +1108,21 @@ files_define_command: FSC_DEFINE FSE_FILE
 | files_define_command files_attr_ops
 {
 	$1->cmd_attr_list = $2;
-};
+}
+| files_define_command files_attr_ops FSK_SEPLST source_type
+{
+ 	 $1->cmd_attr_list = $2;
+     attr_t *attr = NULL;
+     attr_t *list_end = NULL;
+ 
+     for (attr = $2; attr != NULL;
+         attr = attr->attr_next)
+         list_end = attr; /* Find end of list */
+ 
+     list_end->attr_next = $4;
+ 
+
+} 
 
 posset_define_command: FSC_DEFINE FSE_POSSET
 {
@@ -1135,6 +1154,7 @@ fo_define_command: FSC_DEFINE FSC_FLOWOP comp_attr_ops FSK_OPENLST flowop_list F
 {
 	$1->cmd_attr_list = $2;
 };
+
 
 create_command: FSC_CREATE entity
 {
@@ -1341,6 +1361,42 @@ files_attr_op: files_attr_name FSK_ASSIGN attr_list_value
 {
 	if (($$ = alloc_attr()) == NULL)
 		YYERROR;
+	$$->attr_name = $1;
+};
+//pHcode
+source_type: FSA_DSRC FSK_ASSIGN attr_list_value
+{
+	$$ = $3;
+	$$->attr_name=$1;
+}
+| FSA_DSRC FSK_ASSIGN attr_list_value FSK_SEPLST source_define_params
+{
+	if (($$ = alloc_cmd()) == NULL)
+		YYERROR;
+	$$->sub_attr_list = $5;	
+};
+
+source_define_params: source_define_param
+{
+	$$ = $1;
+} 
+| source_define_params FSK_SEPLST source_define_param
+{
+	attr_t *attr = NULL;
+	attr_t *list_end = NULL;
+
+	for (attr = $1; attr != NULL;
+	    attr = attr->attr_next)
+		list_end = attr; /* Find end of list */
+
+	list_end->attr_next = $3;
+
+	$$ = $1;
+};
+
+source_define_param: source_params_name FSK_ASSIGN attr_list_value
+{
+	$$ = $3;
 	$$->attr_name = $1;
 };
 
@@ -1624,7 +1680,11 @@ attrs_define_fileset:
 | FSA_DIRGAMMA { $$ = FSA_DIRGAMMA;}
 | FSA_CACHED { $$ = FSA_CACHED;}
 | FSA_ENTRIES { $$ = FSA_ENTRIES;}
-| FSA_LEAFDIRS { $$ = FSA_LEAFDIRS;};
+| FSA_LEAFDIRS { $$ = FSA_LEAFDIRS;}
+| FSA_DSRC { $$ = FSA_DSRC;};
+
+source_params_name:          //pH
+  FSA_ENTROPY {$$ = FSA_ENTROPY;};
 
 attrs_define_posset:
   FSA_NAME { $$ = FSA_NAME;}
@@ -2861,7 +2921,15 @@ parser_composite_flowop_define(cmd_t *cmd)
 	}
 }
 
-
+/*static void
+source_file_define(cmd_t *cmd)
+{
+	attr_t *attr;
+	if((attr = get_attr_fileset(cmd,FSA_DSRC)))
+	{
+		printf("\nfound attr:");
+	}
+}*/
 /*
  * Calls fileset_define() to allocate a fileset with the supplied name and
  * initializes the fileset's pathname attribute, and optionally the
@@ -2883,6 +2951,10 @@ parser_fileset_define_common(cmd_t *cmd)
 	flowop_plugin_flowinit();
 
 	/* Get the name of the file */
+	if ((attr = get_attr_fileset(cmd, FSA_DSRC)))
+	{
+		printf("\nfound=%d",attr->attr_name);
+	}
 	if ((attr = get_attr_fileset(cmd, FSA_NAME))) {
 		name = attr->attr_avd;
 	} else {
