@@ -146,6 +146,7 @@ typedef struct fileset {
 	int		*fs_filehistop;		/* Ptr to access histogram */
 	int		fs_histo_id;	/* shared memory id for filehisto */
 	pthread_mutex_t	fs_histo_lock;	/* lock for incr of histo */
+	struct attr       *fs_datasource;
 } fileset_t;
 
 int fileset_createset(fileset_t *);
