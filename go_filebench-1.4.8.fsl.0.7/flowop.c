@@ -1290,6 +1290,8 @@ flowop_flow_init(flowop_proto_t *list, int nops)
 /*
  * Initialize the struct source with data
  */
+
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 void
 flowop_init_datasource(struct source* source, struct fileset* fileset) {
 	if (strcmp(fileset->fs_sourceinfo->source, "entropy") == 0) {
@@ -1306,3 +1308,4 @@ flowop_init_datasource(struct source* source, struct fileset* fileset) {
 		source->s_ops = &constant_operations;
 	}
 }
+#endif

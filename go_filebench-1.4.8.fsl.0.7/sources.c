@@ -3,20 +3,9 @@
 #include <string.h>
 #include "entropy.h"
 #include "filebench.h"
+#include "sources.h"
 
-static struct source *ds;
-
-struct source_operations constant_operations = {
-	.fill = constant_fill,
-};
-
-struct source_operations constant_operations = {
-	.fill = entropy_fill,
-};
-
-struct source_operations constant_operations = {
-	.fill = constant_fill,
-};
+struct source *ds;
 
 /* Register the data source to be used for writing */
 int register_datasource(struct source *source) {
@@ -90,6 +79,18 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 	return 0;
 }
 
+
+struct source_operations constant_operations = {
+	.fill = constant_fill,
+};
+
+struct source_operations entropy_operations = {
+	.fill = entropy_fill,
+};
+
+struct source_operations dummy_operations = {
+	.fill = dummy_fill,
+};
 /*
 int main(int argc, char **argv){
 	
