@@ -1,11 +1,42 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "sources.h"
-#include "entropy.h"
 #include <string.h>
+#include "entropy.h"
+#include "filebench.h"
 
-struct source ds;
-struct source_operations s_ops;
+static struct source *ds;
+
+struct source_operations constant_operations = {
+	.fill = constant_fill,
+};
+
+struct source_operations constant_operations = {
+	.fill = entropy_fill,
+};
+
+struct source_operations constant_operations = {
+	.fill = constant_fill,
+};
+
+/* Register the data source to be used for writing */
+int register_datasource(struct source *source) {
+	if (verify_ds(source)) {
+		printf("Could not verify datasource");
+		return (FILEBENCH_ERROR);
+	}
+
+	ds = source;
+	return 0;
+}
+
+/* Verify that the data source is valid */
+int verify_ds(struct source *source) {
+	if (source->s_entropy < 0.00 || source->s_entropy > 8.00 || source->s_ops == NULL) {
+		return (FILEBENCH_ERROR);
+	}
+
+	return 0;
+}
 
 /*
 	This function will not change the buffer allocated in the memory.
@@ -16,7 +47,6 @@ int dummy_fill(struct source *ds, void *buf, unsigned int size){
 	
 	return 0;
 }
-
 
 /*
 	This function will fill the buffer with zeros. Can be changed
@@ -60,19 +90,6 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 	return 0;
 }
 
-/*
-	Initialize the ds and s_ops structures according to the user-
-	-specified values for data source and its value
-*/
-void init_ds(char* name, double value) {
-	ds.s_name = (char*)malloc(sizeof(strlen(name) + 1));
-	strcpy(ds.s_name, name);
-	if (strcmp(name, "entropy") == 0) {
-		s_ops.fill = entropy_fill;
-		ds.s_entropy = value;
-		ds.s_ops = &s_ops;
-	}
-}
 /*
 int main(int argc, char **argv){
 	
