@@ -245,6 +245,16 @@ noreadahead             { return FSA_NOREADAHEAD; }
 				}
                                 return FSV_VAL_INT;
 }
+<INITIAL>[0-9]*\.[0-9]+  {
+                                errno = 0;
+				yylval.dbl = strtod(yytext,NULL);
+				if (errno == EINVAL || errno == ERANGE) {
+                                        (void) filebench_log(LOG_ERROR, 
+						"Invalid I value '%s':%s", yytext,
+						strerror(errno));
+				}
+                                return FSV_VAL_DBL;
+}
 
 <INITIAL>[0-9]+k	{
                                 errno = 0;

@@ -169,6 +169,7 @@ static void parser_osprof_disable(cmd_t *cmd);
 	int64_t		 ival;
 	unsigned char	 bval;
 	char *		 sval;
+	double       dbl;
 	fs_u		 val;
 	avd_t		 avd;
 	cmd_t		*cmd;
@@ -208,6 +209,7 @@ static void parser_osprof_disable(cmd_t *cmd);
 %token FSC_OSPROF_ENABLE FSC_OSPROF_DISABLE
 %token FSA_NOREADAHEAD 
 %token FSA_DSRC FSA_ENTROPY
+%token FSV_VAL_DBL
 
 %type <ival> FSV_VAL_INT
 %type <bval> FSV_VAL_BOOLEAN
@@ -217,6 +219,7 @@ static void parser_osprof_disable(cmd_t *cmd);
 %type <sval> FSV_RANDVAR
 %type <sval> FSK_ASSIGN
 %type <sval> FSV_SET_LOCAL_VAR
+%type <dbl>  FSV_VAL_DBL
 
 %type <ival> FSC_LIST FSC_DEFINE FSC_SET FSC_LOAD FSC_RUN FSC_ENABLE
 %type <ival> FSC_DOMULTISYNC
@@ -1874,6 +1877,10 @@ attr_value: FSV_STRING
 	if (($$ = alloc_attr()) == NULL)
 		YYERROR;
 	$$->attr_avd = var_ref_attr($1);
+} | FSV_VAL_DBL {
+	if(($$ = alloc_attr()) == NULL)
+		YYERROR;
+	$$->attr_avd=avd_dbl_alloc($1);
 };
 
 attr_list_value: var_string_list {
@@ -3168,7 +3175,7 @@ parser_fileset_define(cmd_t *cmd)
 		printf("\npH attr value = %c\n",avd_get_str(attr->attr_avd)[0]);
 		printf("\n type : %d",(int)attr->sub_attr_list->attr_avd->avd_type);
 		printf("\npH src param list =%d->%d->%d\n",attr->attr_name,attr->sub_attr_list->attr_name,1);//,attr->sub_attr_list->attr_next->attr_name);
-		printf("\npH src param list =%ld->%c\n",avd_get_dbl(attr->sub_attr_list->attr_avd),'c');//,avd_get_str(attr->sub_attr_list->attr_next)[0]);
+		printf("\npH src param list =%lf->%c\n",avd_get_dbl(attr->sub_attr_list->attr_avd),'c');//,avd_get_str(attr->sub_attr_list->attr_next)[0]);
 	}
 	else
 		fileset->fs_datasource=NULL;

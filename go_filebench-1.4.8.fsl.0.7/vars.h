@@ -223,6 +223,7 @@ typedef struct var {
 avd_t avd_bool_alloc(boolean_t bool);
 avd_t avd_int_alloc(fbint_t integer);
 avd_t avd_str_alloc(char *string);
+avd_t avd_dbl_alloc(double dblval);
 boolean_t avd_get_bool(avd_t);
 fbint_t avd_get_int(avd_t);
 double avd_get_dbl(avd_t);
