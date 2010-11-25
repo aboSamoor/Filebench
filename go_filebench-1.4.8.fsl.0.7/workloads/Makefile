@@ -55,18 +55,17 @@ am__installdirs = "$(DESTDIR)$(workloadsdir)"
 workloadsDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(workloads_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /root/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run aclocal-1.9
+ACLOCAL = ${SHELL} /home/eid/SB/courses/f10/OS/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run aclocal-1.9
 ALLOCA = 
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /root/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run tar
+AMTAR = ${SHELL} /home/eid/SB/courses/f10/OS/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run tar
 AUTOCOMP_LIBTECLA_FALSE = 
 AUTOCOMP_LIBTECLA_TRUE = #
-AUTOCONF = ${SHELL} /root/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run autoconf
-AUTOHEADER = ${SHELL} /root/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run autoheader
-AUTOMAKE = ${SHELL} /root/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run automake-1.9
-AWK = gawk
->>>>>>> a4a25cd6f9e4102ef4e4085ab57c43853400db2e
+AUTOCONF = ${SHELL} /home/eid/SB/courses/f10/OS/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/eid/SB/courses/f10/OS/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/eid/SB/courses/f10/OS/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run automake-1.9
+AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -94,11 +93,7 @@ LEX_OUTPUT_ROOT = lex.yy
 LIBOBJS = 
 LIBS = -lpthread -lm -lrt 
 LTLIBOBJS = 
-<<<<<<< HEAD
 MAKEINFO = ${SHELL} /home/eid/SB/courses/f10/OS/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run makeinfo
-=======
-MAKEINFO = ${SHELL} /root/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/missing --run makeinfo
->>>>>>> a4a25cd6f9e4102ef4e4085ab57c43853400db2e
 OBJEXT = o
 PACKAGE = go_filebench
 PACKAGE_BUGREPORT = 
@@ -110,15 +105,11 @@ PACKAGE_VERSION = 1.4.8.fsl.0.7
 PATH_SEPARATOR = :
 POW_LIB = 
 SET_MAKE = 
-SHELL = /bin/sh
+SHELL = /bin/bash
 STRIP = 
 VERSION = 1.4.8.fsl.0.7
-<<<<<<< HEAD
-YACC = yacc
+YACC = bison -y
 YFLAGS = @YFLAGS@
-=======
-YACC = byacc
->>>>>>> a4a25cd6f9e4102ef4e4085ab57c43853400db2e
 ac_ct_CC = gcc
 am__fastdepCC_FALSE = #
 am__fastdepCC_TRUE = 
@@ -138,11 +129,7 @@ host_alias =
 htmldir = @htmldir@
 includedir = ${prefix}/include
 infodir = ${prefix}/info
-<<<<<<< HEAD
 install_sh = /home/eid/SB/courses/f10/OS/hw3/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/install-sh
-=======
-install_sh = /root/hw3-cse506g43/hw3/go_filebench-1.4.8.fsl.0.7/install-sh
->>>>>>> a4a25cd6f9e4102ef4e4085ab57c43853400db2e
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = @localedir@
