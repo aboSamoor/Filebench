@@ -344,7 +344,6 @@ flowop_create_runtime_flowops(threadflow_t *threadflow, flowop_t **ops_list_ptr)
 {
 	flowop_t *flowop = *ops_list_ptr;
 	char *name;
-
 	while (flowop) {
 		flowop_t *newflowop;
 
@@ -368,8 +367,8 @@ flowop_create_runtime_flowops(threadflow_t *threadflow, flowop_t **ops_list_ptr)
 				filebench_shutdown(1);
 			}
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-			flowop_init_datasource(flowop->fo_ds, flowop->fo_fileset);
-			if (register_datasource(flowop->fo_ds))
+			flowop_init_datasource(&flowop->fo_ds, flowop->fo_fileset);
+			if (register_datasource(&flowop->fo_ds))
 				return (FILEBENCH_ERROR);
 #endif
 		}
@@ -1293,7 +1292,8 @@ flowop_flow_init(flowop_proto_t *list, int nops)
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 void
-flowop_init_datasource(struct source* source, struct fileset* fileset) {
+flowop_init_datasource(struct source* *source, struct fileset* fileset) {
+/*
 	if (strcmp(fileset->fs_sourceinfo->source, "entropy") == 0) {
 		source->s_entropy = fileset->fs_sourceinfo->entropy;
 		source->s_ops = &entropy_operations;
@@ -1307,5 +1307,11 @@ flowop_init_datasource(struct source* source, struct fileset* fileset) {
 		source->s_entropy = -1.0;
 		source->s_ops = &constant_operations;
 	}
+*/
+	*source = malloc(sizeof(struct source));
+	(*source)->s_entropy = 6.0;
+	(*source)->s_ops = &entropy_operations;
+	if(*source == NULL)
+		DBG;
 }
 #endif

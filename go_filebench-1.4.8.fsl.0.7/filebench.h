@@ -27,7 +27,6 @@
 
 #ifndef _FB_FILEBENCH_H
 #define	_FB_FILEBENCH_H
-
 #include "config.h"
 
 #include <stdlib.h>
@@ -202,5 +201,8 @@ static inline int sigignore(int sig) {
 #define	FILEBENCH_OK	 0
 #define	FILEBENCH_ERROR -1
 #define	FILEBENCH_NORSC -2
+
+#define DBG filebench_log(LOG_VERBOSE, "%s:%s:%d\n",__FILE__,__func__,__LINE__)
+
 
 #endif	/* _FB_FILEBENCH_H */

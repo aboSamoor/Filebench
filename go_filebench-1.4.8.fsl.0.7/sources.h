@@ -18,7 +18,7 @@ extern struct source_operations entropy_operations;
 int dummy_fill(struct source *ds, void *buf, unsigned int size);
 int constant_fill(struct source *ds, void *buf, unsigned int size);
 int entropy_fill(struct source *ds, void *buf, unsigned int size);
-int register_datasource(struct source *source);
+int register_datasource(struct source **source);
 int verify_ds(struct source *source);
 
 #endif

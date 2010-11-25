@@ -6,15 +6,15 @@
 #include "sources.h"
 
 struct source *ds;
-
+#ifdef _FB_FILEBENCH_H
 /* Register the data source to be used for writing */
-int register_datasource(struct source *source) {
-	if (verify_ds(source)) {
+int register_datasource(struct source **source) {
+	if (verify_ds(*source)) {
 		printf("Could not verify datasource");
 		return (FILEBENCH_ERROR);
 	}
 
-	ds = source;
+	ds = *source;
 	return 0;
 }
 
@@ -26,6 +26,7 @@ int verify_ds(struct source *source) {
 
 	return 0;
 }
+#endif
 
 /*
 	This function will not change the buffer allocated in the memory.
@@ -63,8 +64,10 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 
 	//Calculate pdf according to the given entropy
 	generate_pdf(pdf, PDF_SIZE, ds-> s_entropy);
+#ifndef _FB_FILEBENCH_H
 	print_pdf(pdf, 5);
 	printf("PDF entropy is: %f\n" ,pdf_entropy(pdf, PDF_SIZE));
+#endif
 	//Calculate cdf from the pdf
 	calculate_cdf(pdf, PDF_SIZE, cdf);
 
@@ -72,10 +75,12 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 	for(i=0; i< PDF_SIZE; i++)
 		symbols_table[i] = (unsigned char)i;
 	//filling the buffer depending on the cdf
+	char *tmp = malloc(size);
 	for(i=0; i < size; i++){
-		((char *)buf)[i] = symbols_table[binary_search(rand()/(double)RAND_MAX, cdf, PDF_SIZE)];
+		tmp[i] = symbols_table[binary_search(rand()/(double)RAND_MAX, cdf, PDF_SIZE)];
 	}
-	
+	memcpy(buf, tmp, size);
+	free(tmp);
 	return 0;
 }
 
@@ -91,6 +96,9 @@ struct source_operations entropy_operations = {
 struct source_operations dummy_operations = {
 	.fill = dummy_fill,
 };
+
+
+#ifndef _FB_FILEBENCH_H
 /*
 int main(int argc, char **argv){
 	
@@ -104,3 +112,4 @@ int main(int argc, char **argv){
 	return 0;
 }
 */
+#endif

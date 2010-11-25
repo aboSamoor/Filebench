@@ -448,7 +448,6 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 {
 	long memsize;
 	size_t memoffset;
-
 	if (iosize == 0) {
 		filebench_log(LOG_ERROR, "zero iosize for thread %s",
 		    flowop->fo_name);
@@ -493,12 +492,6 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 		flowop->fo_buf_size = iosize;
 
 		/* Code to call entropy-based buffer fill */
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-		if (ds->s_ops->fill(ds, flowop->fo_buf, iosize) != 0) {
-			return (FILEBENCH_ERROR);
-		}
-#endif
-
 		*iobufp = flowop->fo_buf;
 	}
 
@@ -2324,6 +2317,12 @@ flowoplib_write(threadflow_t *threadflow, flowop_t *flowop)
 	if ((ret = flowoplib_iosetup(threadflow, flowop, &wss, &iobuf,
 	    &fdesc, iosize)) != FILEBENCH_OK)
 		return (ret);
+
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+		if (ds->s_ops->fill(ds, iobuf, iosize) != 0) {
+			return (FILEBENCH_ERROR);
+		}
+#endif
 
 	if (avd_get_bool(flowop->fo_random)) {
 		uint64_t fileoffset;
