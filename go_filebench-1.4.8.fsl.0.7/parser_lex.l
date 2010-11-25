@@ -116,12 +116,15 @@ alldone                 { return FSA_ALLDONE; }
 blocking                { return FSA_BLOCKING; }
 cached                  { return FSA_CACHED; }
 client			{ return FSA_CLIENT; }
+datasource              { return FSA_DSRC;}       
 dirwidth                { return FSA_DIRWIDTH; }
 dirdepthrv              { return FSA_DIRDEPTHRV; }
 directio                { return FSA_DIRECTIO; }
 dirgamma                { return FSA_DIRGAMMA; }
 dsync                   { return FSA_DSYNC;  }
+dummy                   { return FSA_DUMMY;}
 entries                 { return FSA_ENTRIES;}
+entropy                 { return FSA_ENTROPY;}
 fd                      { return FSA_FD; }
 filename                { return FSA_FILE; }
 filesetname             { return FSA_FILE; }
@@ -167,7 +170,6 @@ type			{ return FSA_TYPE; }
 useism                  { return FSA_USEISM;}
 value                   { return FSA_VALUE;}
 workingset              { return FSA_WSS; }
-
 uniform                 { return FSV_RANDUNI; }
 tabular			{ return FSV_RANDTAB; }
 "."type			{ return FSS_TYPE; }
@@ -242,6 +244,16 @@ noreadahead             { return FSA_NOREADAHEAD; }
 						strerror(errno));
 				}
                                 return FSV_VAL_INT;
+}
+<INITIAL>[0-9]*\.[0-9]+  {
+                                errno = 0;
+				yylval.dbl = strtod(yytext,NULL);
+				if (errno == EINVAL || errno == ERANGE) {
+                                        (void) filebench_log(LOG_ERROR, 
+						"Invalid I value '%s':%s", yytext,
+						strerror(errno));
+				}
+                                return FSV_VAL_DBL;
 }
 
 <INITIAL>[0-9]+k	{

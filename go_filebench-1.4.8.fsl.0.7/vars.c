@@ -373,6 +373,27 @@ avd_int_alloc(fbint_t integer)
 
 	return (avd);
 }
+/*
+ * pre-loads the allocated avd_t with the fbint_t "integer".
+ * Returns the avd_t on success, NULL on failure.
+ */
+avd_t
+avd_dbl_alloc(double dblval)
+{
+	avd_t avd;
+
+	if ((avd = avd_alloc_cmn()) == NULL)
+		return (NULL);
+
+	avd->avd_type = AVD_VAL_DBL;
+	avd->avd_val.dblval = dblval;
+	
+	filebench_log(LOG_DEBUG_IMPL, "Alloc integer %llu",
+	    (u_longlong_t)dblval);
+
+	return (avd);
+}
+
 
 /*
  * Gets a avd_t and points it to the var that
