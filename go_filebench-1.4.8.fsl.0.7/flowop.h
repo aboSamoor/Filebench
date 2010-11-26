@@ -160,6 +160,6 @@ void flowop_destruct_all_flows(threadflow_t *threadflow);
 flowop_t *flowop_new_composite_define(char *name);
 void flowop_printall(void);
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-void flowop_init_datasource(struct source** source, struct fileset* fileset);
+void flowop_init_datasource(struct source**, struct fileset*);
 #endif
 #endif	/* _FB_FLOWOP_H */

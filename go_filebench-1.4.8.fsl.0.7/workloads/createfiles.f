@@ -23,7 +23,7 @@
 # Use is subject to license terms.
 
 set $dir=/tmp
-set $nfiles=50000
+set $nfiles=10
 set $meandirwidth=100
 set $filesize=16k
 set $iosize=1m
@@ -31,7 +31,7 @@ set $nthreads=16
 
 set mode quit firstdone
 
-define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth
+define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,datasource=entro,entropy=3.4
 
 define process name=filecreate,instances=1
 {

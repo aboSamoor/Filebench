@@ -1,18 +1,21 @@
 #ifndef lint
-static char const 
-yyrcsid[] = "$FreeBSD: src/usr.bin/yacc/skeleton.c,v 1.28 2000/01/17 02:04:06 bde Exp $";
+static const char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #endif
-#include <stdlib.h>
+
 #define YYBYACC 1
 #define YYMAJOR 1
 #define YYMINOR 9
-#define YYLEX yylex()
-#define YYEMPTY -1
-#define yyclearin (yychar=(YYEMPTY))
-#define yyerrok (yyerrflag=0)
-#define YYRECOVERING() (yyerrflag!=0)
-static int yygrowstack();
+#define YYPATCH 20100610
+
+#define YYEMPTY        (-1)
+#define yyclearin      (yychar = YYEMPTY)
+#define yyerrok        (yyerrflag = 0)
+#define YYRECOVERING() (yyerrflag != 0)
+
 #define YYPREFIX "yy"
+
+#define YYPURE 0
+
 #line 29 "parser_gram.y"
 
 #include <stdlib.h>
@@ -164,8 +167,31 @@ typedef union {
 	list_t		*list;
 	probtabent_t	*rndtb;
 } YYSTYPE;
-#line 168 "parser_gram.c"
-#define YYERRCODE 256
+#line 170 "parser_gram.c"
+/* compatibility with bison */
+#ifdef YYPARSE_PARAM
+/* compatibility with FreeBSD */
+# ifdef YYPARSE_PARAM_TYPE
+#  define YYPARSE_DECL() yyparse(YYPARSE_PARAM_TYPE YYPARSE_PARAM)
+# else
+#  define YYPARSE_DECL() yyparse(void *YYPARSE_PARAM)
+# endif
+#else
+# define YYPARSE_DECL() yyparse(void)
+#endif
+
+/* Parameters sent to lex. */
+#ifdef YYLEX_PARAM
+# define YYLEX_DECL() yylex(void *YYLEX_PARAM)
+# define YYLEX yylex(YYLEX_PARAM)
+#else
+# define YYLEX_DECL() yylex(void)
+# define YYLEX yylex()
+#endif
+
+extern int YYPARSE_DECL();
+extern int YYLEX_DECL();
+
 #define FSC_LIST 257
 #define FSC_DEFINE 258
 #define FSC_EXEC 259
@@ -303,7 +329,8 @@ typedef union {
 #define FSA_ENTROPY 391
 #define FSV_VAL_DBL 392
 #define FSA_DUMMY 393
-const short yylhs[] = {                                        -1,
+#define YYERRCODE 256
+static const short yylhs[] = {                           -1,
     0,    0,    0,    5,    5,    4,    4,    4,    4,    4,
     4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
     4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
@@ -336,7 +363,7 @@ const short yylhs[] = {                                        -1,
    62,   83,   83,   60,   60,   60,   60,   60,   61,   61,
    61,   61,   61,  100,  100,
 };
-const short yylen[] = {                                         2,
+static const short yylen[] = {                            2,
     2,    2,    0,    1,    2,    1,    1,    1,    1,    1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -369,7 +396,7 @@ const short yylen[] = {                                         2,
     1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
     1,    1,    1,    1,    1,
 };
-const short yydefred[] = {                                      3,
+static const short yydefred[] = {                         3,
     0,    2,   75,    0,  105,    0,    0,    0,    0,   37,
     0,    0,    0,    0,   44,    0,    0,    0,    0,    0,
     0,    0,  131,   52,   48,    0,    0,   49,   50,    1,
@@ -412,7 +439,7 @@ const short yydefred[] = {                                      3,
   305,    0,    0,  158,    0,    0,    0,  165,  154,  155,
     0,    0,    0,  163,
 };
-const short yydgoto[] = {                                       1,
+static const short yydgoto[] = {                          1,
   323,   75,    0,  361,  362,   31,   32,   33,   34,   35,
    36,   37,   38,   39,   40,   41,   42,   43,   44,   45,
    46,   47,  294,   48,   49,  295,  297,  298,   50,   51,
@@ -424,7 +451,7 @@ const short yydgoto[] = {                                       1,
   118,  159,  154,  140,  149,  119,  345,  160,  184,  303,
   201,  307,  259,  165,  102,  171,  386,  380,  381,  392,
 };
-const short yysindex[] = {                                      0,
+static const short yysindex[] = {                         0,
  -225,    0,    0, -149,    0, -262, -278, -132,    7,    0,
  -284, -278, -239, -239,    0, -239, -255, -120, -113, -322,
  -322, -239,    0,    0,    0, -160, -187,    0,    0,    0,
@@ -467,7 +494,7 @@ const short yysindex[] = {                                      0,
     0,  124,  115,    0, -157, -270,  -58,    0,    0,    0,
   125,  -58,  121,    0,
 };
-const short yyrindex[] = {                                      0,
+static const short yyrindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0, 1607,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -510,7 +537,7 @@ const short yyrindex[] = {                                      0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,
 };
-const short yygindex[] = {                                      0,
+static const short yygindex[] = {                         0,
     0,  435,    0,   -1,  127,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0, -288,    0,    0,   85,    0,  156,    0,    0,
@@ -523,7 +550,7 @@ const short yygindex[] = {                                      0,
     0,    0,  279,    0,    0,    0,    0,    0,  107, -269,
 };
 #define YYTABLESIZE 3003
-const short yytable[] = {                                      30,
+static const short yytable[] = {                         30,
    60,  173,  269,   85,   99,  293,  347,   86,  284,  280,
   202,  290,  296,  292,  262,  263,  264,  265,   71,   72,
    73,  299,  300,   70,  310,   87,  203,   74,  349,   94,
@@ -826,7 +853,7 @@ const short yytable[] = {                                      30,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,  104,  104,
 };
-const short yycheck[] = {                                       1,
+static const short yycheck[] = {                          1,
     0,   66,  217,  288,  327,  270,  295,  292,  223,  221,
   260,  226,  299,  228,  285,  286,  287,  288,  297,  298,
   299,  290,  291,  286,  236,  310,  276,  306,  315,  285,
@@ -1135,7 +1162,8 @@ const short yycheck[] = {                                       1,
 #endif
 #define YYMAXTOKEN 393
 #if YYDEBUG
-const char * const yyname[] = {
+static const char *yyname[] = {
+
 "end-of-file",0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -1169,7 +1197,7 @@ const char * const yyname[] = {
 "FSC_OSPROF_ENABLE","FSC_OSPROF_DISABLE","FSA_NOREADAHEAD","FSA_DSRC",
 "FSA_ENTROPY","FSV_VAL_DBL","FSA_DUMMY",
 };
-const char * const yyrule[] = {
+static const char *yyrule[] = {
 "$accept : commands",
 "commands : commands command",
 "commands : commands error",
@@ -1476,35 +1504,42 @@ const char * const yyrule[] = {
 "attr_list_value : FSV_VARIABLE",
 "var_int_val : FSV_VAL_INT",
 "var_int_val : FSV_VARIABLE",
+
 };
 #endif
-#if YYDEBUG
-#include <stdio.h>
-#endif
+/* define the initial stack-sizes */
 #ifdef YYSTACKSIZE
 #undef YYMAXDEPTH
-#define YYMAXDEPTH YYSTACKSIZE
+#define YYMAXDEPTH  YYSTACKSIZE
 #else
 #ifdef YYMAXDEPTH
 #define YYSTACKSIZE YYMAXDEPTH
 #else
-#define YYSTACKSIZE 10000
-#define YYMAXDEPTH 10000
+#define YYSTACKSIZE 500
+#define YYMAXDEPTH  500
 #endif
 #endif
-#define YYINITSTACKSIZE 200
-int yydebug;
-int yynerrs;
-int yyerrflag;
-int yychar;
-short *yyssp;
-YYSTYPE *yyvsp;
-YYSTYPE yyval;
-YYSTYPE yylval;
-short *yyss;
-short *yysslim;
-YYSTYPE *yyvs;
-int yystacksize;
+
+#define YYINITSTACKSIZE 500
+
+int      yydebug;
+int      yynerrs;
+
+typedef struct {
+    unsigned stacksize;
+    short    *s_base;
+    short    *s_mark;
+    short    *s_last;
+    YYSTYPE  *l_base;
+    YYSTYPE  *l_mark;
+} YYSTACKDATA;
+int      yyerrflag;
+int      yychar;
+YYSTYPE  yyval;
+YYSTYPE  yylval;
+
+/* variables for the parser stack */
+static YYSTACKDATA yystack;
 #line 1917 "parser_gram.y"
 
 /*
@@ -4487,73 +4522,78 @@ yywrap()
 	} else
 		return (1);
 }
-#line 4491 "parser_gram.c"
+#line 4525 "parser_gram.c"
+
+#if YYDEBUG
+#include <stdio.h>		/* needed for printf */
+#endif
+
+#include <stdlib.h>	/* needed for malloc, etc */
+#include <string.h>	/* needed for memset */
+
 /* allocate initial stack or double stack size, up to YYMAXDEPTH */
-static int yygrowstack()
+static int yygrowstack(YYSTACKDATA *data)
 {
-    int newsize, i;
+    int i;
+    unsigned newsize;
     short *newss;
     YYSTYPE *newvs;
 
-    if ((newsize = yystacksize) == 0)
+    if ((newsize = data->stacksize) == 0)
         newsize = YYINITSTACKSIZE;
     else if (newsize >= YYMAXDEPTH)
         return -1;
     else if ((newsize *= 2) > YYMAXDEPTH)
         newsize = YYMAXDEPTH;
-    i = yyssp - yyss;
-    newss = yyss ? (short *)realloc(yyss, newsize * sizeof *newss) :
-      (short *)malloc(newsize * sizeof *newss);
-    if (newss == NULL)
+
+    i = data->s_mark - data->s_base;
+    newss = (data->s_base != 0)
+          ? (short *)realloc(data->s_base, newsize * sizeof(*newss))
+          : (short *)malloc(newsize * sizeof(*newss));
+    if (newss == 0)
         return -1;
-    yyss = newss;
-    yyssp = newss + i;
-    newvs = yyvs ? (YYSTYPE *)realloc(yyvs, newsize * sizeof *newvs) :
-      (YYSTYPE *)malloc(newsize * sizeof *newvs);
-    if (newvs == NULL)
+
+    data->s_base = newss;
+    data->s_mark = newss + i;
+
+    newvs = (data->l_base != 0)
+          ? (YYSTYPE *)realloc(data->l_base, newsize * sizeof(*newvs))
+          : (YYSTYPE *)malloc(newsize * sizeof(*newvs));
+    if (newvs == 0)
         return -1;
-    yyvs = newvs;
-    yyvsp = newvs + i;
-    yystacksize = newsize;
-    yysslim = yyss + newsize - 1;
+
+    data->l_base = newvs;
+    data->l_mark = newvs + i;
+
+    data->stacksize = newsize;
+    data->s_last = data->s_base + newsize - 1;
     return 0;
 }
 
-#define YYABORT goto yyabort
+#if YYPURE || defined(YY_NO_LEAKS)
+static void yyfreestack(YYSTACKDATA *data)
+{
+    free(data->s_base);
+    free(data->l_base);
+    memset(data, 0, sizeof(*data));
+}
+#else
+#define yyfreestack(data) /* nothing */
+#endif
+
+#define YYABORT  goto yyabort
 #define YYREJECT goto yyabort
 #define YYACCEPT goto yyaccept
-#define YYERROR goto yyerrlab
-
-#ifndef YYPARSE_PARAM
-#if defined(__cplusplus) || __STDC__
-#define YYPARSE_PARAM_ARG void
-#define YYPARSE_PARAM_DECL
-#else	/* ! ANSI-C/C++ */
-#define YYPARSE_PARAM_ARG
-#define YYPARSE_PARAM_DECL
-#endif	/* ANSI-C/C++ */
-#else	/* YYPARSE_PARAM */
-#ifndef YYPARSE_PARAM_TYPE
-#define YYPARSE_PARAM_TYPE void *
-#endif
-#if defined(__cplusplus) || __STDC__
-#define YYPARSE_PARAM_ARG YYPARSE_PARAM_TYPE YYPARSE_PARAM
-#define YYPARSE_PARAM_DECL
-#else	/* ! ANSI-C/C++ */
-#define YYPARSE_PARAM_ARG YYPARSE_PARAM
-#define YYPARSE_PARAM_DECL YYPARSE_PARAM_TYPE YYPARSE_PARAM;
-#endif	/* ANSI-C/C++ */
-#endif	/* ! YYPARSE_PARAM */
+#define YYERROR  goto yyerrlab
 
 int
-yyparse (YYPARSE_PARAM_ARG)
-    YYPARSE_PARAM_DECL
+YYPARSE_DECL()
 {
-    register int yym, yyn, yystate;
+    int yym, yyn, yystate;
 #if YYDEBUG
-    register const char *yys;
+    const char *yys;
 
-    if ((yys = getenv("YYDEBUG")))
+    if ((yys = getenv("YYDEBUG")) != 0)
     {
         yyn = *yys;
         if (yyn >= '0' && yyn <= '9')
@@ -4563,18 +4603,24 @@ yyparse (YYPARSE_PARAM_ARG)
 
     yynerrs = 0;
     yyerrflag = 0;
-    yychar = (-1);
+    yychar = YYEMPTY;
+    yystate = 0;
 
-    if (yyss == NULL && yygrowstack()) goto yyoverflow;
-    yyssp = yyss;
-    yyvsp = yyvs;
-    *yyssp = yystate = 0;
+#if YYPURE
+    memset(&yystack, 0, sizeof(yystack));
+#endif
+
+    if (yystack.s_base == NULL && yygrowstack(&yystack)) goto yyoverflow;
+    yystack.s_mark = yystack.s_base;
+    yystack.l_mark = yystack.l_base;
+    yystate = 0;
+    *yystack.s_mark = 0;
 
 yyloop:
-    if ((yyn = yydefred[yystate])) goto yyreduce;
+    if ((yyn = yydefred[yystate]) != 0) goto yyreduce;
     if (yychar < 0)
     {
-        if ((yychar = yylex()) < 0) yychar = 0;
+        if ((yychar = YYLEX) < 0) yychar = 0;
 #if YYDEBUG
         if (yydebug)
         {
@@ -4594,13 +4640,14 @@ yyloop:
             printf("%sdebug: state %d, shifting to state %d\n",
                     YYPREFIX, yystate, yytable[yyn]);
 #endif
-        if (yyssp >= yysslim && yygrowstack())
+        if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
         {
             goto yyoverflow;
         }
-        *++yyssp = yystate = yytable[yyn];
-        *++yyvsp = yylval;
-        yychar = (-1);
+        yystate = yytable[yyn];
+        *++yystack.s_mark = yytable[yyn];
+        *++yystack.l_mark = yylval;
+        yychar = YYEMPTY;
         if (yyerrflag > 0)  --yyerrflag;
         goto yyloop;
     }
@@ -4611,36 +4658,35 @@ yyloop:
         goto yyreduce;
     }
     if (yyerrflag) goto yyinrecovery;
-#if defined(lint) || defined(__GNUC__)
-    goto yynewerror;
-#endif
-yynewerror:
+
     yyerror("syntax error");
-#if defined(lint) || defined(__GNUC__)
+
     goto yyerrlab;
-#endif
+
 yyerrlab:
     ++yynerrs;
+
 yyinrecovery:
     if (yyerrflag < 3)
     {
         yyerrflag = 3;
         for (;;)
         {
-            if ((yyn = yysindex[*yyssp]) && (yyn += YYERRCODE) >= 0 &&
+            if ((yyn = yysindex[*yystack.s_mark]) && (yyn += YYERRCODE) >= 0 &&
                     yyn <= YYTABLESIZE && yycheck[yyn] == YYERRCODE)
             {
 #if YYDEBUG
                 if (yydebug)
                     printf("%sdebug: state %d, error recovery shifting\
- to state %d\n", YYPREFIX, *yyssp, yytable[yyn]);
+ to state %d\n", YYPREFIX, *yystack.s_mark, yytable[yyn]);
 #endif
-                if (yyssp >= yysslim && yygrowstack())
+                if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
                 {
                     goto yyoverflow;
                 }
-                *++yyssp = yystate = yytable[yyn];
-                *++yyvsp = yylval;
+                yystate = yytable[yyn];
+                *++yystack.s_mark = yytable[yyn];
+                *++yystack.l_mark = yylval;
                 goto yyloop;
             }
             else
@@ -4648,11 +4694,11 @@ yyinrecovery:
 #if YYDEBUG
                 if (yydebug)
                     printf("%sdebug: error recovery discarding state %d\n",
-                            YYPREFIX, *yyssp);
+                            YYPREFIX, *yystack.s_mark);
 #endif
-                if (yyssp <= yyss) goto yyabort;
-                --yyssp;
-                --yyvsp;
+                if (yystack.s_mark <= yystack.s_base) goto yyabort;
+                --yystack.s_mark;
+                --yystack.l_mark;
             }
         }
     }
@@ -4669,9 +4715,10 @@ yyinrecovery:
                     YYPREFIX, yystate, yychar, yys);
         }
 #endif
-        yychar = (-1);
+        yychar = YYEMPTY;
         goto yyloop;
     }
+
 yyreduce:
 #if YYDEBUG
     if (yydebug)
@@ -4679,54 +4726,57 @@ yyreduce:
                 YYPREFIX, yystate, yyn, yyrule[yyn]);
 #endif
     yym = yylen[yyn];
-    yyval = yyvsp[1-yym];
+    if (yym)
+        yyval = yystack.l_mark[1-yym];
+    else
+        memset(&yyval, 0, sizeof yyval);
     switch (yyn)
     {
 case 1:
 #line 268 "parser_gram.y"
-{
-	if (yyvsp[0].cmd->cmd != NULL)
-		yyvsp[0].cmd->cmd(yyvsp[0].cmd);
+	{
+	if (yystack.l_mark[0].cmd->cmd != NULL)
+		yystack.l_mark[0].cmd->cmd(yystack.l_mark[0].cmd);
 
-	free(yyvsp[0].cmd);
+	free(yystack.l_mark[0].cmd);
 }
 break;
 case 2:
 #line 275 "parser_gram.y"
-{
+	{
 	if (dofile)
 		YYABORT;
 }
 break;
 case 4:
 #line 282 "parser_gram.y"
-{
-	filebench_log(LOG_DEBUG_IMPL, "inner_command %zx", yyvsp[0].cmd);
-	yyval.cmd = yyvsp[0].cmd;
+	{
+	filebench_log(LOG_DEBUG_IMPL, "inner_command %zx", yystack.l_mark[0].cmd);
+	yyval.cmd = yystack.l_mark[0].cmd;
 }
 break;
 case 5:
 #line 287 "parser_gram.y"
-{
+	{
 	cmd_t *list = NULL;
 	cmd_t *list_end = NULL;
 
 	/* Find end of list */
-	for (list = yyvsp[-1].cmd; list != NULL;
+	for (list = yystack.l_mark[-1].cmd; list != NULL;
 	    list = list->cmd_next)
 		list_end = list;
 
-	list_end->cmd_next = yyvsp[0].cmd;
+	list_end->cmd_next = yystack.l_mark[0].cmd;
 
 	filebench_log(LOG_DEBUG_IMPL,
-	    "inner_commands adding cmd %zx to list %zx", yyvsp[0].cmd, yyvsp[-1].cmd);
+	    "inner_commands adding cmd %zx to list %zx", yystack.l_mark[0].cmd, yystack.l_mark[-1].cmd);
 
-	yyval.cmd = yyvsp[-1].cmd;
+	yyval.cmd = yystack.l_mark[-1].cmd;
 }
 break;
 case 37:
 #line 338 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	filebench_log(LOG_DEBUG_IMPL, "foreach_command %zx", yyval.cmd);
@@ -4734,14 +4784,14 @@ case 37:
 break;
 case 38:
 #line 344 "parser_gram.y"
-{
+	{
 	cmd_t *inner_cmd;
 	list_t *list;
 
-	yyval.cmd = yyvsp[-6].cmd;
-	yyval.cmd->cmd_list = yyvsp[-1].cmd;
-	yyval.cmd->cmd_tgt1 = yyvsp[-5].sval;
-	yyval.cmd->cmd_param_list = yyvsp[-3].list;
+	yyval.cmd = yystack.l_mark[-6].cmd;
+	yyval.cmd->cmd_list = yystack.l_mark[-1].cmd;
+	yyval.cmd->cmd_tgt1 = yystack.l_mark[-5].sval;
+	yyval.cmd->cmd_param_list = yystack.l_mark[-3].list;
 	yyval.cmd->cmd = parser_foreach_integer;
 
 	for (list = yyval.cmd->cmd_param_list; list != NULL;
@@ -4760,14 +4810,14 @@ case 38:
 break;
 case 39:
 #line 367 "parser_gram.y"
-{
+	{
 	cmd_t *inner_cmd;
 	list_t *list;
 
-	yyval.cmd = yyvsp[-6].cmd;
-	yyval.cmd->cmd_list = yyvsp[-1].cmd;
-	yyval.cmd->cmd_tgt1 = yyvsp[-5].sval;
-	yyval.cmd->cmd_param_list = yyvsp[-3].list;
+	yyval.cmd = yystack.l_mark[-6].cmd;
+	yyval.cmd->cmd_list = yystack.l_mark[-1].cmd;
+	yyval.cmd->cmd_tgt1 = yystack.l_mark[-5].sval;
+	yyval.cmd->cmd_param_list = yystack.l_mark[-3].list;
 	yyval.cmd->cmd = parser_foreach_string;
 
 	for (list = yyval.cmd->cmd_param_list; list != NULL;
@@ -4786,63 +4836,63 @@ case 39:
 break;
 case 40:
 #line 392 "parser_gram.y"
-{
+	{
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_integer = avd_int_alloc(yyvsp[0].ival);
+	yyval.list->list_integer = avd_int_alloc(yystack.l_mark[0].ival);
 }
 break;
 case 41:
 #line 399 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_integer = avd_int_alloc(yyvsp[0].ival);
+	yyval.list->list_integer = avd_int_alloc(yystack.l_mark[0].ival);
 
 	/* Find end of list */
-	for (list = yyvsp[-2].list; list != NULL;
+	for (list = yystack.l_mark[-2].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-2].list;
+	yyval.list = yystack.l_mark[-2].list;
 }
 break;
 case 42:
 #line 417 "parser_gram.y"
-{
+	{
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[-1].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[-1].sval);
 }
 break;
 case 43:
 #line 424 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
 	if ((yyval.list = alloc_list()) == NULL)
 			YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[-1].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[-1].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-4].list; list != NULL;
+	for (list = yystack.l_mark[-4].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-4].list;
+	yyval.list = yystack.l_mark[-4].list;
 }
 break;
 case 44:
 #line 442 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_eventgen;
@@ -4850,33 +4900,33 @@ case 44:
 break;
 case 45:
 #line 448 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd_attr_list = yyvsp[0].attr;
+	{
+	yystack.l_mark[-1].cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 46:
 #line 453 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 	yyval.cmd->cmd = parser_system;
 }
 break;
 case 47:
 #line 462 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 	yyval.cmd->cmd = parser_echo;
 }
 break;
 case 48:
 #line 471 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_version;
@@ -4884,7 +4934,7 @@ case 48:
 break;
 case 49:
 #line 478 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_osprof_enable;
@@ -4892,7 +4942,7 @@ case 49:
 break;
 case 50:
 #line 485 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_osprof_disable;
@@ -4900,17 +4950,17 @@ case 50:
 break;
 case 51:
 #line 492 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 	yyval.cmd->cmd = parser_usage;
 }
 break;
 case 52:
 #line 501 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
@@ -4919,7 +4969,7 @@ case 52:
 break;
 case 53:
 #line 509 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
@@ -4928,74 +4978,74 @@ case 53:
 break;
 case 54:
 #line 516 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd_attr_list = yyvsp[0].attr;
+	{
+	yystack.l_mark[-1].cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 55:
 #line 521 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
 	yyval.cmd->cmd = parser_domultisync;
-	yyval.cmd->cmd_attr_list = yyvsp[0].attr;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 56:
 #line 530 "parser_gram.y"
-{
+	{
 	if ((yyval.list = alloc_list()) == NULL)
 			YYERROR;
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 }
 break;
 case 57:
 #line 536 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-2].list; list != NULL;
+	for (list = yystack.l_mark[-2].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-2].list;
+	yyval.list = yystack.l_mark[-2].list;
 }
 break;
 case 58:
 #line 554 "parser_gram.y"
-{
+	{
 	if ((yyval.list = alloc_list()) == NULL)
 			YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 }
 break;
 case 59:
 #line 561 "parser_gram.y"
-{
+	{
 	if ((yyval.list = alloc_list()) == NULL)
 			YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 }
 break;
 case 60:
 #line 569 "parser_gram.y"
-{
-	yyval.list = yyvsp[0].list;
+	{
+	yyval.list = yystack.l_mark[0].list;
 }
 break;
 case 61:
 #line 572 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5003,20 +5053,20 @@ case 61:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-1].list; list != NULL;
+	for (list = yystack.l_mark[-1].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-1].list;
+	yyval.list = yystack.l_mark[-1].list;
 
 }
 break;
 case 62:
 #line 590 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5024,19 +5074,19 @@ case 62:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-1].list; list != NULL;
+	for (list = yystack.l_mark[-1].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-1].list;
+	yyval.list = yystack.l_mark[-1].list;
 }
 break;
 case 63:
 #line 607 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5044,20 +5094,20 @@ case 63:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-1].list; list != NULL;
+	for (list = yystack.l_mark[-1].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-1].list;
+	yyval.list = yystack.l_mark[-1].list;
 
 }
 break;
 case 64:
 #line 625 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5065,37 +5115,37 @@ case 64:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-1].list; list != NULL;
+	for (list = yystack.l_mark[-1].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-1].list;
+	yyval.list = yystack.l_mark[-1].list;
 }
 break;
 case 65:
 #line 644 "parser_gram.y"
-{
+	{
 	if ((yyval.list = alloc_list()) == NULL)
 			YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 }
 break;
 case 66:
 #line 651 "parser_gram.y"
-{
+	{
 	if ((yyval.list = alloc_list()) == NULL)
 			YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 }
 break;
 case 67:
 #line 659 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5103,20 +5153,20 @@ case 67:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-1].list; list != NULL;
+	for (list = yystack.l_mark[-1].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-1].list;
+	yyval.list = yystack.l_mark[-1].list;
 
 }
 break;
 case 68:
 #line 677 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5124,19 +5174,19 @@ case 68:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-1].list; list != NULL;
+	for (list = yystack.l_mark[-1].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-1].list;
+	yyval.list = yystack.l_mark[-1].list;
 }
 break;
 case 69:
 #line 694 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5144,20 +5194,20 @@ case 69:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[-1].sval);
-	yyval.list->list_integer = avd_int_alloc(yyvsp[0].ival);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[-1].sval);
+	yyval.list->list_integer = avd_int_alloc(yystack.l_mark[0].ival);
 
 	/* Find end of list */
-	for (list = yyvsp[-2].list; list != NULL;
+	for (list = yystack.l_mark[-2].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-2].list;
+	yyval.list = yystack.l_mark[-2].list;
 }
 break;
 case 70:
 #line 712 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5165,20 +5215,20 @@ case 70:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-1].list; list != NULL;
+	for (list = yystack.l_mark[-1].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-1].list;
+	yyval.list = yystack.l_mark[-1].list;
 
 }
 break;
 case 71:
 #line 730 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5186,19 +5236,19 @@ case 71:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[0].sval);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[0].sval);
 
 	/* Find end of list */
-	for (list = yyvsp[-1].list; list != NULL;
+	for (list = yystack.l_mark[-1].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-1].list;
+	yyval.list = yystack.l_mark[-1].list;
 }
 break;
 case 72:
 #line 747 "parser_gram.y"
-{
+	{
 	list_t *list = NULL;
 	list_t *list_end = NULL;
 
@@ -5206,32 +5256,32 @@ case 72:
 	if ((yyval.list = alloc_list()) == NULL)
 		YYERROR;
 
-	yyval.list->list_string = avd_str_alloc(yyvsp[-1].sval);
-	yyval.list->list_integer = avd_int_alloc(yyvsp[0].ival);
+	yyval.list->list_string = avd_str_alloc(yystack.l_mark[-1].sval);
+	yyval.list->list_integer = avd_int_alloc(yystack.l_mark[0].ival);
 
 	/* Find end of list */
-	for (list = yyvsp[-2].list; list != NULL;
+	for (list = yystack.l_mark[-2].list; list != NULL;
 	    list = list->list_next)
 		list_end = list;
 	list_end->list_next = yyval.list;
-	yyval.list = yyvsp[-2].list;
+	yyval.list = yystack.l_mark[-2].list;
 }
 break;
 case 73:
 #line 765 "parser_gram.y"
-{
-	yyval.list = yyvsp[-1].list;
+	{
+	yyval.list = yystack.l_mark[-1].list;
 }
 break;
 case 74:
 #line 768 "parser_gram.y"
-{
-	yyval.list = yyvsp[-1].list;
+	{
+	yyval.list = yystack.l_mark[-1].list;
 }
 break;
 case 75:
 #line 773 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_list;
@@ -5239,63 +5289,63 @@ case 75:
 break;
 case 76:
 #line 779 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd = &parser_flowop_list;
+	{
+	yystack.l_mark[-1].cmd->cmd = &parser_flowop_list;
 }
 break;
 case 77:
 #line 784 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_fscheck;
 
-	yyval.cmd->cmd_attr_list = yyvsp[0].attr;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 78:
 #line 792 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd_attr_list->attr_next = yyvsp[0].attr;
+	{
+	yystack.l_mark[-1].cmd->cmd_attr_list->attr_next = yystack.l_mark[0].attr;
 }
 break;
 case 79:
 #line 797 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_fsflush;
 
-	yyval.cmd->cmd_attr_list = yyvsp[0].attr;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 80:
 #line 806 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_log;
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 }
 break;
 case 81:
 #line 814 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = NULL;
-	filebench_shm->shm_debug_level = yyvsp[0].ival;
+	filebench_shm->shm_debug_level = yystack.l_mark[0].ival;
 	if (filebench_shm->shm_debug_level > 9)
 		yydebug = 1;
 }
 break;
 case 84:
 #line 828 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	yyval.cmd->cmd_tgt1 = yyvsp[-2].sval;
-	yyval.cmd->cmd_qty = yyvsp[0].ival;
+	yyval.cmd->cmd_tgt1 = yystack.l_mark[-2].sval;
+	yyval.cmd->cmd_qty = yystack.l_mark[0].ival;
 	if (parentscript) {
 		parser_vars(yyval.cmd);
 	}
@@ -5304,12 +5354,12 @@ case 84:
 break;
 case 85:
 #line 838 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	var_assign_var(yyvsp[-2].sval, yyvsp[0].sval);
-	yyval.cmd->cmd_tgt1 = yyvsp[-2].sval;
-	yyval.cmd->cmd_tgt2 = yyvsp[0].sval;
+	var_assign_var(yystack.l_mark[-2].sval, yystack.l_mark[0].sval);
+	yyval.cmd->cmd_tgt1 = yystack.l_mark[-2].sval;
+	yyval.cmd->cmd_tgt2 = yystack.l_mark[0].sval;
 	if (parentscript) {
 		parser_vars(yyval.cmd);
 	}
@@ -5318,50 +5368,50 @@ case 85:
 break;
 case 86:
 #line 850 "parser_gram.y"
-{
-	if (yyvsp[-2].cmd->cmd == parser_set_integer) {
-		switch (yyvsp[-1].ival) {
+	{
+	if (yystack.l_mark[-2].cmd->cmd == parser_set_integer) {
+		switch (yystack.l_mark[-1].ival) {
 		case FSK_PLUS:
-			var_assign_integer(yyvsp[-2].cmd->cmd_tgt1, yyvsp[-2].cmd->cmd_qty + yyvsp[0].ival);
+			var_assign_integer(yystack.l_mark[-2].cmd->cmd_tgt1, yystack.l_mark[-2].cmd->cmd_qty + yystack.l_mark[0].ival);
 			break;
 		case FSK_MINUS:
-			var_assign_integer(yyvsp[-2].cmd->cmd_tgt1, yyvsp[-2].cmd->cmd_qty - yyvsp[0].ival);
+			var_assign_integer(yystack.l_mark[-2].cmd->cmd_tgt1, yystack.l_mark[-2].cmd->cmd_qty - yystack.l_mark[0].ival);
 			break;
 		case FSK_MULTIPLY:
-			var_assign_integer(yyvsp[-2].cmd->cmd_tgt1, yyvsp[-2].cmd->cmd_qty * yyvsp[0].ival);
+			var_assign_integer(yystack.l_mark[-2].cmd->cmd_tgt1, yystack.l_mark[-2].cmd->cmd_qty * yystack.l_mark[0].ival);
 			break;
 		case FSK_DIVIDE:
-			var_assign_integer(yyvsp[-2].cmd->cmd_tgt1, yyvsp[-2].cmd->cmd_qty / yyvsp[0].ival);
+			var_assign_integer(yystack.l_mark[-2].cmd->cmd_tgt1, yystack.l_mark[-2].cmd->cmd_qty / yystack.l_mark[0].ival);
 			break;
 		}
 		yyval.cmd->cmd = NULL;
 	} else {
-		yyvsp[-2].cmd->cmd_qty = yyvsp[0].ival;
-		yyvsp[-2].cmd->cmd_subtype = yyvsp[-1].ival;
-		yyvsp[-2].cmd->cmd = parser_set_var_op_int;
+		yystack.l_mark[-2].cmd->cmd_qty = yystack.l_mark[0].ival;
+		yystack.l_mark[-2].cmd->cmd_subtype = yystack.l_mark[-1].ival;
+		yystack.l_mark[-2].cmd->cmd = parser_set_var_op_int;
 	}
 }
 break;
 case 87:
 #line 874 "parser_gram.y"
-{
-	yyvsp[-2].cmd->cmd_tgt3 = yyvsp[0].sval;
-	yyvsp[-2].cmd->cmd_subtype = yyvsp[-1].ival;
-	if (yyvsp[-2].cmd->cmd == parser_set_integer) {
+	{
+	yystack.l_mark[-2].cmd->cmd_tgt3 = yystack.l_mark[0].sval;
+	yystack.l_mark[-2].cmd->cmd_subtype = yystack.l_mark[-1].ival;
+	if (yystack.l_mark[-2].cmd->cmd == parser_set_integer) {
 		yyval.cmd->cmd = parser_set_int_op_var;
 	} else {
-		yyvsp[-2].cmd->cmd = parser_set_var_op_var;
+		yystack.l_mark[-2].cmd->cmd = parser_set_var_op_var;
 	}
 }
 break;
 case 88:
 #line 885 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	var_assign_boolean(yyvsp[-2].sval, yyvsp[0].bval);
+	var_assign_boolean(yystack.l_mark[-2].sval, yystack.l_mark[0].bval);
 	if (parentscript) {
-		yyval.cmd->cmd_tgt1 = yyvsp[-2].sval;
+		yyval.cmd->cmd_tgt1 = yystack.l_mark[-2].sval;
 		parser_vars(yyval.cmd);
 	}
 	yyval.cmd->cmd = NULL;
@@ -5369,12 +5419,12 @@ case 88:
 break;
 case 89:
 #line 896 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	var_assign_string(yyvsp[-4].sval, yyvsp[-1].sval);
+	var_assign_string(yystack.l_mark[-4].sval, yystack.l_mark[-1].sval);
 	if (parentscript) {
-		yyval.cmd->cmd_tgt1 = yyvsp[-4].sval;
+		yyval.cmd->cmd_tgt1 = yystack.l_mark[-4].sval;
 		parser_vars(yyval.cmd);
 	}
 	yyval.cmd->cmd = NULL;
@@ -5382,12 +5432,12 @@ case 89:
 break;
 case 90:
 #line 906 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	var_assign_string(yyvsp[-2].sval, yyvsp[0].sval);
+	var_assign_string(yystack.l_mark[-2].sval, yystack.l_mark[0].sval);
 	if (parentscript) {
-		yyval.cmd->cmd_tgt1 = yyvsp[-2].sval;
+		yyval.cmd->cmd_tgt1 = yystack.l_mark[-2].sval;
 		parser_vars(yyval.cmd);
 	}
 	yyval.cmd->cmd = NULL;
@@ -5395,7 +5445,7 @@ case 90:
 break;
 case 91:
 #line 916 "parser_gram.y"
-{
+	{
 	filebench_shm->shm_rmode = FILEBENCH_MODE_TIMEOUT;
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
@@ -5404,7 +5454,7 @@ case 91:
 break;
 case 92:
 #line 922 "parser_gram.y"
-{
+	{
 	filebench_shm->shm_rmode = FILEBENCH_MODE_QALLDONE;
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
@@ -5413,7 +5463,7 @@ case 92:
 break;
 case 93:
 #line 928 "parser_gram.y"
-{
+	{
 	filebench_shm->shm_rmode = FILEBENCH_MODE_Q1STDONE;
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
@@ -5422,7 +5472,7 @@ case 93:
 break;
 case 94:
 #line 934 "parser_gram.y"
-{
+	{
 	filebench_shm->shm_mmode |= FILEBENCH_MODE_NOUSAGE;
 	filebench_log(LOG_INFO, "disabling CPU usage statistics");
 	if ((yyval.cmd = alloc_cmd()) == NULL)
@@ -5432,43 +5482,43 @@ case 94:
 break;
 case 95:
 #line 941 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_randvar_set;
-	yyval.cmd->cmd_tgt1 = yyvsp[-3].sval;
+	yyval.cmd->cmd_tgt1 = yystack.l_mark[-3].sval;
 	yyval.cmd->cmd_qty = FSS_TYPE;
-	yyval.cmd->cmd_attr_list = yyvsp[0].attr;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[0].attr;
 
 }
 break;
 case 96:
 #line 950 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_randvar_set;
-	yyval.cmd->cmd_tgt1 = yyvsp[-3].sval;
+	yyval.cmd->cmd_tgt1 = yystack.l_mark[-3].sval;
 	yyval.cmd->cmd_qty = FSS_SRC;
-	yyval.cmd->cmd_attr_list = yyvsp[0].attr;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[0].attr;
 
 }
 break;
 case 97:
 #line 959 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_randvar_set;
-	yyval.cmd->cmd_tgt1 = yyvsp[-3].sval;
-	yyval.cmd->cmd_qty = yyvsp[-2].ival;
-	yyval.cmd->cmd_attr_list = yyvsp[0].attr;
+	yyval.cmd->cmd_tgt1 = yystack.l_mark[-3].sval;
+	yyval.cmd->cmd_qty = yystack.l_mark[-2].ival;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[0].attr;
 	
 }
 break;
 case 98:
 #line 970 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = (void (*)(struct cmd *))&parser_statssnap;
@@ -5478,7 +5528,7 @@ case 98:
 break;
 case 99:
 #line 978 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = (void (*)(struct cmd *))&stats_clear;
@@ -5487,58 +5537,58 @@ case 99:
 break;
 case 100:
 #line 985 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 	yyval.cmd->cmd = (void (*)(struct cmd *))&parser_directory;
 
 }
 break;
 case 101:
 #line 993 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 	yyval.cmd->cmd = parser_statscmd;
 
 }
 break;
 case 102:
 #line 1001 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 	yyval.cmd->cmd = parser_statsdump;
 }
 break;
 case 103:
 #line 1008 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 	yyval.cmd->cmd = parser_statsxmldump;
 }
 break;
 case 104:
 #line 1015 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
-	yyval.cmd->cmd_param_list = yyvsp[0].list;
+	yyval.cmd->cmd_param_list = yystack.l_mark[0].list;
 	yyval.cmd->cmd = parser_statsmultidump;
 }
 break;
 case 105:
 #line 1024 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_filebench_shutdown;
@@ -5546,87 +5596,87 @@ case 105:
 break;
 case 106:
 #line 1031 "parser_gram.y"
-{
-	yyval.cmd = yyvsp[0].cmd;
+	{
+	yyval.cmd = yystack.l_mark[0].cmd;
 }
 break;
 case 107:
 #line 1034 "parser_gram.y"
-{
+	{
 	cmd_t *list = NULL;
 	cmd_t *list_end = NULL;
 
 	/* Find end of list */
-	for (list = yyvsp[-1].cmd; list != NULL;
+	for (list = yystack.l_mark[-1].cmd; list != NULL;
 	    list = list->cmd_next)
 		list_end = list;
 
-	list_end->cmd_next = yyvsp[0].cmd;
+	list_end->cmd_next = yystack.l_mark[0].cmd;
 
 	filebench_log(LOG_DEBUG_IMPL,
-	    "flowop_list adding cmd %zx to list %zx", yyvsp[0].cmd, yyvsp[-1].cmd);
+	    "flowop_list adding cmd %zx to list %zx", yystack.l_mark[0].cmd, yystack.l_mark[-1].cmd);
 
-	yyval.cmd = yyvsp[-1].cmd;
+	yyval.cmd = yystack.l_mark[-1].cmd;
 }
 break;
 case 108:
 #line 1052 "parser_gram.y"
-{
+	{
 	/*
 	 * Allocate a cmd node per thread, with a
 	 * list of flowops attached to the cmd_list
 	 */
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	yyval.cmd->cmd_list = yyvsp[-1].cmd;
-	yyval.cmd->cmd_attr_list = yyvsp[-3].attr;
+	yyval.cmd->cmd_list = yystack.l_mark[-1].cmd;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[-3].attr;
 }
 break;
 case 109:
 #line 1064 "parser_gram.y"
-{
-	yyval.cmd = yyvsp[0].cmd;
+	{
+	yyval.cmd = yystack.l_mark[0].cmd;
 }
 break;
 case 110:
 #line 1067 "parser_gram.y"
-{
+	{
 	cmd_t *list = NULL;
 	cmd_t *list_end = NULL;
 
 	/* Find end of list */
-	for (list = yyvsp[-1].cmd; list != NULL;
+	for (list = yystack.l_mark[-1].cmd; list != NULL;
 	    list = list->cmd_next)
 		list_end = list;
 
-	list_end->cmd_next = yyvsp[0].cmd;
+	list_end->cmd_next = yystack.l_mark[0].cmd;
 
 	filebench_log(LOG_DEBUG_IMPL,
-	    "thread_list adding cmd %zx to list %zx", yyvsp[0].cmd, yyvsp[-1].cmd);
+	    "thread_list adding cmd %zx to list %zx", yystack.l_mark[0].cmd, yystack.l_mark[-1].cmd);
 
-	yyval.cmd = yyvsp[-1].cmd;
+	yyval.cmd = yystack.l_mark[-1].cmd;
 }
 break;
 case 111:
 #line 1085 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_proc_define;
-	yyval.cmd->cmd_list = yyvsp[-1].cmd;
-	yyval.cmd->cmd_attr_list = yyvsp[-3].attr;
+	yyval.cmd->cmd_list = yystack.l_mark[-1].cmd;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[-3].attr;
 
 }
 break;
 case 112:
 #line 1094 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd_attr_list = yyvsp[0].attr;
+	{
+	yystack.l_mark[-1].cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 113:
 #line 1099 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_file_define;
@@ -5634,7 +5684,7 @@ case 113:
 break;
 case 114:
 #line 1104 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_fileset_define;
@@ -5642,28 +5692,28 @@ case 114:
 break;
 case 115:
 #line 1110 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd_attr_list = yyvsp[0].attr;
+	{
+	yystack.l_mark[-1].cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 116:
 #line 1114 "parser_gram.y"
-{
- 	 yyvsp[-3].cmd->cmd_attr_list = yyvsp[-2].attr;
+	{
+ 	 yystack.l_mark[-3].cmd->cmd_attr_list = yystack.l_mark[-2].attr;
      attr_t *attr = NULL;
      attr_t *list_end = NULL; 
-     for (attr = yyvsp[-2].attr; attr != NULL;
+     for (attr = yystack.l_mark[-2].attr; attr != NULL;
          attr = attr->attr_next)
 	 {
 		printf("%d->",attr->attr_name);
          list_end = attr; /* Find end of list */
 	 }
-     list_end->attr_next = yyvsp[0].attr;
+     list_end->attr_next = yystack.l_mark[0].attr;
 }
 break;
 case 117:
 #line 1128 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_posset_define;
@@ -5671,41 +5721,41 @@ case 117:
 break;
 case 118:
 #line 1133 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd_attr_list = yyvsp[0].attr;
+	{
+	yystack.l_mark[-1].cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 119:
 #line 1138 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_randvar_define;
-	yyval.cmd->cmd_attr_list = yyvsp[0].attr;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 120:
 #line 1146 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = &parser_composite_flowop_define;
-	yyval.cmd->cmd_list = yyvsp[-1].cmd;
-	yyval.cmd->cmd_attr_list = yyvsp[-3].attr;
+	yyval.cmd->cmd_list = yystack.l_mark[-1].cmd;
+	yyval.cmd->cmd_attr_list = yystack.l_mark[-3].attr;
 }
 break;
 case 121:
 #line 1154 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd_attr_list = yyvsp[0].attr;
+	{
+	yystack.l_mark[-1].cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 122:
 #line 1160 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	switch (yyvsp[0].ival) {
+	switch (yystack.l_mark[0].ival) {
 	case FSE_PROC:
 		yyval.cmd->cmd = &parser_proc_create;
 		break;
@@ -5714,7 +5764,7 @@ case 122:
 		yyval.cmd->cmd = &parser_fileset_create;
 		break;
 	default:
-		filebench_log(LOG_ERROR, "unknown entity", yyvsp[0].ival);
+		filebench_log(LOG_ERROR, "unknown entity", yystack.l_mark[0].ival);
 		YYERROR;
 	}
 
@@ -5722,10 +5772,10 @@ case 122:
 break;
 case 123:
 #line 1179 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	switch (yyvsp[0].ival) {
+	switch (yystack.l_mark[0].ival) {
 	case FSE_PROC:
 		yyval.cmd->cmd = &parser_proc_shutdown;
 		break;
@@ -5734,7 +5784,7 @@ case 123:
 		yyval.cmd->cmd = &parser_fileset_shutdown;
 		break;
 	default:
-		filebench_log(LOG_ERROR, "unknown entity", yyvsp[0].ival);
+		filebench_log(LOG_ERROR, "unknown entity", yystack.l_mark[0].ival);
 		YYERROR;
 	}
 
@@ -5742,61 +5792,61 @@ case 123:
 break;
 case 124:
 #line 1198 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_warmup;
-	yyval.cmd->cmd_qty = yyvsp[0].ival;
+	yyval.cmd->cmd_qty = yystack.l_mark[0].ival;
 }
 break;
 case 125:
 #line 1205 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_warmup_variable;
-	yyval.cmd->cmd_tgt1 = fb_stralloc(yyvsp[0].sval);
+	yyval.cmd->cmd_tgt1 = fb_stralloc(yystack.l_mark[0].sval);
 }
 break;
 case 126:
 #line 1213 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_sleep;
-	yyval.cmd->cmd_qty = yyvsp[0].ival;
+	yyval.cmd->cmd_qty = yystack.l_mark[0].ival;
 }
 break;
 case 127:
 #line 1220 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_sleep_variable;
-	yyval.cmd->cmd_tgt1 = fb_stralloc(yyvsp[0].sval);
+	yyval.cmd->cmd_tgt1 = fb_stralloc(yystack.l_mark[0].sval);
 }
 break;
 case 128:
 #line 1228 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_run;
-	yyval.cmd->cmd_qty = yyvsp[0].ival;
+	yyval.cmd->cmd_qty = yystack.l_mark[0].ival;
 }
 break;
 case 129:
 #line 1235 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_run_variable;
-	yyval.cmd->cmd_tgt1 = fb_stralloc(yyvsp[0].sval);
+	yyval.cmd->cmd_tgt1 = fb_stralloc(yystack.l_mark[0].sval);
 }
 break;
 case 130:
 #line 1242 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_run;
@@ -5805,7 +5855,7 @@ case 130:
 break;
 case 131:
 #line 1250 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 	yyval.cmd->cmd = parser_help;
@@ -5813,34 +5863,34 @@ case 131:
 break;
 case 132:
 #line 1257 "parser_gram.y"
-{
+	{
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
-	yyval.cmd->cmd_name = fb_stralloc(yyvsp[0].sval);
+	yyval.cmd->cmd_name = fb_stralloc(yystack.l_mark[0].sval);
 }
 break;
 case 133:
 #line 1263 "parser_gram.y"
-{
-	yyvsp[-1].cmd->cmd_attr_list = yyvsp[0].attr;
+	{
+	yystack.l_mark[-1].cmd->cmd_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 134:
 #line 1268 "parser_gram.y"
-{
+	{
 	FILE *newfile;
 	char loadfile[128];
 
 	if ((yyval.cmd = alloc_cmd()) == NULL)
 		YYERROR;
 
-	(void) strcpy(loadfile, yyvsp[0].sval);
+	(void) strcpy(loadfile, yystack.l_mark[0].sval);
 	(void) strcat(loadfile, ".f");
 
 	if ((newfile = fopen(loadfile, "r")) == NULL) {
 		(void) strcpy(loadfile, fbbasepath);
 		(void) strcat(loadfile, "/workloads/");
-		(void) strcat(loadfile, yyvsp[0].sval);
+		(void) strcat(loadfile, yystack.l_mark[0].sval);
 		(void) strcat(loadfile, ".f");
 		if ((newfile = fopen(loadfile, "r")) == NULL) {
 			filebench_log(LOG_ERROR, "Cannot open %s", loadfile);
@@ -5855,183 +5905,183 @@ case 134:
 break;
 case 135:
 #line 1295 "parser_gram.y"
-{yyval.ival = FSE_PROC;}
+	{yyval.ival = FSE_PROC;}
 break;
 case 136:
 #line 1296 "parser_gram.y"
-{yyval.ival = FSE_THREAD;}
+	{yyval.ival = FSE_THREAD;}
 break;
 case 137:
 #line 1297 "parser_gram.y"
-{yyval.ival = FSE_FILESET;}
+	{yyval.ival = FSE_FILESET;}
 break;
 case 138:
 #line 1298 "parser_gram.y"
-{yyval.ival = FSE_FILE;}
+	{yyval.ival = FSE_FILE;}
 break;
 case 139:
 #line 1300 "parser_gram.y"
-{ yyval.val.i = yyvsp[0].ival;}
+	{ yyval.val.i = yystack.l_mark[0].ival;}
 break;
 case 140:
 #line 1301 "parser_gram.y"
-{ yyval.val.s = yyvsp[0].sval;}
+	{ yyval.val.s = yystack.l_mark[0].sval;}
 break;
 case 141:
 #line 1302 "parser_gram.y"
-{ yyval.val.b = yyvsp[0].bval;}
+	{ yyval.val.b = yystack.l_mark[0].bval;}
 break;
 case 143:
 #line 1308 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 144:
 #line 1312 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 145:
 #line 1326 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 146:
 #line 1330 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 147:
 #line 1344 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 148:
 #line 1349 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_name = yyvsp[0].ival;
+	yyval.attr->attr_name = yystack.l_mark[0].ival;
 }
 break;
 case 149:
 #line 1356 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 150:
 #line 1361 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_name = yyvsp[0].ival;
+	yyval.attr->attr_name = yystack.l_mark[0].ival;
 }
 break;
 case 151:
 #line 1368 "parser_gram.y"
-{
+	{
 	/*printf("no param dsrc:%d\n",$1);*/
 	if((yyval.attr=alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_str_alloc(yyvsp[0].sval);
+	yyval.attr->attr_avd = avd_str_alloc(yystack.l_mark[0].sval);
 	yyval.attr->attr_name=FSA_DSRC;
 }
 break;
 case 152:
 #line 1376 "parser_gram.y"
-{
+	{
 	printf("datasource present chk params\n");
 	if((yyval.attr=alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_str_alloc(yyvsp[-2].sval);
+	yyval.attr->attr_avd = avd_str_alloc(yystack.l_mark[-2].sval);
 	yyval.attr->attr_name=FSA_DSRC;
-	yyval.attr->sub_attr_list = yyvsp[0].attr;
+	yyval.attr->sub_attr_list = yystack.l_mark[0].attr;
 }
 break;
 case 153:
 #line 1386 "parser_gram.y"
-{
+	{
 	printf("chk params now\n");
-	yyval.attr = yyvsp[0].attr;
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 154:
 #line 1391 "parser_gram.y"
-{
+	{
 	printf("chk params now\n");
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 155:
 #line 1406 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 156:
 #line 1413 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 157:
 #line 1417 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 158:
 #line 1430 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-6].attr; attr != NULL;
+	for (attr = yystack.l_mark[-6].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
@@ -6040,800 +6090,800 @@ case 158:
 		YYERROR;
 
 	attr->attr_name = FSA_RANDTABLE;
-	attr->attr_obj = (void *)yyvsp[-1].rndtb;
+	attr->attr_obj = (void *)yystack.l_mark[-1].rndtb;
 	list_end->attr_next = attr;
-	yyval.attr = yyvsp[-6].attr;
+	yyval.attr = yystack.l_mark[-6].attr;
 }
 break;
 case 159:
 #line 1449 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 160:
 #line 1454 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_name = yyvsp[0].ival;
+	yyval.attr->attr_name = yystack.l_mark[0].ival;
 }
 break;
 case 161:
 #line 1460 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 	yyval.attr->attr_name = FSA_TYPE;
 }
 break;
 case 162:
 #line 1465 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 	yyval.attr->attr_name = FSA_RANDSRC;
 }
 break;
 case 163:
 #line 1471 "parser_gram.y"
-{
+	{
 	if ((yyval.rndtb = alloc_probtabent()) == NULL)
 		YYERROR;
-	yyval.rndtb->pte_percent = yyvsp[-5].avd;
-	yyval.rndtb->pte_segmin  = yyvsp[-3].avd;
-	yyval.rndtb->pte_segmax  = yyvsp[-1].avd;
+	yyval.rndtb->pte_percent = yystack.l_mark[-5].avd;
+	yyval.rndtb->pte_segmin  = yystack.l_mark[-3].avd;
+	yyval.rndtb->pte_segmax  = yystack.l_mark[-1].avd;
 }
 break;
 case 164:
 #line 1481 "parser_gram.y"
-{
-	yyval.rndtb = yyvsp[0].rndtb;
+	{
+	yyval.rndtb = yystack.l_mark[0].rndtb;
 }
 break;
 case 165:
 #line 1485 "parser_gram.y"
-{
+	{
 	probtabent_t *pte = NULL;
 	probtabent_t *ptelist_end = NULL;
 
-	for (pte = yyvsp[-2].rndtb; pte != NULL;
+	for (pte = yystack.l_mark[-2].rndtb; pte != NULL;
 	    pte = pte->pte_next)
 		ptelist_end = pte; /* Find end of prob table entry list */
 
-	ptelist_end->pte_next = yyvsp[0].rndtb;
+	ptelist_end->pte_next = yystack.l_mark[0].rndtb;
 
-	yyval.rndtb = yyvsp[-2].rndtb;
+	yyval.rndtb = yystack.l_mark[-2].rndtb;
 }
 break;
 case 166:
 #line 1500 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 167:
 #line 1504 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 168:
 #line 1518 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 169:
 #line 1523 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_name = yyvsp[0].ival;
+	yyval.attr->attr_name = yystack.l_mark[0].ival;
 }
 break;
 case 170:
 #line 1531 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 171:
 #line 1535 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 172:
 #line 1548 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 173:
 #line 1562 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 174:
 #line 1567 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_name = yyvsp[0].ival;
+	yyval.attr->attr_name = yystack.l_mark[0].ival;
 }
 break;
 case 175:
 #line 1575 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 176:
 #line 1579 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 177:
 #line 1593 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 178:
 #line 1598 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_name = yyvsp[0].ival;
+	yyval.attr->attr_name = yystack.l_mark[0].ival;
 }
 break;
 case 179:
 #line 1606 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 180:
 #line 1610 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 181:
 #line 1624 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 182:
 #line 1630 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 	yyval.attr->attr_name = FSA_VALUE;
 }
 break;
 case 183:
 #line 1636 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_str_alloc(yyvsp[0].sval);
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	yyval.attr->attr_avd = avd_str_alloc(yystack.l_mark[0].sval);
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 184:
 #line 1644 "parser_gram.y"
-{yyval.ival = FSK_PLUS;}
+	{yyval.ival = FSK_PLUS;}
 break;
 case 185:
 #line 1645 "parser_gram.y"
-{yyval.ival = FSK_MINUS;}
+	{yyval.ival = FSK_MINUS;}
 break;
 case 186:
 #line 1646 "parser_gram.y"
-{yyval.ival = FSK_MULTIPLY;}
+	{yyval.ival = FSK_MULTIPLY;}
 break;
 case 187:
 #line 1647 "parser_gram.y"
-{yyval.ival = FSK_DIVIDE;}
+	{yyval.ival = FSK_DIVIDE;}
 break;
 case 195:
 #line 1662 "parser_gram.y"
-{ yyval.ival = FSA_NICE;}
+	{ yyval.ival = FSA_NICE;}
 break;
 case 196:
 #line 1663 "parser_gram.y"
-{ yyval.ival = FSA_NAME;}
+	{ yyval.ival = FSA_NAME;}
 break;
 case 197:
 #line 1664 "parser_gram.y"
-{ yyval.ival = FSA_INSTANCES;}
+	{ yyval.ival = FSA_INSTANCES;}
 break;
 case 198:
 #line 1667 "parser_gram.y"
-{ yyval.ival = FSA_SIZE;}
+	{ yyval.ival = FSA_SIZE;}
 break;
 case 199:
 #line 1668 "parser_gram.y"
-{ yyval.ival = FSA_NAME;}
+	{ yyval.ival = FSA_NAME;}
 break;
 case 200:
 #line 1669 "parser_gram.y"
-{ yyval.ival = FSA_PATH;}
+	{ yyval.ival = FSA_PATH;}
 break;
 case 201:
 #line 1670 "parser_gram.y"
-{ yyval.ival = FSA_READONLY;}
+	{ yyval.ival = FSA_READONLY;}
 break;
 case 202:
 #line 1671 "parser_gram.y"
-{ yyval.ival = FSA_TRUSTTREE;}
+	{ yyval.ival = FSA_TRUSTTREE;}
 break;
 case 203:
 #line 1672 "parser_gram.y"
-{ yyval.ival = FSA_REUSE;}
+	{ yyval.ival = FSA_REUSE;}
 break;
 case 204:
 #line 1673 "parser_gram.y"
-{ yyval.ival = FSA_PREALLOC;}
+	{ yyval.ival = FSA_PREALLOC;}
 break;
 case 205:
 #line 1674 "parser_gram.y"
-{ yyval.ival = FSA_PARALLOC;}
+	{ yyval.ival = FSA_PARALLOC;}
 break;
 case 206:
 #line 1677 "parser_gram.y"
-{ yyval.ival = FSA_SIZE;}
+	{ yyval.ival = FSA_SIZE;}
 break;
 case 207:
 #line 1678 "parser_gram.y"
-{ yyval.ival = FSA_NAME;}
+	{ yyval.ival = FSA_NAME;}
 break;
 case 208:
 #line 1679 "parser_gram.y"
-{ yyval.ival = FSA_PATH;}
+	{ yyval.ival = FSA_PATH;}
 break;
 case 209:
 #line 1680 "parser_gram.y"
-{ yyval.ival = FSA_DIRWIDTH;}
+	{ yyval.ival = FSA_DIRWIDTH;}
 break;
 case 210:
 #line 1681 "parser_gram.y"
-{ yyval.ival = FSA_DIRDEPTHRV;}
+	{ yyval.ival = FSA_DIRDEPTHRV;}
 break;
 case 211:
 #line 1682 "parser_gram.y"
-{ yyval.ival = FSA_PREALLOC;}
+	{ yyval.ival = FSA_PREALLOC;}
 break;
 case 212:
 #line 1683 "parser_gram.y"
-{ yyval.ival = FSA_PARALLOC;}
+	{ yyval.ival = FSA_PARALLOC;}
 break;
 case 213:
 #line 1684 "parser_gram.y"
-{ yyval.ival = FSA_REUSE;}
+	{ yyval.ival = FSA_REUSE;}
 break;
 case 214:
 #line 1685 "parser_gram.y"
-{ yyval.ival = FSA_READONLY;}
+	{ yyval.ival = FSA_READONLY;}
 break;
 case 215:
 #line 1686 "parser_gram.y"
-{ yyval.ival = FSA_TRUSTTREE;}
+	{ yyval.ival = FSA_TRUSTTREE;}
 break;
 case 216:
 #line 1687 "parser_gram.y"
-{ yyval.ival = FSA_FILESIZEGAMMA;}
+	{ yyval.ival = FSA_FILESIZEGAMMA;}
 break;
 case 217:
 #line 1688 "parser_gram.y"
-{ yyval.ival = FSA_DIRGAMMA;}
+	{ yyval.ival = FSA_DIRGAMMA;}
 break;
 case 218:
 #line 1689 "parser_gram.y"
-{ yyval.ival = FSA_CACHED;}
+	{ yyval.ival = FSA_CACHED;}
 break;
 case 219:
 #line 1690 "parser_gram.y"
-{ yyval.ival = FSA_ENTRIES;}
+	{ yyval.ival = FSA_ENTRIES;}
 break;
 case 220:
 #line 1691 "parser_gram.y"
-{ yyval.ival = FSA_LEAFDIRS;}
+	{ yyval.ival = FSA_LEAFDIRS;}
 break;
 case 221:
 #line 1692 "parser_gram.y"
-{ yyval.ival = FSA_DSRC;}
+	{ yyval.ival = FSA_DSRC;}
 break;
 case 222:
 #line 1695 "parser_gram.y"
-{yyval.ival = FSA_ENTROPY;}
+	{yyval.ival = FSA_ENTROPY;}
 break;
 case 223:
 #line 1696 "parser_gram.y"
-{yyval.ival = FSA_DUMMY;}
+	{yyval.ival = FSA_DUMMY;}
 break;
 case 224:
 #line 1699 "parser_gram.y"
-{ yyval.ival = FSA_NAME;}
+	{ yyval.ival = FSA_NAME;}
 break;
 case 225:
 #line 1700 "parser_gram.y"
-{ yyval.ival = FSA_TYPE;}
+	{ yyval.ival = FSA_TYPE;}
 break;
 case 226:
 #line 1701 "parser_gram.y"
-{ yyval.ival = FSA_RANDSEED;}
+	{ yyval.ival = FSA_RANDSEED;}
 break;
 case 227:
 #line 1702 "parser_gram.y"
-{ yyval.ival = FSA_ENTRIES;}
+	{ yyval.ival = FSA_ENTRIES;}
 break;
 case 228:
 #line 1703 "parser_gram.y"
-{ yyval.ival = FSA_RANDMAX;}
+	{ yyval.ival = FSA_RANDMAX;}
 break;
 case 229:
 #line 1706 "parser_gram.y"
-{ yyval.ival = FSA_NAME;}
+	{ yyval.ival = FSA_NAME;}
 break;
 case 230:
 #line 1707 "parser_gram.y"
-{ yyval.ival = FSA_RANDSEED;}
+	{ yyval.ival = FSA_RANDSEED;}
 break;
 case 231:
 #line 1708 "parser_gram.y"
-{ yyval.ival = FSA_RANDGAMMA;}
+	{ yyval.ival = FSA_RANDGAMMA;}
 break;
 case 232:
 #line 1709 "parser_gram.y"
-{ yyval.ival = FSA_RANDMEAN;}
+	{ yyval.ival = FSA_RANDMEAN;}
 break;
 case 233:
 #line 1710 "parser_gram.y"
-{ yyval.ival = FSA_RANDMIN;}
+	{ yyval.ival = FSA_RANDMIN;}
 break;
 case 234:
 #line 1711 "parser_gram.y"
-{ yyval.ival = FSA_RANDROUND;}
+	{ yyval.ival = FSA_RANDROUND;}
 break;
 case 235:
 #line 1714 "parser_gram.y"
-{ yyval.ival = FSS_TYPE;}
+	{ yyval.ival = FSS_TYPE;}
 break;
 case 236:
 #line 1715 "parser_gram.y"
-{ yyval.ival = FSS_SRC;}
+	{ yyval.ival = FSS_SRC;}
 break;
 case 237:
 #line 1716 "parser_gram.y"
-{ yyval.ival = FSS_SEED;}
+	{ yyval.ival = FSS_SEED;}
 break;
 case 238:
 #line 1717 "parser_gram.y"
-{ yyval.ival = FSS_GAMMA;}
+	{ yyval.ival = FSS_GAMMA;}
 break;
 case 239:
 #line 1718 "parser_gram.y"
-{ yyval.ival = FSS_MEAN;}
+	{ yyval.ival = FSS_MEAN;}
 break;
 case 240:
 #line 1719 "parser_gram.y"
-{ yyval.ival = FSS_MIN;}
+	{ yyval.ival = FSS_MIN;}
 break;
 case 241:
 #line 1720 "parser_gram.y"
-{ yyval.ival = FSS_ROUND;}
+	{ yyval.ival = FSS_ROUND;}
 break;
 case 242:
 #line 1723 "parser_gram.y"
-{ yyval.ival = FSS_SEED;}
+	{ yyval.ival = FSS_SEED;}
 break;
 case 243:
 #line 1724 "parser_gram.y"
-{ yyval.ival = FSS_GAMMA;}
+	{ yyval.ival = FSS_GAMMA;}
 break;
 case 244:
 #line 1725 "parser_gram.y"
-{ yyval.ival = FSS_MEAN;}
+	{ yyval.ival = FSS_MEAN;}
 break;
 case 245:
 #line 1726 "parser_gram.y"
-{ yyval.ival = FSS_MIN;}
+	{ yyval.ival = FSS_MIN;}
 break;
 case 246:
 #line 1727 "parser_gram.y"
-{ yyval.ival = FSS_ROUND;}
+	{ yyval.ival = FSS_ROUND;}
 break;
 case 247:
 #line 1730 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_int_alloc(yyvsp[0].ival);
+	yyval.attr->attr_avd = avd_int_alloc(yystack.l_mark[0].ival);
 }
 break;
 case 248:
 #line 1737 "parser_gram.y"
-{ yyval.ival = FSV_RANDUNI;}
+	{ yyval.ival = FSV_RANDUNI;}
 break;
 case 249:
 #line 1738 "parser_gram.y"
-{ yyval.ival = FSV_RANDTAB;}
+	{ yyval.ival = FSV_RANDTAB;}
 break;
 case 250:
 #line 1739 "parser_gram.y"
-{ yyval.ival = FSA_RANDGAMMA;}
+	{ yyval.ival = FSA_RANDGAMMA;}
 break;
 case 251:
 #line 1742 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_int_alloc(yyvsp[0].ival);
+	yyval.attr->attr_avd = avd_int_alloc(yystack.l_mark[0].ival);
 }
 break;
 case 252:
 #line 1749 "parser_gram.y"
-{ yyval.ival = FSV_URAND;}
+	{ yyval.ival = FSV_URAND;}
 break;
 case 253:
 #line 1750 "parser_gram.y"
-{ yyval.ival = FSV_RAND48;}
+	{ yyval.ival = FSV_RAND48;}
 break;
 case 254:
 #line 1753 "parser_gram.y"
-{ yyval.ival = FSA_PROCESS;}
+	{ yyval.ival = FSA_PROCESS;}
 break;
 case 255:
 #line 1754 "parser_gram.y"
-{ yyval.ival = FSA_NAME;}
+	{ yyval.ival = FSA_NAME;}
 break;
 case 256:
 #line 1755 "parser_gram.y"
-{ yyval.ival = FSA_MEMSIZE;}
+	{ yyval.ival = FSA_MEMSIZE;}
 break;
 case 257:
 #line 1756 "parser_gram.y"
-{ yyval.ival = FSA_USEISM;}
+	{ yyval.ival = FSA_USEISM;}
 break;
 case 258:
 #line 1757 "parser_gram.y"
-{ yyval.ival = FSA_INSTANCES;}
+	{ yyval.ival = FSA_INSTANCES;}
 break;
 case 259:
 #line 1760 "parser_gram.y"
-{ yyval.ival = FSA_WSS;}
+	{ yyval.ival = FSA_WSS;}
 break;
 case 260:
 #line 1761 "parser_gram.y"
-{ yyval.ival = FSA_FILE;}
+	{ yyval.ival = FSA_FILE;}
 break;
 case 261:
 #line 1762 "parser_gram.y"
-{ yyval.ival = FSA_POSSET;}
+	{ yyval.ival = FSA_POSSET;}
 break;
 case 262:
 #line 1763 "parser_gram.y"
-{ yyval.ival = FSA_NAME;}
+	{ yyval.ival = FSA_NAME;}
 break;
 case 263:
 #line 1764 "parser_gram.y"
-{ yyval.ival = FSA_RANDOM;}
+	{ yyval.ival = FSA_RANDOM;}
 break;
 case 264:
 #line 1765 "parser_gram.y"
-{ yyval.ival = FSA_FD;}
+	{ yyval.ival = FSA_FD;}
 break;
 case 265:
 #line 1766 "parser_gram.y"
-{ yyval.ival = FSA_SRCFD;}
+	{ yyval.ival = FSA_SRCFD;}
 break;
 case 266:
 #line 1767 "parser_gram.y"
-{ yyval.ival = FSA_ROTATEFD;}
+	{ yyval.ival = FSA_ROTATEFD;}
 break;
 case 267:
 #line 1768 "parser_gram.y"
-{ yyval.ival = FSA_DSYNC;}
+	{ yyval.ival = FSA_DSYNC;}
 break;
 case 268:
 #line 1769 "parser_gram.y"
-{ yyval.ival = FSA_DIRECTIO;}
+	{ yyval.ival = FSA_DIRECTIO;}
 break;
 case 269:
 #line 1770 "parser_gram.y"
-{ yyval.ival = FSA_INDEXED;}
+	{ yyval.ival = FSA_INDEXED;}
 break;
 case 270:
 #line 1771 "parser_gram.y"
-{ yyval.ival = FSA_TARGET;}
+	{ yyval.ival = FSA_TARGET;}
 break;
 case 271:
 #line 1772 "parser_gram.y"
-{ yyval.ival = FSA_ITERS;}
+	{ yyval.ival = FSA_ITERS;}
 break;
 case 272:
 #line 1773 "parser_gram.y"
-{ yyval.ival = FSA_VALUE;}
+	{ yyval.ival = FSA_VALUE;}
 break;
 case 273:
 #line 1774 "parser_gram.y"
-{ yyval.ival = FSA_BLOCKING;}
+	{ yyval.ival = FSA_BLOCKING;}
 break;
 case 274:
 #line 1775 "parser_gram.y"
-{ yyval.ival = FSA_HIGHWATER;}
+	{ yyval.ival = FSA_HIGHWATER;}
 break;
 case 275:
 #line 1776 "parser_gram.y"
-{ yyval.ival = FSA_IOSIZE;}
+	{ yyval.ival = FSA_IOSIZE;}
 break;
 case 276:
 #line 1777 "parser_gram.y"
-{ yyval.ival = FSA_NOREADAHEAD;}
+	{ yyval.ival = FSA_NOREADAHEAD;}
 break;
 case 277:
 #line 1780 "parser_gram.y"
-{ yyval.ival = FSA_RATE;}
+	{ yyval.ival = FSA_RATE;}
 break;
 case 278:
 #line 1783 "parser_gram.y"
-{ yyval.ival = FSA_MASTER;}
+	{ yyval.ival = FSA_MASTER;}
 break;
 case 279:
 #line 1784 "parser_gram.y"
-{ yyval.ival = FSA_CLIENT;}
+	{ yyval.ival = FSA_CLIENT;}
 break;
 case 280:
 #line 1787 "parser_gram.y"
-{ yyval.ival = FSA_PATH;}
+	{ yyval.ival = FSA_PATH;}
 break;
 case 281:
 #line 1788 "parser_gram.y"
-{ yyval.ival = FSA_FSTYPE;}
+	{ yyval.ival = FSA_FSTYPE;}
 break;
 case 282:
 #line 1791 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
 }
 break;
 case 283:
 #line 1795 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 284:
 #line 1808 "parser_gram.y"
-{
+	{
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
-	for (attr = yyvsp[-2].attr; attr != NULL;
+	for (attr = yystack.l_mark[-2].attr; attr != NULL;
 	    attr = attr->attr_next)
 		list_end = attr; /* Find end of list */
 
-	list_end->attr_next = yyvsp[0].attr;
+	list_end->attr_next = yystack.l_mark[0].attr;
 
-	yyval.attr = yyvsp[-2].attr;
+	yyval.attr = yystack.l_mark[-2].attr;
 }
 break;
 case 285:
 #line 1822 "parser_gram.y"
-{
-	yyval.attr = yyvsp[0].attr;
-	yyval.attr->attr_name = yyvsp[-2].ival;
+	{
+	yyval.attr = yystack.l_mark[0].attr;
+	yyval.attr->attr_name = yystack.l_mark[-2].ival;
 }
 break;
 case 286:
 #line 1828 "parser_gram.y"
-{
-	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_boolean(yyvsp[-2].sval, yyvsp[0].bval))) == NULL)
+	{
+	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_boolean(yystack.l_mark[-2].sval, yystack.l_mark[0].bval))) == NULL)
 		YYERROR;
 }
 break;
 case 287:
 #line 1833 "parser_gram.y"
-{
-	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_integer(yyvsp[-2].sval, yyvsp[0].ival))) == NULL)
+	{
+	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_integer(yystack.l_mark[-2].sval, yystack.l_mark[0].ival))) == NULL)
 		YYERROR;
 }
 break;
 case 288:
 #line 1838 "parser_gram.y"
-{
-	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_string(yyvsp[-4].sval, yyvsp[-1].sval))) == NULL)
+	{
+	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_string(yystack.l_mark[-4].sval, yystack.l_mark[-1].sval))) == NULL)
 		YYERROR;
 }
 break;
 case 289:
 #line 1843 "parser_gram.y"
-{
-	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_string(yyvsp[-2].sval, yyvsp[0].sval))) == NULL)
+	{
+	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_string(yystack.l_mark[-2].sval, yystack.l_mark[0].sval))) == NULL)
 		YYERROR;
 }
 break;
 case 290:
 #line 1848 "parser_gram.y"
-{
-	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_var(yyvsp[-2].sval, yyvsp[0].sval))) == NULL)
+	{
+	if ((yyval.attr = alloc_lvar_attr(var_lvar_assign_var(yystack.l_mark[-2].sval, yystack.l_mark[0].sval))) == NULL)
 		YYERROR;
 }
 break;
 case 291:
 #line 1853 "parser_gram.y"
-{
-	if ((yyval.attr = alloc_lvar_attr(var_lvar_alloc_local(yyvsp[0].sval))) == NULL)
+	{
+	if ((yyval.attr = alloc_lvar_attr(var_lvar_alloc_local(yystack.l_mark[0].sval))) == NULL)
 		YYERROR;
 }
 break;
 case 292:
 #line 1860 "parser_gram.y"
-{ yyval.ival = FSA_NAME;}
+	{ yyval.ival = FSA_NAME;}
 break;
 case 293:
 #line 1861 "parser_gram.y"
-{ yyval.ival = FSA_ITERS;}
+	{ yyval.ival = FSA_ITERS;}
 break;
 case 294:
 #line 1864 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_str_alloc(yyvsp[0].sval);
+	yyval.attr->attr_avd = avd_str_alloc(yystack.l_mark[0].sval);
 }
 break;
 case 295:
 #line 1868 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_int_alloc(yyvsp[0].ival);
+	yyval.attr->attr_avd = avd_int_alloc(yystack.l_mark[0].ival);
 }
 break;
 case 296:
 #line 1872 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_bool_alloc(yyvsp[0].bval);
+	yyval.attr->attr_avd = avd_bool_alloc(yystack.l_mark[0].bval);
 }
 break;
 case 297:
 #line 1876 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = var_ref_attr(yyvsp[0].sval);
+	yyval.attr->attr_avd = var_ref_attr(yystack.l_mark[0].sval);
 }
 break;
 case 298:
 #line 1880 "parser_gram.y"
-{
+	{
 	if((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd=avd_dbl_alloc(yyvsp[0].dbl);
+	yyval.attr->attr_avd=avd_dbl_alloc(yystack.l_mark[0].dbl);
 }
 break;
 case 299:
 #line 1886 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_param_list = yyvsp[0].list;
+	yyval.attr->attr_param_list = yystack.l_mark[0].list;
 }
 break;
 case 300:
 #line 1890 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_str_alloc(yyvsp[0].sval);
+	yyval.attr->attr_avd = avd_str_alloc(yystack.l_mark[0].sval);
 }
 break;
 case 301:
 #line 1894 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_int_alloc(yyvsp[0].ival);
+	yyval.attr->attr_avd = avd_int_alloc(yystack.l_mark[0].ival);
 }
 break;
 case 302:
 #line 1898 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = avd_bool_alloc(yyvsp[0].bval);
+	yyval.attr->attr_avd = avd_bool_alloc(yystack.l_mark[0].bval);
 }
 break;
 case 303:
 #line 1902 "parser_gram.y"
-{
+	{
 	if ((yyval.attr = alloc_attr()) == NULL)
 		YYERROR;
-	yyval.attr->attr_avd = var_ref_attr(yyvsp[0].sval);
+	yyval.attr->attr_avd = var_ref_attr(yystack.l_mark[0].sval);
 }
 break;
 case 304:
 #line 1909 "parser_gram.y"
-{
-	yyval.avd = avd_int_alloc(yyvsp[0].ival);
+	{
+	yyval.avd = avd_int_alloc(yystack.l_mark[0].ival);
 }
 break;
 case 305:
 #line 1912 "parser_gram.y"
-{
-	yyval.avd = var_ref_attr(yyvsp[0].sval);
+	{
+	yyval.avd = var_ref_attr(yystack.l_mark[0].sval);
 }
 break;
-#line 6833 "parser_gram.c"
+#line 6882 "parser_gram.c"
     }
-    yyssp -= yym;
-    yystate = *yyssp;
-    yyvsp -= yym;
+    yystack.s_mark -= yym;
+    yystate = *yystack.s_mark;
+    yystack.l_mark -= yym;
     yym = yylhs[yyn];
     if (yystate == 0 && yym == 0)
     {
@@ -6843,11 +6893,11 @@ break;
  state %d\n", YYPREFIX, YYFINAL);
 #endif
         yystate = YYFINAL;
-        *++yyssp = YYFINAL;
-        *++yyvsp = yyval;
+        *++yystack.s_mark = YYFINAL;
+        *++yystack.l_mark = yyval;
         if (yychar < 0)
         {
-            if ((yychar = yylex()) < 0) yychar = 0;
+            if ((yychar = YYLEX) < 0) yychar = 0;
 #if YYDEBUG
             if (yydebug)
             {
@@ -6870,19 +6920,24 @@ break;
 #if YYDEBUG
     if (yydebug)
         printf("%sdebug: after reduction, shifting from state %d \
-to state %d\n", YYPREFIX, *yyssp, yystate);
+to state %d\n", YYPREFIX, *yystack.s_mark, yystate);
 #endif
-    if (yyssp >= yysslim && yygrowstack())
+    if (yystack.s_mark >= yystack.s_last && yygrowstack(&yystack))
     {
         goto yyoverflow;
     }
-    *++yyssp = yystate;
-    *++yyvsp = yyval;
+    *++yystack.s_mark = (short) yystate;
+    *++yystack.l_mark = yyval;
     goto yyloop;
+
 yyoverflow:
     yyerror("yacc stack overflow");
+
 yyabort:
+    yyfreestack(&yystack);
     return (1);
+
 yyaccept:
+    yyfreestack(&yystack);
     return (0);
 }

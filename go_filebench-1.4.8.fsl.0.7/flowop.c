@@ -33,6 +33,8 @@
 #include "filebench.h"
 #include "flowop.h"
 #include "stats.h"
+#include "vars.h"
+#include "parsertypes.h"
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 #include "sources.h"
@@ -367,7 +369,8 @@ flowop_create_runtime_flowops(threadflow_t *threadflow, flowop_t **ops_list_ptr)
 				filebench_shutdown(1);
 			}
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-			flowop_init_datasource(&flowop->fo_ds, flowop->fo_fileset);
+//			printf("%d\n",newflowop->fo_fileset->fs_size->avd_val);
+			flowop_init_datasource(&flowop->fo_ds, newflowop->fo_fileset);
 			if (register_datasource(&flowop->fo_ds))
 				return (FILEBENCH_ERROR);
 #endif
@@ -1291,7 +1294,7 @@ flowop_flow_init(flowop_proto_t *list, int nops)
  * Create a struct source at *datasource
  */
 void
-flowop_init_datasource(struct source **datasource, struct fileset* fileset) {
+flowop_init_datasource(struct source **datasource, struct fileset* fs) {
 /*
 	if (strcmp(fileset->fs_sourceinfo->source, "entropy") == 0) {
 		source->s_entropy = fileset->fs_sourceinfo->entropy;
@@ -1307,8 +1310,14 @@ flowop_init_datasource(struct source **datasource, struct fileset* fileset) {
 		source->s_ops = &constant_operations;
 	}
 */
+	if (fs->fs_datasource == NULL)
+		DBG;
+
+//	printf("Datasource=%d\n",fs->fs_datasource->attr_name);
+//	float val = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
+
 	*datasource = malloc(sizeof(struct source));
-	(*datasource)->s_entropy = 6.0;
+	(*datasource)->s_entropy = 1.5;
 	(*datasource)->s_ops = &entropy_operations;
 }
 #endif
