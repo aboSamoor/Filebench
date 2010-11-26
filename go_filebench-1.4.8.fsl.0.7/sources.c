@@ -6,7 +6,7 @@
 #include "sources.h"
 
 struct source *ds;
-#ifdef _FB_FILEBENCH_H
+
 /* Register the data source to be used for writing */
 int register_datasource(struct source **source) {
 	if (verify_ds(*source)) {
@@ -26,7 +26,6 @@ int verify_ds(struct source *source) {
 
 	return 0;
 }
-#endif
 
 /*
 	This function will not change the buffer allocated in the memory.

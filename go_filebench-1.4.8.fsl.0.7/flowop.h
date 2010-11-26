@@ -73,7 +73,7 @@ typedef struct flowop {
 	avd_t		fo_fileindex;	/* Attr */
 	avd_t		fo_noreadahead; /* Attr */
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	struct source	*fo_ds;		/* Corresponds to Data Source Attribute e.g. entropy */
+	struct source	*fo_ds;		/* datasource e.g. entropy */
 #endif
 	flowstat_t	fo_stats;	/* Flow statistics */
 #ifdef HAVE_PROC_PID_STAT
