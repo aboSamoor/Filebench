@@ -135,15 +135,10 @@
 #define FSC_OSPROF_ENABLE 387
 #define FSC_OSPROF_DISABLE 388
 #define FSA_NOREADAHEAD 389
-#define FSA_DSRC 390
-#define FSA_ENTROPY 391
-#define FSV_VAL_DBL 392
-#define FSA_DUMMY 393
 typedef union {
 	int64_t		 ival;
 	unsigned char	 bval;
 	char *		 sval;
-	double       dbl;
 	fs_u		 val;
 	avd_t		 avd;
 	cmd_t		*cmd;
