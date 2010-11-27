@@ -36,10 +36,6 @@
 #include "vars.h"
 #include "parsertypes.h"
 
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-#include "sources.h"
-#endif
-
 static flowop_t *flowop_define_common(threadflow_t *threadflow, char *name,
     flowop_t *inherit, flowop_t **flowoplist_hdp, int instance, int type);
 static int flowop_composite(threadflow_t *threadflow, flowop_t *flowop);
@@ -368,14 +364,6 @@ flowop_create_runtime_flowops(threadflow_t *threadflow, flowop_t **ops_list_ptr)
 				    newflowop->fo_name, name);
 				filebench_shutdown(1);
 			}
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-//			if (newflowop->fo_datasource == NULL)
-//				DBG;
-//			printf("%d\n",newflowop->fo_fileset->fs_size->avd_val);
-//			flowop_init_datasource(&flowop->fo_ds, newflowop->fo_fileset);
-//			if (register_datasource(&flowop->fo_ds))
-//				return (FILEBENCH_ERROR);
-#endif
 		}
 
 		/* check for fo_possetname attribute, and resolve if present */
@@ -1290,36 +1278,3 @@ flowop_flow_init(flowop_proto_t *list, int nops)
 		flowop->fo_attrs = fl->fl_attrs;
 	}
 }
-
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-/*
- * Create a struct source at *datasource
- */
-void
-flowop_init_datasource(struct source **datasource, struct fileset* fs) {
-/*
-	if (strcmp(fileset->fs_sourceinfo->source, "entropy") == 0) {
-		source->s_entropy = fileset->fs_sourceinfo->entropy;
-		source->s_ops = &entropy_operations;
-	} else if (strcmp(fileset->fs_sourceinfo->source, "default") == 0) {
-		source->s_entropy = -1.0;
-		source->s_ops = &constant_operations;
-	} else if (strcmp(fileset->fs_sourceinfo->source, "null") == 0) {
-		source->s_entropy = -1.0;
-		source->s_ops = &dummy_operations;
-	} else {
-		source->s_entropy = -1.0;
-		source->s_ops = &constant_operations;
-	}
-*/
-//	if (fs->fs_datasource == NULL)
-//		DBG;
-
-//	printf("Datasource=%d\n",fs->fs_datasource->attr_name);
-//	float val = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
-
-	*datasource = malloc(sizeof(struct source));
-	(*datasource)->s_entropy = 1.5;
-	(*datasource)->s_ops = &entropy_operations;
-}
-#endif

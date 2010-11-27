@@ -981,28 +981,19 @@ fileset_unbusy(filesetentry_t *entry, int update_exist,
 }
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-int fileset_init_datasource(fileset_t *fs) {
-	/* If "datasource" attribute is specified */
-	/* 
-	 * entro 	= entropy_operations
-	 * default	= dummy_operations
-	 * null		= constant_operations
-	 * <empty>	= dummy_operations
-	 */
-	if (fs->fs_datasource != NULL) {
-		printf("%s\n",avd_get_str(fs->fs_datasource->attr_avd));
-		printf("%f\n",avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd));
+int fileset_init_datasource(fileset_t **fs_ptr) {
+	fileset_t* fs = *fs_ptr;
+	fs->fs_ds.s_entropy = 0.0f;
 
+	if (fs->fs_datasource != NULL) {
+		fs->fs_ds.s_entropy = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
 		if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
-			filebench_log(LOG_VERBOSE,"entropy_operations selected.\n");
-			fs->s_ops = &entropy_operations;
-		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),DEFAULT_STRING) == 0) {
-			fs->s_ops = &dummy_operations;
-		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),NULL_STRING) == 0) {
-			fs->s_ops = &constant_operations;
+			fs->fs_ds.s_ops = &entropy_operations;
+		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),CONSTANT_STRING) == 0) {
+			fs->fs_ds.s_ops = &constant_operations;
 		}
 	} else {
-		fs->s_ops = &dummy_operations;
+		fs->fs_ds.s_ops = &dummy_operations;
 	}
 	
 	return 0;
@@ -1207,7 +1198,7 @@ fileset_create(fileset_t *fileset)
 	    (u_longlong_t)(((gethrtime() - start) / 1000000000) + 1));
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	if (fileset_init_datasource(fileset) != 0) {
+	if (fileset_init_datasource(&fileset) != 0) {
 		filebench_log(LOG_ERROR,"Failed to initialize fileset datasource.");
 		return(FILEBENCH_ERROR);
 	}

@@ -25,13 +25,13 @@
 set $dir=/media/sda7
 set $nfiles=10
 set $meandirwidth=100
-set $filesize=16k
+set $filesize=2k
 set $iosize=1m
-set $nthreads=16
+set $nthreads=4
 
 set mode quit firstdone
 
-define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,datasource=entro,entropy=3.4
+define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,datasource=entro,entropy=6.7
 
 define process name=filecreate,instances=1
 {

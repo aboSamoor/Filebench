@@ -2587,18 +2587,6 @@ parser_flowop_get_attrs(cmd_t *cmd, flowop_t *flowop)
 		flowop->fo_filename = NULL;
 	}
 
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	if ((attr = get_attr_fileset(cmd, FSA_DSRC))) {
-		flowop->fo_datasource = attr->attr_avd;
-		if(flowop->fo_datasource == NULL) {
-		   filebench_log(LOG_ERROR,"define flowop: no datasource specified");
-		   filebench_shutdown(1);
-		}
-	} else {
-		flowop->fo_datasource = NULL;
-	}
-#endif
-
 	/* Get the possetname from attribute */
 	if ((attr = get_attr(cmd, FSA_POSSET))) {
 		flowop->fo_possetname = attr->attr_avd;

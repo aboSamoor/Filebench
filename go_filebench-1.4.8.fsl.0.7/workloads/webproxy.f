@@ -30,7 +30,7 @@ set $nthreads=100
 set $meaniosize=16k
 set $readiosize=1m
 
-define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=80
+define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,prealloc=80,datasource=entro,entropy=2.9
 
 define process name=proxycache,instances=1
 {
