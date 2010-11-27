@@ -447,7 +447,6 @@ static int
 flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
     caddr_t *iobufp, fbint_t iosize)
 {
-	//DBG;
 	long memsize;
 	size_t memoffset;
 	if (iosize == 0) {

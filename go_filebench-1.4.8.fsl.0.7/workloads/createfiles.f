@@ -22,7 +22,7 @@
 # Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 
-set $dir=/tmp
+set $dir=/media/sda7
 set $nfiles=10
 set $meandirwidth=100
 set $filesize=16k
@@ -38,7 +38,7 @@ define process name=filecreate,instances=1
   thread name=filecreatethread,memsize=10m,instances=$nthreads
   {
     flowop createfile name=createfile1,filesetname=bigfileset,fd=1
-    flowop writewholefile name=writefile1,fd=1,iosize=$iosize
+    flowop writewholefile name=writefile1,filesetname=bigfileset,iosize=$iosize
     flowop closefile name=closefile1,fd=1
     flowop opslimit name=limit
   }
