@@ -31,7 +31,7 @@ set $nthreads=4
 
 set mode quit firstdone
 
-define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,datasource=entro,entropy=3.4
+define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,datasource=entro,entropy=6.7
 
 define process name=filecreate,instances=1
 {
