@@ -2214,18 +2214,6 @@ parser_flowop_get_attrs(cmd_t *cmd, flowop_t *flowop)
 		flowop->fo_filename = NULL;
 	}
 
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	if ((attr = get_attr_fileset(cmd, FSA_DSRC))) {
-		flowop->fo_datasource = attr->attr_avd;
-		if(flowop->fo_datasource == NULL) {
-		   filebench_log(LOG_ERROR,"define flowop: no datasource specified");
-		   filebench_shutdown(1);
-		}
-	} else {
-		flowop->fo_datasource = NULL;
-	}
-#endif
-
 	/* Get the possetname from attribute */
 	if ((attr = get_attr(cmd, FSA_POSSET))) {
 		flowop->fo_possetname = attr->attr_avd;
@@ -4534,7 +4522,7 @@ yywrap()
 	} else
 		return (1);
 }
-#line 4537 "parser_gram.c"
+#line 4525 "parser_gram.c"
 
 #if YYDEBUG
 #include <stdio.h>		/* needed for printf */
@@ -6891,7 +6879,7 @@ case 305:
 	yyval.avd = var_ref_attr(yystack.l_mark[0].sval);
 }
 break;
-#line 6894 "parser_gram.c"
+#line 6882 "parser_gram.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

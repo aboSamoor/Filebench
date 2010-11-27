@@ -447,7 +447,7 @@ static int
 flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
     caddr_t *iobufp, fbint_t iosize)
 {
-	//DBG;
+	DBG;
 	long memsize;
 	size_t memoffset;
 	if (iosize == 0) {
@@ -462,7 +462,6 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 
 	if ((memsize = threadflow->tf_constmemsize) != 0) {
 		/* use tf_mem for I/O with random offset */
-		DBG;
 		if (memsize < iosize) {
 			filebench_log(LOG_ERROR,
 			    "tf_memsize smaller than IO size for thread %s",
@@ -473,11 +472,13 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 		fb_urandom(&memoffset, memsize, iosize, NULL);
 		*iobufp = threadflow->tf_mem + memoffset;
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 	int fd = flowop->fo_fdnumber;
 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
-	
-		printf("Fileset: %s\n",fs->fs_name);
-
+	DBG;
+	printf("Fileset: %s\n",avd_get_str(fs->fs_name));
+	DBG;
+#endif
 	} else {
 		DBG;
 		/* use private I/O buffer */
@@ -2329,15 +2330,15 @@ flowoplib_write(threadflow_t *threadflow, flowop_t *flowop)
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 	int fd = flowop->fo_fdnumber;
 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
-//	struct fileset *fs = flowop->fo_fileset;
-
-DBG;
-//	if (flowop->fo_datasource == NULL)
-//		DBG;
-	
-//	printf("%s\n",avd_get_str(flowop->fo_datasource->attr_avd));
-//	printf("%f\n",avd_get_dbl(flowop->fo_datasource->sub_attr_list->attr_avd));
-
+	float x = 77.0;
+	DBG;
+	printf("Fileset: %s\n",avd_get_str(fs->fs_name));
+	DBG;
+	if (fs->fs_ds != NULL)
+		x = (float)fs->fs_ds->s_entropy;
+//		printf("%f\n",fs->fs_ds->s_entropy);
+	DBG;
+	printf("%f\n",x);
 	//if (fs->fs_path == NULL)
 	//	DBG;
 
@@ -2455,6 +2456,16 @@ flowoplib_writewholefile(threadflow_t *threadflow, flowop_t *flowop)
 		wss = file->fse_size;
 
 	wsize = (int)MIN(wss, iosize);
+
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+	int fd = flowop->fo_fdnumber;
+	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
+	DBG;
+	printf("Found str: %s\n",avd_get_str(fs->fs_name));
+	if(fs->fs_ds == NULL)
+		DBG;
+	fs->fs_ds->s_ops->fill(fs->fs_ds, iobuf, iosize);
+#endif
 
 	/* Measure time to write bytes */
 	flowop_beginop(threadflow, flowop);

@@ -23,11 +23,11 @@
 # Use is subject to license terms.
 
 set $dir=/tmp
-set $nfiles=10
+set $nfiles=2
 set $meandirwidth=100
-set $filesize=16k
+set $filesize=2k
 set $iosize=1m
-set $nthreads=16
+set $nthreads=4
 
 set mode quit firstdone
 
