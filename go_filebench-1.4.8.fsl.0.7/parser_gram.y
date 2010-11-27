@@ -1374,7 +1374,6 @@ source_type: FSA_DSRC FSK_ASSIGN FSV_STRING
 }
 | FSA_DSRC FSK_ASSIGN FSV_STRING FSK_SEPLST source_define_params
 {
-	printf("datasource present chk params\n");
 	if(($$=alloc_attr()) == NULL)
 		YYERROR;
 	$$->attr_avd = avd_str_alloc($3);
@@ -1384,12 +1383,10 @@ source_type: FSA_DSRC FSK_ASSIGN FSV_STRING
 
 source_define_params: source_define_param
 {
-	printf("chk params now\n");
 	$$ = $1;
 } 
 | source_define_params FSK_SEPLST source_define_param
 {
-	printf("chk params now\n");
 	attr_t *attr = NULL;
 	attr_t *list_end = NULL;
 
@@ -1692,8 +1689,7 @@ attrs_define_fileset:
 | FSA_DSRC { $$ = FSA_DSRC;};
 
 source_params_name:          //pH
-  FSA_ENTROPY {$$ = FSA_ENTROPY;}
-| FSA_DUMMY {$$ = FSA_DUMMY;};
+  FSA_ENTROPY {$$ = FSA_ENTROPY;};
 
 attrs_define_posset:
   FSA_NAME { $$ = FSA_NAME;}
@@ -2964,7 +2960,6 @@ parser_fileset_define_common(cmd_t *cmd)
 	flowop_plugin_flowinit();
 
 	/* Get the name of the file */
-	printf("about to chk for FSA_DSRC\n");
 
 	if ((attr = get_attr_fileset(cmd, FSA_NAME))) {
 		name = attr->attr_avd;
@@ -3167,15 +3162,16 @@ parser_fileset_define(cmd_t *cmd)
 	} else
 		fileset->fs_sizegamma = avd_int_alloc(1500);
 	/* Get the Data Source parameters if present */
-	printf("about to chk for FSA_DSRC\n");
 	if ((attr = get_attr_fileset(cmd, FSA_DSRC)))
 	{
 		fileset->fs_datasource = attr;
+		/*
 		printf("\npH print found=%d\n",attr->attr_name);
 		printf("\npH attr value = %c\n",avd_get_str(attr->attr_avd)[0]);
 		printf("\n type : %d",(int)attr->sub_attr_list->attr_avd->avd_type);
 		printf("\npH src param list =%d->%d->%d\n",attr->attr_name,attr->sub_attr_list->attr_name,1);//,attr->sub_attr_list->attr_next->attr_name);
 		printf("\npH src param list =%lf->%c\n",avd_get_dbl(attr->sub_attr_list->attr_avd),'c');//,avd_get_str(attr->sub_attr_list->attr_next)[0]);
+		*/
 	}
 	else
 		fileset->fs_datasource=NULL;
