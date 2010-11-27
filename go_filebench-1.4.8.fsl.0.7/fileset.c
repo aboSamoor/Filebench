@@ -34,10 +34,12 @@
 #include <sys/shm.h>
 
 #include "filebench.h"
+#include "parsertypes.h"
 #include "fileset.h"
 #include "gamma_dist.h"
 #include "utils.h"
 #include "fsplug.h"
+#include "sources.h"
 
 /*
  * File sets, of type fileset_t, are entities which contain
@@ -978,6 +980,35 @@ fileset_unbusy(filesetentry_t *entry, int update_exist,
 	(void) ipc_mutex_unlock(&fileset->fs_pick_lock);
 }
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+int fileset_init_datasource(fileset_t *fs) {
+	/* If "datasource" attribute is specified */
+	/* 
+	 * entro 	= entropy_operations
+	 * default	= dummy_operations
+	 * null		= constant_operations
+	 * <empty>	= dummy_operations
+	 */
+	if (fs->fs_datasource != NULL) {
+		printf("%s\n",avd_get_str(fs->fs_datasource->attr_avd));
+		printf("%f\n",avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd));
+
+		if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
+			filebench_log(LOG_VERBOSE,"entropy_operations selected.\n");
+			fs->s_ops = &entropy_operations;
+		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),DEFAULT_STRING) == 0) {
+			fs->s_ops = &dummy_operations;
+		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),NULL_STRING) == 0) {
+			fs->s_ops = &constant_operations;
+		}
+	} else {
+		fs->s_ops = &dummy_operations;
+	}
+	
+	return 0;
+}
+#endif
+
 /*
  * Given a fileset "fileset", create the associated files as
  * specified in the attributes of the fileset. The fileset is
@@ -1175,6 +1206,12 @@ fileset_create(fileset_t *fileset)
 	    fileset_entity_name(fileset), fileset_name,
 	    (u_longlong_t)(((gethrtime() - start) / 1000000000) + 1));
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+	if (fileset_init_datasource(fileset) != 0) {
+		filebench_log(LOG_ERROR,"Failed to initialize fileset datasource.");
+		return(FILEBENCH_ERROR);
+	}
+#endif
 	return (FILEBENCH_OK);
 }
 

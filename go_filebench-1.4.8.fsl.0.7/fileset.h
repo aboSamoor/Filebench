@@ -107,7 +107,8 @@ typedef struct fileset {
 	avd_t		fs_readonly;	/* Attr */
 	avd_t		fs_trust_tree;	/* Attr */
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	struct attr	*fs_datasource;	/* Data Source Attribute e.g. entropy */
+	struct attr	*fs_datasource;	/* datasource Attribute e.g. entropy */
+	struct source_operations *s_ops;/* source operations vector */
 #endif
 	double		fs_meandepth;	/* Computed mean depth */
 	double		fs_meanwidth;	/* Specified mean dir width */
@@ -168,4 +169,7 @@ void fileset_unbusy(filesetentry_t *entry, int update_exist,
 int fileset_dump_histo(fileset_t *fileset, int first);
 void fileset_attach_all_histos(void);
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+int fileset_init_datasource(fileset_t *fs);
+#endif
 #endif	/* _FB_FILESET_H */

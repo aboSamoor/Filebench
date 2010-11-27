@@ -157,6 +157,11 @@ struct src_attr {
 	char* source;		/* Value e.g. "default", "null", "entropy" */
 	double entropy;		/* To be used iff value = "entropy" */
 };
+
+#define ENTROPY_STRING "entro"
+#define DEFAULT_STRING "default"
+#define NULL_STRING "null"
+
 #endif
 
 #define	FILEBENCH_RANDMAX64 UINT64_MAX

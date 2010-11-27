@@ -2588,7 +2588,7 @@ parser_flowop_get_attrs(cmd_t *cmd, flowop_t *flowop)
 	}
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	if ((attr = get_attr(cmd, FSA_DSRC))) {
+	if ((attr = get_attr_fileset(cmd, FSA_DSRC))) {
 		flowop->fo_datasource = attr->attr_avd;
 		if(flowop->fo_datasource == NULL) {
 		   filebench_log(LOG_ERROR,"define flowop: no datasource specified");

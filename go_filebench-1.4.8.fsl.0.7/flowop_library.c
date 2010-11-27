@@ -45,6 +45,7 @@
 #include "filebench.h"
 #include "flowop.h"
 #include "fileset.h"
+#include "parsertypes.h"
 #include "fb_random.h"
 #include "utils.h"
 #include "fsplug.h"
@@ -446,6 +447,7 @@ static int
 flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
     caddr_t *iobufp, fbint_t iosize)
 {
+	//DBG;
 	long memsize;
 	size_t memoffset;
 	if (iosize == 0) {
@@ -460,7 +462,7 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 
 	if ((memsize = threadflow->tf_constmemsize) != 0) {
 		/* use tf_mem for I/O with random offset */
-
+		DBG;
 		if (memsize < iosize) {
 			filebench_log(LOG_ERROR,
 			    "tf_memsize smaller than IO size for thread %s",
@@ -471,7 +473,13 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 		fb_urandom(&memoffset, memsize, iosize, NULL);
 		*iobufp = threadflow->tf_mem + memoffset;
 
+	int fd = flowop->fo_fdnumber;
+	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
+	
+		printf("Fileset: %s\n",fs->fs_name);
+
 	} else {
+		DBG;
 		/* use private I/O buffer */
 		if ((flowop->fo_buf != NULL) &&
 		    (flowop->fo_buf_size < iosize)) {
@@ -2319,9 +2327,29 @@ flowoplib_write(threadflow_t *threadflow, flowop_t *flowop)
 		return (ret);
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-		if (ds->s_ops->fill(ds, iobuf, iosize) != 0) {
-			return (FILEBENCH_ERROR);
-		}
+	int fd = flowop->fo_fdnumber;
+	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
+//	struct fileset *fs = flowop->fo_fileset;
+
+DBG;
+//	if (flowop->fo_datasource == NULL)
+//		DBG;
+	
+//	printf("%s\n",avd_get_str(flowop->fo_datasource->attr_avd));
+//	printf("%f\n",avd_get_dbl(flowop->fo_datasource->sub_attr_list->attr_avd));
+
+	//if (fs->fs_path == NULL)
+	//	DBG;
+
+	//if (fs->fs_dirwidth == NULL)
+	//	DBG;
+
+//	printf("%s\n",avd_get_str(fs->fs_name));
+
+//	printf("%d\n",fs->fs_datasource->attr_name);
+//		if (ds->s_ops->fill(ds, iobuf, iosize) != 0) {
+//			return (FILEBENCH_ERROR);
+//		}
 #endif
 
 	if (avd_get_bool(flowop->fo_random)) {

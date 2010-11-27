@@ -369,10 +369,12 @@ flowop_create_runtime_flowops(threadflow_t *threadflow, flowop_t **ops_list_ptr)
 				filebench_shutdown(1);
 			}
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+//			if (newflowop->fo_datasource == NULL)
+//				DBG;
 //			printf("%d\n",newflowop->fo_fileset->fs_size->avd_val);
-			flowop_init_datasource(&flowop->fo_ds, newflowop->fo_fileset);
-			if (register_datasource(&flowop->fo_ds))
-				return (FILEBENCH_ERROR);
+//			flowop_init_datasource(&flowop->fo_ds, newflowop->fo_fileset);
+//			if (register_datasource(&flowop->fo_ds))
+//				return (FILEBENCH_ERROR);
 #endif
 		}
 
@@ -1310,8 +1312,8 @@ flowop_init_datasource(struct source **datasource, struct fileset* fs) {
 		source->s_ops = &constant_operations;
 	}
 */
-	if (fs->fs_datasource == NULL)
-		DBG;
+//	if (fs->fs_datasource == NULL)
+//		DBG;
 
 //	printf("Datasource=%d\n",fs->fs_datasource->attr_name);
 //	float val = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
