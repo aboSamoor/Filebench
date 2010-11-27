@@ -72,9 +72,6 @@ typedef struct flowop {
 	avd_t		fo_rotatefd;	/* Attr */
 	avd_t		fo_fileindex;	/* Attr */
 	avd_t		fo_noreadahead; /* Attr */
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	struct source	*fo_ds;		/* Corresponds to Data Source Attribute e.g. entropy */
-#endif
 	flowstat_t	fo_stats;	/* Flow statistics */
 #ifdef HAVE_PROC_PID_STAT
 	hrtime_t	fo_start_usage;	/* record CPU usage values for each flowop at the start of flowop */	
@@ -159,7 +156,4 @@ void flowop_beginop(threadflow_t *threadflow, flowop_t *flowop);
 void flowop_destruct_all_flows(threadflow_t *threadflow);
 flowop_t *flowop_new_composite_define(char *name);
 void flowop_printall(void);
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-void flowop_init_datasource(struct source** source, struct fileset* fileset);
-#endif
 #endif	/* _FB_FLOWOP_H */

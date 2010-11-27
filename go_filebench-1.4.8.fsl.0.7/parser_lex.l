@@ -122,7 +122,6 @@ dirdepthrv              { return FSA_DIRDEPTHRV; }
 directio                { return FSA_DIRECTIO; }
 dirgamma                { return FSA_DIRGAMMA; }
 dsync                   { return FSA_DSYNC;  }
-dummy                   { return FSA_DUMMY;}
 entries                 { return FSA_ENTRIES;}
 entropy                 { return FSA_ENTROPY;}
 fd                      { return FSA_FD; }

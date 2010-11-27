@@ -153,10 +153,8 @@ void filebench_shutdown(int error);
 void filebench_plugin_funcvecinit(void);
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-struct src_attr {
-	char* source;		/* Value e.g. "default", "null", "entropy" */
-	double entropy;		/* To be used iff value = "entropy" */
-};
+#define ENTROPY_STRING "entro"
+#define CONSTANT_STRING "constant"
 #endif
 
 #define	FILEBENCH_RANDMAX64 UINT64_MAX

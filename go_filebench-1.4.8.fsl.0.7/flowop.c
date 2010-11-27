@@ -33,10 +33,8 @@
 #include "filebench.h"
 #include "flowop.h"
 #include "stats.h"
-
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-#include "sources.h"
-#endif
+#include "vars.h"
+#include "parsertypes.h"
 
 static flowop_t *flowop_define_common(threadflow_t *threadflow, char *name,
     flowop_t *inherit, flowop_t **flowoplist_hdp, int instance, int type);
@@ -366,11 +364,6 @@ flowop_create_runtime_flowops(threadflow_t *threadflow, flowop_t **ops_list_ptr)
 				    newflowop->fo_name, name);
 				filebench_shutdown(1);
 			}
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-			flowop_init_datasource(&flowop->fo_ds, flowop->fo_fileset);
-			if (register_datasource(&flowop->fo_ds))
-				return (FILEBENCH_ERROR);
-#endif
 		}
 
 		/* check for fo_possetname attribute, and resolve if present */
@@ -1285,33 +1278,3 @@ flowop_flow_init(flowop_proto_t *list, int nops)
 		flowop->fo_attrs = fl->fl_attrs;
 	}
 }
-
-/*
- * Initialize the struct source with data
- */
-
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-void
-flowop_init_datasource(struct source* *source, struct fileset* fileset) {
-/*
-	if (strcmp(fileset->fs_sourceinfo->source, "entropy") == 0) {
-		source->s_entropy = fileset->fs_sourceinfo->entropy;
-		source->s_ops = &entropy_operations;
-	} else if (strcmp(fileset->fs_sourceinfo->source, "default") == 0) {
-		source->s_entropy = -1.0;
-		source->s_ops = &constant_operations;
-	} else if (strcmp(fileset->fs_sourceinfo->source, "null") == 0) {
-		source->s_entropy = -1.0;
-		source->s_ops = &dummy_operations;
-	} else {
-		source->s_entropy = -1.0;
-		source->s_ops = &constant_operations;
-	}
-*/
-	*source = malloc(sizeof(struct source));
-	(*source)->s_entropy = 6.0;
-	(*source)->s_ops = &entropy_operations;
-	if(*source == NULL)
-		DBG;
-}
-#endif

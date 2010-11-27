@@ -28,6 +28,8 @@
 
 #include "filebench.h"
 
+#include "sources.h"
+
 #define	FILE_ALLOC_BLOCK (off64_t)(1024 * 1024)
 
 #define	FSE_MAXTID 16384
@@ -106,9 +108,8 @@ typedef struct fileset {
 	avd_t		fs_reuse;	/* Attr */
 	avd_t		fs_readonly;	/* Attr */
 	avd_t		fs_trust_tree;	/* Attr */
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	struct src_attr* fs_sourceinfo;	/* Data Source Attribute e.g. entropy */
-#endif
+	struct attr	*fs_datasource;	/* datasource attribute e.g. entropy */
+	struct source	fs_ds;		/* datasource internal representation */
 	double		fs_meandepth;	/* Computed mean depth */
 	double		fs_meanwidth;	/* Specified mean dir width */
 	double		fs_meansize;	/* Specified mean file size */
@@ -149,7 +150,6 @@ typedef struct fileset {
 	int		*fs_filehistop;		/* Ptr to access histogram */
 	int		fs_histo_id;	/* shared memory id for filehisto */
 	pthread_mutex_t	fs_histo_lock;	/* lock for incr of histo */
-	struct attr       *fs_datasource;
 } fileset_t;
 
 int fileset_createset(fileset_t *);
@@ -169,4 +169,7 @@ void fileset_unbusy(filesetentry_t *entry, int update_exist,
 int fileset_dump_histo(fileset_t *fileset, int first);
 void fileset_attach_all_histos(void);
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+int fileset_init_datasource(fileset_t **fs);
+#endif
 #endif	/* _FB_FILESET_H */

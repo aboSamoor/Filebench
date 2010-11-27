@@ -38,7 +38,7 @@ set $directio=0
 
 eventgen rate=$eventrate
 
-define file name=largefile1,path=$dir,size=$filesize,prealloc,reuse,paralloc
+define file name=largefile1,path=$dir,size=$filesize,prealloc,reuse,paralloc,datasource=entro,entropy=2.3
 
 define process name=rand-rw,instances=1
 {

@@ -22,23 +22,23 @@
 # Copyright 2009 Sun Microsystems, Inc.  All rights reserved.
 # Use is subject to license terms.
 
-set $dir=/media/sda7
-set $nfiles=10
+set $dir=/tmp
+set $nfiles=50000
 set $meandirwidth=100
-set $filesize=2k
+set $filesize=16k
 set $iosize=1m
-set $nthreads=4
+set $nthreads=16
+set $srcval=entro
 
 set mode quit firstdone
 
-define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,datasource=entro,entropy=6.7
-
+define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,datasource=entro,entropy=3.4 #,dummy=baddum
 define process name=filecreate,instances=1
 {
   thread name=filecreatethread,memsize=10m,instances=$nthreads
   {
     flowop createfile name=createfile1,filesetname=bigfileset,fd=1
-    flowop writewholefile name=writefile1,filesetname=bigfileset,iosize=$iosize
+    flowop writewholefile name=writefile1,fd=1,iosize=$iosize
     flowop closefile name=closefile1,fd=1
     flowop opslimit name=limit
   }
