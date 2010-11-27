@@ -3170,12 +3170,13 @@ parser_fileset_define(cmd_t *cmd)
 	printf("about to chk for FSA_DSRC\n");
 	if ((attr = get_attr_fileset(cmd, FSA_DSRC)))
 	{
-		fileset->fs_datasource = attr;
-		printf("\npH print found=%d\n",attr->attr_name);
-		printf("\npH attr value = %c\n",avd_get_str(attr->attr_avd)[0]);
-		printf("\n type : %d",(int)attr->sub_attr_list->attr_avd->avd_type);
-		printf("\npH src param list =%d->%d->%d\n",attr->attr_name,attr->sub_attr_list->attr_name,1);//,attr->sub_attr_list->attr_next->attr_name);
-		printf("\npH src param list =%lf->%c\n",avd_get_dbl(attr->sub_attr_list->attr_avd),'c');//,avd_get_str(attr->sub_attr_list->attr_next)[0]);
+		memcpy(&fileset->fs_datasource,attr,sizeof(attr));
+		free(attr);
+		printf("\npH print found=%d\n",fileset->fs_datasource.attr_name);
+		printf("\npH attr value = %c\n",avd_get_str(fileset->fs_datasource.attr_avd)[0]);
+		printf("\n type : %d",(int)fileset->fs_datasource.sub_attr_list->attr_avd->avd_type);
+		printf("\npH src param list =%d->%d->%d\n",fileset->fs_datasource.attr_name,fileset->fs_datasource.sub_attr_list->attr_name,1);//,attr->sub_attr_list->attr_next->attr_name);
+		printf("\npH src param list =%lf->%c\n",avd_get_dbl(fileset->fs_datasource.sub_attr_list->attr_avd),'c');//,avd_get_str(attr->sub_attr_list->attr_next)[0]);
 	}
 	else
 		fileset->fs_datasource=NULL;

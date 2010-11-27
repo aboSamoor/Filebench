@@ -985,11 +985,11 @@ int fileset_init_datasource(fileset_t **fs_ptr) {
 	fileset_t* fs = *fs_ptr;
 	fs->fs_ds.s_entropy = 0.0f;
 
-	if (fs->fs_datasource != NULL) {
-		fs->fs_ds.s_entropy = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
-		if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
+	if (fs->fs_datasource[0].attr_name) {
+		fs->fs_ds.s_entropy = avd_get_dbl(fs->fs_datasource[0].sub_attr_list->attr_avd);
+		if (strcmp(avd_get_str(fs->fs_datasource[0].attr_avd),ENTROPY_STRING) == 0) {
 			fs->fs_ds.s_ops = &entropy_operations;
-		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),CONSTANT_STRING) == 0) {
+		} else if (strcmp(avd_get_str(fs->fs_datasource[0].attr_avd),CONSTANT_STRING) == 0) {
 			fs->fs_ds.s_ops = &constant_operations;
 		}
 	} else {

@@ -1,3 +1,7 @@
+#ifndef YYERRCODE
+#define YYERRCODE 256
+#endif
+
 #define FSC_LIST 257
 #define FSC_DEFINE 258
 #define FSC_EXEC 259
