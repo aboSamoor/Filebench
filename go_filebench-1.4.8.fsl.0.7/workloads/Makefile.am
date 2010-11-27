@@ -51,7 +51,7 @@ workloads_DATA = bringover.f \
 	work_read.f \
 	work_write.f \
 	rami_read.f \
-	rami_write
+	rami_write.f
 
 
 EXTRA_DIST = $(workloads_DATA)
