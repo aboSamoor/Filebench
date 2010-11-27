@@ -26,13 +26,11 @@
 #ifndef _FB_FILESET_H
 #define	_FB_FILESET_H
 
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-#include "sources.h"
-#include "parsertypes.h"
-#endif
-
 #include "filebench.h"
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+#include "sources.h"
+#endif
 
 #define	FILE_ALLOC_BLOCK (off64_t)(1024 * 1024)
 
@@ -113,7 +111,7 @@ typedef struct fileset {
 	avd_t		fs_readonly;	/* Attr */
 	avd_t		fs_trust_tree;	/* Attr */
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	struct attr	    fs_datasource[1];	/* datasource attribute e.g. entropy */
+	struct attr	*fs_datasource;	/* datasource attribute e.g. entropy */
 	struct source	fs_ds;		/* datasource internal representation */
 #endif
 	double		fs_meandepth;	/* Computed mean depth */
