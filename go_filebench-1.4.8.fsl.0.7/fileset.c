@@ -982,21 +982,18 @@ fileset_unbusy(filesetentry_t *entry, int update_exist,
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 int fileset_init_datasource(fileset_t **fs_ptr) {
-	DBG;
 	fileset_t* fs = *fs_ptr;
-
-	fs->fs_ds = malloc(sizeof(struct source));
-	fs->fs_ds->s_entropy = 0.0f;
+	fs->fs_ds.s_entropy = 0.0f;
 
 	if (fs->fs_datasource != NULL) {
-		fs->fs_ds->s_entropy = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
+		fs->fs_ds.s_entropy = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
 		if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
-			fs->fs_ds->s_ops = &entropy_operations;
+			fs->fs_ds.s_ops = &entropy_operations;
 		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),CONSTANT_STRING) == 0) {
-			fs->fs_ds->s_ops = &constant_operations;
+			fs->fs_ds.s_ops = &constant_operations;
 		}
 	} else {
-		fs->fs_ds->s_ops = &dummy_operations;
+		fs->fs_ds.s_ops = &dummy_operations;
 	}
 	
 	return 0;
@@ -1205,7 +1202,6 @@ fileset_create(fileset_t *fileset)
 		filebench_log(LOG_ERROR,"Failed to initialize fileset datasource.");
 		return(FILEBENCH_ERROR);
 	}
-	printf("Found: %f\n",fileset->fs_ds->s_entropy);
 #endif
 	return (FILEBENCH_OK);
 }

@@ -28,6 +28,10 @@
 
 #include "filebench.h"
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+#include "sources.h"
+#endif
+
 #define	FILE_ALLOC_BLOCK (off64_t)(1024 * 1024)
 
 #define	FSE_MAXTID 16384
@@ -108,7 +112,7 @@ typedef struct fileset {
 	avd_t		fs_trust_tree;	/* Attr */
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 	struct attr	*fs_datasource;	/* datasource attribute e.g. entropy */
-	struct source	*fs_ds;		/* datasource internal representation */
+	struct source	fs_ds;		/* datasource internal representation */
 #endif
 	double		fs_meandepth;	/* Computed mean depth */
 	double		fs_meanwidth;	/* Specified mean dir width */

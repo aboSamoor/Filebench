@@ -475,9 +475,7 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 	int fd = flowop->fo_fdnumber;
 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
-	DBG;
 	printf("Fileset: %s\n",avd_get_str(fs->fs_name));
-	DBG;
 #endif
 	} else {
 		DBG;
@@ -2328,29 +2326,7 @@ flowoplib_write(threadflow_t *threadflow, flowop_t *flowop)
 		return (ret);
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	int fd = flowop->fo_fdnumber;
-	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
-	float x = 77.0;
-	DBG;
-	printf("Fileset: %s\n",avd_get_str(fs->fs_name));
-	DBG;
-	if (fs->fs_ds != NULL)
-		x = (float)fs->fs_ds->s_entropy;
-//		printf("%f\n",fs->fs_ds->s_entropy);
-	DBG;
-	printf("%f\n",x);
-	//if (fs->fs_path == NULL)
-	//	DBG;
-
-	//if (fs->fs_dirwidth == NULL)
-	//	DBG;
-
-//	printf("%s\n",avd_get_str(fs->fs_name));
-
-//	printf("%d\n",fs->fs_datasource->attr_name);
-//		if (ds->s_ops->fill(ds, iobuf, iosize) != 0) {
-//			return (FILEBENCH_ERROR);
-//		}
+	/* Maybe some code here to handle the buffer */
 #endif
 
 	if (avd_get_bool(flowop->fo_random)) {
@@ -2460,11 +2436,8 @@ flowoplib_writewholefile(threadflow_t *threadflow, flowop_t *flowop)
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 	int fd = flowop->fo_fdnumber;
 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
-	DBG;
-	printf("Found str: %s\n",avd_get_str(fs->fs_name));
-	if(fs->fs_ds == NULL)
-		DBG;
-	fs->fs_ds->s_ops->fill(fs->fs_ds, iobuf, iosize);
+	printf("Found: %f\n",fs->fs_ds.s_entropy);
+	//fs->fs_ds->s_ops->fill(fs->fs_ds, iobuf, iosize);
 #endif
 
 	/* Measure time to write bytes */
