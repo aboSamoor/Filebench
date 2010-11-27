@@ -47,7 +47,11 @@ workloads_DATA = bringover.f \
 	varmail.f \
 	videoserver.f \
 	webproxy.f \
-	webserver.f
+	webserver.f \
+	work_read.f \
+	work_write.f \
+	rami_read.f \
+	rami_write
 
 
 EXTRA_DIST = $(workloads_DATA)
