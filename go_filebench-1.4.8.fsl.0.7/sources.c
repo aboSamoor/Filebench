@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "entropy.h"
 #include "filebench.h"
 #include "sources.h"
@@ -55,7 +56,7 @@ int constant_fill(struct source *ds, void *buf, unsigned int size){
 	This function fills the buffer with random data according to
 	a pdf has the entropy specified in the source.
 */
-int entropy_fill(struct source *ds, void *buf, unsigned int size){
+int entropy_accurate_fill(struct source *ds, void *buf, unsigned int size){
 	
 	int i = 0;
 	double pdf[PDF_SIZE];
@@ -85,6 +86,52 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 }
 
 
+/*
+	This function fills the buffer with random data according to
+	a pdf has with different populating algorithm than entropy_fill
+	it takes less time but it does not give homogeous entropy data stream
+*/
+int entropy_fill(struct source *ds, void *buf, unsigned int size){
+	
+	int i = 0;
+	double pdf[PDF_SIZE];
+	double cdf[PDF_SIZE];
+	unsigned char symbols_table[PDF_SIZE];
+
+	//Calculate pdf according to the given entropy
+	generate_pdf(pdf, PDF_SIZE, ds-> s_entropy);
+#ifndef _FB_FILEBENCH_H
+	print_pdf(pdf, 5);
+	printf("PDF entropy is: %f\n" ,pdf_entropy(pdf, PDF_SIZE));
+#endif
+
+	//Calculate cdf from the pdf
+	calculate_cdf(pdf, PDF_SIZE, cdf);
+
+	void *tmp = malloc(size);
+	//initializing the symbol table
+	for(i=0; i< PDF_SIZE; i++)
+		symbols_table[i] = (unsigned char)i;
+
+	int k=0;
+	int j=0;
+	
+	for(i=0; i< PDF_SIZE; i++){
+		//printf("values %u %f %u",i,pdf[i],size);
+		for(j=0; j < (int)(pdf[i]*size); j++){
+			((unsigned char*)tmp)[k] = symbols_table[i];
+			k++;
+		}
+	}
+	for(; k < size; k++){
+		((unsigned char *)tmp)[k] = symbols_table[binary_search(rand()/(double)RAND_MAX, cdf, PDF_SIZE)];
+	}
+	memcpy(buf, tmp, size);
+	free(tmp);
+	return 0;
+}
+
+
 struct source_operations constant_operations = {
 	.fill = constant_fill,
 };
@@ -99,17 +146,19 @@ struct source_operations dummy_operations = {
 
 
 #ifndef _FB_FILEBENCH_H
-/*
+
 int main(int argc, char **argv){
 	
 	struct source ds;
-	unsigned int size = 1024*1024*10;
+	unsigned int size = 1*1024*1024;
 	unsigned char* buf=malloc(size);
-	ds.s_entropy = 1.45;
+	clock_t start = clock();
+	ds.s_entropy = 7.84;
 	entropy_fill(&ds, buf, size);
+	printf("Time elapsed: %f\n", ((double)clock() - start) / CLOCKS_PER_SEC);
 	printf("The entropy of buf: %f\n", buf_entropy(buf, size));
 	free(buf);
 	return 0;
 }
-*/
+
 #endif
