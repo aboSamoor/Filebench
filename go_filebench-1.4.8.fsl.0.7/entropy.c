@@ -104,8 +104,8 @@ int generate_pdf(double pdf[], int size , double e){
         pdf[i] = 1.0/num_sym;
 	}
     double epsilon = numerical_solve(equation, num_sym, e);
-    pdf[0] -= epsilon;
-    pdf[1] += epsilon;
+    pdf[0] += epsilon;
+    pdf[1] -= epsilon;
 	return 0;
 }
 
