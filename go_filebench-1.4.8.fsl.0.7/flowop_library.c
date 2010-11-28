@@ -471,11 +471,6 @@ flowoplib_iobufsetup(threadflow_t *threadflow, flowop_t *flowop,
 		fb_urandom(&memoffset, memsize, iosize, NULL);
 		*iobufp = threadflow->tf_mem + memoffset;
 
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	int fd = flowop->fo_fdnumber;
-	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
-	//printf("Fileset: %s\n",avd_get_str(fs->fs_name));
-#endif
 	} else {
 		//DBG;
 		/* use private I/O buffer */
@@ -2501,7 +2496,7 @@ flowoplib_appendfile(threadflow_t *threadflow, flowop_t *flowop)
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 	int fd = flowop->fo_fdnumber;
 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
-	printf("Fileset: %s. Entropy: %f\n",avd_get_str(fs->fs_name),fs->fs_ds.s_entropy);
+	//printf("Fileset: %s. Entropy: %f\n",avd_get_str(fs->fs_name),fs->fs_ds.s_entropy);
 	fs->fs_ds.s_ops->fill(&fs->fs_ds, iobuf, iosize);
 #endif
 	/* Measure time to write bytes */
@@ -2570,7 +2565,7 @@ flowoplib_appendfilerand(threadflow_t *threadflow, flowop_t *flowop)
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
 	int fd = flowop->fo_fdnumber;
 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
-	printf("Fileset: %s. Entropy: %f\n",avd_get_str(fs->fs_name),fs->fs_ds.s_entropy);
+	//printf("Fileset: %s. Entropy: %f\n",avd_get_str(fs->fs_name),fs->fs_ds.s_entropy);
 	fs->fs_ds.s_ops->fill(&fs->fs_ds, iobuf, iosize);
 #endif
 	/* Measure time to write bytes */
