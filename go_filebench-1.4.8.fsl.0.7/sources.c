@@ -75,6 +75,10 @@ int entropy_accurate_fill(struct source *ds, void *buf, unsigned int size){
 	//initializing the symbol table
 	for(i=0; i< PDF_SIZE; i++)
 		symbols_table[i] = (unsigned char)i;
+
+	//shuffle the symbols table
+	permutate(symbols_table, PDF_SIZE);
+
 	//filling the buffer depending on the cdf
 	char *tmp = malloc(size);
 	for(i=0; i < size; i++){
@@ -113,6 +117,9 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 	for(i=0; i< PDF_SIZE; i++)
 		symbols_table[i] = (unsigned char)i;
 
+	//shuffle the symbols table
+	permutate(symbols_table, PDF_SIZE);
+
 	int k=0;
 	int j=0;
 	
@@ -123,6 +130,7 @@ int entropy_fill(struct source *ds, void *buf, unsigned int size){
 			k++;
 		}
 	}
+	//remaining elements
 	for(; k < size; k++){
 		((unsigned char *)tmp)[k] = symbols_table[binary_search(rand()/(double)RAND_MAX, cdf, PDF_SIZE)];
 	}

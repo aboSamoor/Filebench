@@ -4,6 +4,25 @@
 #include <string.h>
 #include "entropy.h"
 
+int random_int(int start, int end){
+	return start + rand()%(end - start);
+}
+void swap(unsigned char array[], int i, int j){
+	int temp = array[i];
+	array[i] = array[j];
+	array[j] = temp;
+}
+
+int permutate(unsigned char array[], unsigned int size){
+
+	int i,j;
+	if(size <= 0) return -1;
+	for(i=0; i < size; i++){
+		j = array[random_int(i,size)];
+		swap(array, i, j);
+	}
+	return 0;
+}
 
 double pdf_entropy(double pdf[], unsigned int size){
 	
@@ -113,6 +132,13 @@ void print_pdf(double pdf[], unsigned int size){
 	int i;
 	for(i=0; i< size; i++)
 		printf("%f, ", pdf[i]);
+	printf("\n");
+}
+
+void print_array(unsigned char array[], unsigned int size){
+	int i;
+	for(i=0; i< size; i++)
+		printf("%d, ", (int)array[i]);
 	printf("\n");
 }
 
