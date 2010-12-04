@@ -1,0 +1,40 @@
+Comparison between different filling operations, TESTED on 256MiB buffer
+SEARCH
+======
+[eid@eid-ThinkPad-R61: go_filebench-1.4.8.fsl.0.7] $ ./sources 
+0.008081, 0.000615, 0.004348, 0.004348, 0.004348, 
+PDF entropy is: 7.840000
+Time elapsed: 43.030000
+0.004349, 0.004347, 0.004343, 0.004349, 0.004347, 
+The entropy of buf: 7.840002
+
+CONT
+====
+[eid@eid-ThinkPad-R61: go_filebench-1.4.8.fsl.0.7] $ ./sources 
+0.008081, 0.000615, 0.004348, 0.004348, 0.004348, 
+PDF entropy is: 7.840000
+Time elapsed: 1.920000
+0.004348, 0.004348, 0.004348, 0.004348, 0.004348, 
+The entropy of buf: 7.840000
+
+
+PERMUTATE
+=========
+[eid@eid-ThinkPad-R61: go_filebench-1.4.8.fsl.0.7] $ ./sources 
+0.008081, 0.000615, 0.004348, 0.004348, 0.004348, 
+PDF entropy is: 7.840000
+Time elapsed: 38.320000
+0.004348, 0.004348, 0.004348, 0.004348, 0.004348, 
+The entropy of buf: 7.840000
+
+LOOKUP
+======
+[eid@eid-ThinkPad-R61: go_filebench-1.4.8.fsl.0.7] $ ./sources 
+0.008081, 0.000615, 0.004348, 0.004348, 0.004348, 
+PDF entropy is: 7.840000
+0.004333, 0.004333, 0.004333, 0.004395, 0.004333, 
+The entropy of the lookup table: 7.839912
+Time elapsed: 5.950000
+0.004336, 0.004333, 0.004338, 0.004388, 0.004332, 
+The entropy of buf: 7.839916
+
