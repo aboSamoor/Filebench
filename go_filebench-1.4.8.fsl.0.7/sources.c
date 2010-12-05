@@ -118,7 +118,7 @@ int entropy_cont_fill(struct source *ds, void *buf, unsigned int size){
 	for(i=0; i< PDF_SIZE; i++)
 		symbols_table[i] = (unsigned char)i;
 
-	//shuffle the buffer
+	//shuffle the symbols table
     permutate(symbols_table, PDF_SIZE);
 
 	int k=0;
