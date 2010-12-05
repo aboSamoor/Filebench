@@ -41,6 +41,9 @@
 #include "fsplug.h"
 #include "sources.h"
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+#include "sources.h"
+#endif
 /*
  * File sets, of type fileset_t, are entities which contain
  * information about collections of files and subdirectories in Filebench.
@@ -394,6 +397,23 @@ fileset_alloc_file(filesetentry_t *entry)
 		 */
 		wsize = MIN(entry->fse_size - seek, FILE_ALLOC_BLOCK);
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+		if (fileset == NULL)
+			DBG;
+
+		if (fileset->fs_datasource != NULL) {
+			fileset->fs_ds.s_entropy = avd_get_dbl(fileset->fs_datasource->sub_attr_list->attr_avd);
+			if (strcmp(avd_get_str(fileset->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
+				fileset->fs_ds.s_ops = &entropy_operations;
+			} else if (strcmp(avd_get_str(fileset->fs_datasource->attr_avd),CONSTANT_STRING) == 0) {
+				fileset->fs_ds.s_ops = &constant_operations;
+			}
+		} else {
+			fileset->fs_ds.s_ops = &dummy_operations;
+		}
+
+		fileset->fs_ds.s_ops->fill(&fileset->fs_ds, buf, wsize);
+#endif
 		ret = FB_WRITE(&fdesc, buf, wsize);
 		if (ret != wsize) {
 			filebench_log(LOG_ERROR,
