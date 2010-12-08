@@ -1,5 +1,6 @@
-sudo mkfs -t ext2 /dev/sdb
-sudo mount.ext2 /dev/sdb /mnt/sdbdrive
-sudo mkdir /mnt/sdbdrive/dedupfs
-sudo mount.sdfs -v sdfs_vol4 -m /mnt/sdfs
-
+mkfs -t ext2 /dev/sdb1
+mount -t ext2 /dev/sdb1 /mnt/sdbdrive
+rm -rf /mnt/sdbdrive/dedupfs/*
+mount.sdfs -v sdfs_vol3 -m /mnt/sdfs &
+sleep 10
+rm -rf /mnt/sdfs/*

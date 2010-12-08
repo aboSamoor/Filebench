@@ -1,3 +1,5 @@
 umount /mnt/sdfs
-rm -rf /mnt/sdbdrive
+sleep 10
+#rm -rf /mnt/sdbdrive
 umount /mnt/sdbdrive
+sleep 10
