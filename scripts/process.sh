@@ -7,15 +7,17 @@ ent="$4"
 ext2_dir="$5"
 
 change_dir="cd ${PWD}"
-cmd_del_fset="rm -rf ${fset_dir}"
+#cmd_del_fset="rm -rf ${fset_dir}"
+cmd_del_fset="./cycle.sh"
 cmd_load="${prog} ${load}"
 cmd_testing="${ent} ${fset_dir}/00000001/00000001"
-cmd_size="du -s ${ext2_dir}"
+cmd_size1="du -s ${ext2_dir}"
+cmd_size2="du -s ${fset_dir}"
 
 echo "@@@@@@@@@@@@@@@@@@This script expects to run as a superuser, to switch to a superuser run 'sudo -i'@@@@@@@@@@@@@@"
 echo "@@@@@@@@@@@@@@@@@@This script expects that you have  /root/ent/ent to test files                   @@@@@@@@@@@@@@"
 
-echo "Deleting old filesets ...................."
+echo "Cleaning up then preparing the hard disk using cycle.sh ...................."
 echo "$cmd_del_fset"
 $cmd_del_fset
 echo
@@ -34,6 +36,8 @@ echo "Testing files.............................."
 echo "$cmd_testing"
 $cmd_testing
 echo "Size of the fileset on the partition......."
-echo "$cmd_size"
-$cmd_size
+echo "$cmd_size1"
+$cmd_size1
+echo "$cmd_size2"
+$cmd_size2
 echo

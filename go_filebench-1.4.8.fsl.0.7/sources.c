@@ -158,7 +158,8 @@ int entropy_permutate_fill(struct source *ds, void *buf, unsigned int size){
 /*
     _lookup_fill initializes a vector using _*_fill method then
     using that vector we will initilize our buffer by lookuping
-    differnt elements using a random index. 
+    differnt elements using a random index.The fastest method 
+    after cont_fill it is slower by a factor of 3. 
 */
 
 int entropy_lookup_fill(struct source *ds, void *buf, unsigned int size){
@@ -183,6 +184,35 @@ int entropy_lookup_fill(struct source *ds, void *buf, unsigned int size){
 }
 
 /*
+    To help the permutate function overcome the caching problem. Benchmarks
+    shows 3x speedup. However, _4k_fill should be sure that the pages filling
+    algorithm is using the same set of symbols for each page, otherwise the
+    entropy of the whole file will increase more than the specified value. If
+    you are using permutate_fill that will call cont_fill then comment the 
+    symbols shuffle step. Still slower that _lookup_fill by a factor of 2.
+*/
+int entropy_4k_fill(struct source *ds, void *buf, unsigned int size){
+    int _4k = 4 * 1024;
+    int pages = size / _4k;
+    int remaining_size = size % _4k;
+
+    void *tmp = malloc(_4k);
+    int i =0;
+    for(i=0; i<pages; i++){
+        entropy_permutate_fill(ds, tmp, _4k);
+//        printf("The entropy of 4k buffer: %f\n", buf_entropy(tmp, _4k));
+        memcpy(&((unsigned char *)buf)[i*_4k], tmp, _4k);
+    }
+
+    void *rem = malloc(remaining_size);
+    memcpy(&((unsigned char *)buf)[pages*_4k], rem, remaining_size);
+
+    free(tmp);
+    free(rem);
+    return 0;
+}
+
+/*
     This function will create a tmp buffer and call the actual
     function to fill the tmp buffer with the specific entropy.
     Creating a tmp buffer is because of a weird error happens
@@ -191,7 +221,7 @@ int entropy_lookup_fill(struct source *ds, void *buf, unsigned int size){
 
 int entropy_fill(struct source *ds, void *buf, unsigned int size){
 	void *tmp = malloc(size);
-    int err = entropy_cont_fill(ds, tmp, size);
+    int err = entropy_lookup_fill(ds, tmp, size);
     memcpy(buf, tmp, size);
     free(tmp);
     return err;

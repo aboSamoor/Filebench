@@ -1,4 +1,4 @@
-set $dir=/media/sda7
+set $dir=/mnt/sdfs
 define fileset name=rami_fileset,path=$dir,size=1m,entries=50000,dirwidth=100000,prealloc=0,datasource=entro,entropy=7.0
 define process name=filewriter,instances=1
 {
@@ -10,4 +10,3 @@ define process name=filewriter,instances=1
   }
 }
 run 300
-stats dump "work_write.log"

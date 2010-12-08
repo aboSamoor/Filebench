@@ -4,10 +4,10 @@
 #include <string.h>
 #include "entropy.h"
 
-int random_int(int start, int end){
+inline int random_int(int start, int end){
 	return start + rand()%(end - start);
 }
-void swap(unsigned char array[], int i, int j){
+inline void swap(unsigned char array[], int i, int j){
 	int temp = array[i];
 	array[i] = array[j];
 	array[j] = temp;
@@ -18,7 +18,7 @@ int permutate(unsigned char array[], unsigned int size){
 	int i,j;
 	if(size <= 0) return -1;
 	for(i=0; i < size; i++){
-		j = array[random_int(i,size)];
+		j = random_int(i,size);
 		swap(array, i, j);
 	}
 	return 0;
