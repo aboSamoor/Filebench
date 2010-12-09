@@ -28,10 +28,6 @@
 
 #include "filebench.h"
 
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-#include "sources.h"
-#endif
-
 typedef struct flowop {
 	char		fo_name[128];	/* Name */
 	int		fo_instance;	/* Instance number */

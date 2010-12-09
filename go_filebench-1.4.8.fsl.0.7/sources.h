@@ -10,7 +10,6 @@ struct source_operations {
 	int (*fill)(struct source *, void *, unsigned int);
 };
 
-extern struct source *ds;
 extern struct source_operations dummy_operations;
 extern struct source_operations constant_operations;
 extern struct source_operations entropy_operations;
