@@ -259,6 +259,31 @@ fileset_move_entry(avl_tree_t *src_tree, avl_tree_t *dst_tree,
 	avl_add(dst_tree, entry);
 }
 
+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
+/*
+ * Initialize the fs_ds member in struct fileset depending on
+ * the values in fs_datasource that is populated by the parser.
+ * If fs_datasource is NULL, fs_ds is initialized with dummy values
+ * that do not affect filebench operation.
+ */
+static void
+fileset_init_datasource(fileset_t *fs)
+{
+	fs->fs_ds.s_entropy = 0.0f;
+
+	if (fs->fs_datasource != NULL) {
+		fs->fs_ds.s_entropy = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
+		if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
+			fs->fs_ds.s_ops = &entropy_operations;
+		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),CONSTANT_STRING) == 0) {
+			fs->fs_ds.s_ops = &constant_operations;
+		}
+	} else {
+		fs->fs_ds.s_ops = &dummy_operations;
+	}
+}
+#endif
+
 /*
  * given a fileset entry, determines if the associated leaf directory
  * needs to be made or not, and if so does the mkdir.
@@ -398,22 +423,10 @@ fileset_alloc_file(filesetentry_t *entry)
 		wsize = MIN(entry->fse_size - seek, FILE_ALLOC_BLOCK);
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-		if (fileset == NULL)
-			DBG;
-
-		if (fileset->fs_datasource != NULL) {
-			fileset->fs_ds.s_entropy = avd_get_dbl(fileset->fs_datasource->sub_attr_list->attr_avd);
-			if (strcmp(avd_get_str(fileset->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
-				fileset->fs_ds.s_ops = &entropy_operations;
-			} else if (strcmp(avd_get_str(fileset->fs_datasource->attr_avd),CONSTANT_STRING) == 0) {
-				fileset->fs_ds.s_ops = &constant_operations;
-			}
-		} else {
-			fileset->fs_ds.s_ops = &dummy_operations;
-		}
-
+		fileset_init_datasource(fileset);
 		fileset->fs_ds.s_ops->fill(&fileset->fs_ds, buf, wsize);
 #endif
+
 		ret = FB_WRITE(&fdesc, buf, wsize);
 		if (ret != wsize) {
 			filebench_log(LOG_ERROR,
@@ -1000,26 +1013,6 @@ fileset_unbusy(filesetentry_t *entry, int update_exist,
 	(void) ipc_mutex_unlock(&fileset->fs_pick_lock);
 }
 
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-int fileset_init_datasource(fileset_t **fs_ptr) {
-	fileset_t* fs = *fs_ptr;
-	fs->fs_ds.s_entropy = 0.0f;
-
-	if (fs->fs_datasource != NULL) {
-		fs->fs_ds.s_entropy = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
-		if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
-			fs->fs_ds.s_ops = &entropy_operations;
-		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),CONSTANT_STRING) == 0) {
-			fs->fs_ds.s_ops = &constant_operations;
-		}
-	} else {
-		fs->fs_ds.s_ops = &dummy_operations;
-	}
-	
-	return 0;
-}
-#endif
-
 /*
  * Given a fileset "fileset", create the associated files as
  * specified in the attributes of the fileset. The fileset is
@@ -1218,10 +1211,7 @@ fileset_create(fileset_t *fileset)
 	    (u_longlong_t)(((gethrtime() - start) / 1000000000) + 1));
 
 #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-	if (fileset_init_datasource(&fileset) != 0) {
-		filebench_log(LOG_ERROR,"Failed to initialize fileset datasource.");
-		return(FILEBENCH_ERROR);
-	}
+	fileset_init_datasource(fileset);
 #endif
 	return (FILEBENCH_OK);
 }

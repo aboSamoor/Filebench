@@ -169,7 +169,4 @@ void fileset_unbusy(filesetentry_t *entry, int update_exist,
 int fileset_dump_histo(fileset_t *fileset, int first);
 void fileset_attach_all_histos(void);
 
-#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
-int fileset_init_datasource(fileset_t **fs);
-#endif
 #endif	/* _FB_FILESET_H */
