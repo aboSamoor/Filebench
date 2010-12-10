@@ -1,1 +1,84 @@
-\section{Entropy Generator}
+\section{Entropy Generator}\label{sec:ent_imp}
+
+The entropy generator is organized into two modules \verb+entropy.c+ and \verb+source.c+ . \verb+entropy.c+ is a library that contains a group of helping functions to build
+ data sources with random generation capabilities. \verb+source.h+ has the definition of the \verb+source+ and \verb+source_operations+ structures.
+\lstset{language=C}
+\begin{lstlisting}
+struct source {
+    double s_entropy;
+    struct source_operations *s_ops; 
+};
+
+struct source_operations {
+    int (*fill)(struct source * datasource, void *buf, unsigned int size);
+};
+
+\end{lstlisting}
+
+
+ In \verb+sources.c+ we can find few declared instances of the later structure. Filebench uses \verb+dummy_operations+ by default unless an entropy is specified as a parameter to the fileset declaration statement.
+ In that case, Filebench will assign \verb+entropy_operations+ to the fileset source structure. Both structures are minimal and can be expanded for any future needs.
+
+\subsection{Calculating the pdf}
+
+We explained in section \ref{sub:func} the algorithm that calculates the PDF.
+However, the algorithm generates an equation that is not easily solvable analytically.
+ To overcome this problem, numerical methods can be used to solve the equation. We implemented the secant method to find the roots of the equation. The secant method was chosen as it is easy to implement, converge fast enough, only 20 iterations needed !.
+ Not to mention that the requirements are easy to prepare, you have to specify the range that you expect the solution to be in.
+
+
+\subsection{Populating algorithm}
+
+Filebench is calling \verb+entropy_fill+ operation to fill the buffer with data with the specific entropy. \verb+entropy_fill+ is an interface that call the actual algorithm that calculates the PDF and populate the data.
+
+Many algorithms were proposed to generate data, differs mainly in the way they generate the data stream out of the calculated PDF.
+
+In section \ref{sub:gen_des} we explained how we can map the PDF to generate symbols according to their probability. This method is called in literature the roulette selection algorithm. The function that implments that method is
+ \verb+entropy_search_fill+. Although the time complexity of such algorithm is linear. The constant factors can go up to 10; the binary search takes at most 8 comparisons as the symbols table size is 256.
+
+In an effort to minimize the time used to fill the buffer the following methods are implemented:
+
+\begin{itemize}
+\item \verb+entropy_cont_fill+. \\
+    This algorithm fills the buffer with random data according to
+    the PDF creating contiguous segments of symbols to minimize the computational power needed,
+    it generates contiguous segments of symbols in the
+    buffer. Every segment length is proportional to the symbol probability.
+     To make same size buffers look different, we
+    shuffle the symbols table before using them.
+    This algorithm is the only one that does not affect
+    Filebench behavior, it keeps the disk busy all the time
+    as the default case. On the other hand, the level of randomization obtained is
+    per file basis and the entropy is not homogeneous over the segments/pages
+    of the file.
+\item \verb+entropy_permutate_fill+\\
+    It relies on \verb+entropy_cont_fill+ to fill the buffer
+    with the data with the given entropy. After that it generates a
+random permutation using the \verb+permutate+ function of the given
+     buffer and return it back. In this way, the
+    entropy over the array is made homogeneous and not only per file basis.
+    The permutation function has linear time complexity. However, the permutate function
+    operates on randomly selected elements of the buffer at each step it iterates over the buffer.
+    The algorithm does not have local spatiality behavior, so
+    it does not take advantage of the caching behavior of the memory hierarchy.
+    This shows clearly as the overhead of the permutation step is 30x.
+
+\item \verb+entropy_4k_fill+ \\
+    To help the \verb+entropy_permutate_fill+ function overcome the spatiality problem we can fill and then permutate
+    4 KiB segments of the file every time. This guarantees that the page will be cached all the time
+    in the CPU caches. This reduces the overhead of the \verb+permutate+ function to 10x. This also does not guarantee
+    the entropy to be homogeneous across segments that are not aligned with the pages offsets. The error in the entropy
+    gets smaller as the segments we are considering get larger. The function should be sure that the pages filling
+    algorithm is using the same set of symbols for each page, otherwise the entropy of the whole file will increase more than the specified value. If
+    you are using \verb+entropy_permutate_fill+ that is calling \verb+entropy_cont_fill+  to fill the 4KiB pages then comment the 
+    symbols shuffle step.
+
+\item \verb+entropy_lookup_fill+
+    This algorithm initializes a vector using any fill method.
+    The buffer is filled by looking up randomly different elements
+    in the lookup table. It is the fastest algorithm that guarantees
+    homogeneous entropy over the file. The overhead that this algorithm has is 4x, which means
+    that \verb+entropy_cont_fill+ it is faster by a factor of 3.
+\end{itemize}
+
+
