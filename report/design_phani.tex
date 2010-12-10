@@ -1,3 +1,43 @@
 \chapter{Design}\label{chap:des}
 
+In our design we tries the following principles:
+
+\begin{itemize}
+
+\item \textbf{Minimal change} %suggest better name%
+
+We tried our best to make the scope of the changes as minimal as possible. This applies to the size of the patch counted by number of lines 
+and the number of files modified. 
+
+The files that are modified
+\begin{itemize}
+\item fileset.c
+\item flowop\_library.c
+\item parser\_lex.l
+\item parser\_gram.y
+\end{itemize} 
+
+\item \textbf{Extensibility} \\
+
+\item \textbf{Backward compatibility} \\
+The patched Filebench runs all the old workload model files without modification. The patch is triggered only when the data source attribute is specified. The patch is surrounded by conditional compilation preprocessors that enables the user to switch the functionality on or off at the compiling time.
+
+\item \textbf{Modularity}\\
+Any code that do not change the flow of the current Filebench code base, is separated and kept in separate \verb+C+ modules.
+ Files added
+\begin{itemize}
+\item sources.c/sources.h 
+\item entropy.c/entropy.h
+\end{itemize}
+
+\end{itemize}
+
+
+
 \section{Filebench Interpreter}
+
+%Rami:
+%Can you please state the old and new grammars
+%show snippets from the important code
+%describe the behavior in all the cases that can face the interpreter
+%datasource specified or not * entropy specified or not
