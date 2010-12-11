@@ -1,1 +1,5 @@
-\section{Filebench workflow}
+\section{Filebench Workflow Integration}
+We used an \verb+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL+ construct to optionally include our code at make time. We primarily modified three of the existing files in filebench to integrate our entropy generation logic into the main workflow:
+\subsection{fileset.h}
+We added a \verb+struct source fs_ds+ as a member of \verb+struct fileset+. Although certain data is recorded by the parser into another member of \verb+struct fileset+ which is \verb+struct attr* fs_datasource+, we found it necessary to store this information again in \verb+struct source fs_ds+. The reasons for this were twofold. Firstly, all other attributes of a fileset are captured using the \verb+struct attr+ data structure. We decided not to modify this structure to remain compliant with 
+\subsection{flowop\_library.c}
