@@ -1363,7 +1363,6 @@ files_attr_op: files_attr_name FSK_ASSIGN attr_list_value
 		YYERROR;
 	$$->attr_name = $1;
 };
-//pHcode
 source_type: FSA_DSRC FSK_ASSIGN FSV_STRING
 {
 	//printf("no param dsrc:%d\n",$1);
@@ -1688,7 +1687,7 @@ attrs_define_fileset:
 | FSA_LEAFDIRS { $$ = FSA_LEAFDIRS;}
 | FSA_DSRC { $$ = FSA_DSRC;};
 
-source_params_name:          //pH
+source_params_name:         
   FSA_ENTROPY {$$ = FSA_ENTROPY;};
 
 attrs_define_posset:
@@ -3165,13 +3164,6 @@ parser_fileset_define(cmd_t *cmd)
 	if ((attr = get_attr_fileset(cmd, FSA_DSRC)))
 	{
 		fileset->fs_datasource = attr;
-		/*
-		printf("\npH print found=%d\n",attr->attr_name);
-		printf("\npH attr value = %c\n",avd_get_str(attr->attr_avd)[0]);
-		printf("\n type : %d",(int)attr->sub_attr_list->attr_avd->avd_type);
-		printf("\npH src param list =%d->%d->%d\n",attr->attr_name,attr->sub_attr_list->attr_name,1);//,attr->sub_attr_list->attr_next->attr_name);
-		printf("\npH src param list =%lf->%c\n",avd_get_dbl(attr->sub_attr_list->attr_avd),'c');//,avd_get_str(attr->sub_attr_list->attr_next)[0]);
-		*/
 	}
 	else
 		fileset->fs_datasource=NULL;

@@ -1,0 +1,17 @@
+\begin{titlepage}
+ 
+\begin{center}
+
+\ \\[1.5cm] 
+\textbf{\Large DEDUPLICATION AND COMPRESSION BENCHMARKING SUPPORT IN Filebench}\\[1.5cm]
+ 
+ 
+ \textbf{ \small   Operating Systems CSE506 Final Project Report}\\[1.5cm]
+
+\textbf{By\\Rami Al-Rfou'\\ Nikhil Partwardhan \\ Phanindra }\\[1.5cm]
+{\textit{ \today}} 
+
+
+\end{center}
+\vfill
+\end{titlepage}

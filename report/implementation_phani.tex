@@ -1,3 +1,78 @@
 \chapter{Implementation}\label{chap:imp}
 
 \section{Filebench Interpreter}
+The implementation of the Interpreter has been done in fashion that future extensibility of Filebench to accept different datasources with optional and variable number of sub-attributes is easy. Most of the code changes have been made to the \verb+parser_gram.y+ and \verb+parser_lex.l+ files. \verb+parser_lex.l+ file has a list of valid tokens. Two tokens (\verb+datasource+ and \verb+entropy+) have been added to this file. Since the parser never recognized decimal numbers e.g. 3.4 earlier, the file has also been modified to accept decimal values. New tokens in the \verb+parser_lex.l+ are as below:
+
+\lstset{language=C}
+\begin{lstlisting}
+#include "utils.h"
+#include "parser_gram.h"
+..
+%%
+..
+datasource              { return FSA_DSRC;}
+entropy                 { return FSA_ENTROPY;}
+..
+<INITIAL>[0-9]*\.[0-9]+  {  .. } // parse decimal values.
+..
+%%
+..
+\end{lstlisting}
+
+\noindent \verb+parser_gram.y+ file has been modified to accept \verb+datasource+ as a parameter. \verb+entropy+ attribute is accepted by the grammar only if \verb+datasource+ parameter is present.\\ Following are the key rules in the grammar.
+
+\lstset{language=C}
+\begin{lstlisting}
+
+..
+%%
+..
+//define fileset command supports only source_type and not entropy
+
+files_define_command: FSC_DEFINE FSE_FILE { .. }
+| FSC_DEFINE FSE_FILESET { .. }
+| files_define_command files_attr_ops { .. }
+| files_define_command files_attr_ops FSK_SEPLST \bf{source_type} { .. }     
+..
+
+source_type: FSA_DSRC FSK_ASSIGN FSV_STRING { .. }
+| FSA_DSRC FSK_ASSIGN FSV_STRING FSK_SEPLST source_define_params { .. } 	
+
+..
+
+// Support for multiple sub-attributes for datasource
+source_define_params: source_define_param { .. }
+| source_define_params FSK_SEPLST source_define_param { .. }	        
+..
+
+source_define_param: source_params_name FSK_ASSIGN attr_value { .. }
+
+%%
+..
+\end{lstlisting}
+
+
+To keep the parser generic, it was decided that the parser won't verify if a sub-attribute (like \verb+entropy+) is valid for a particular type of \verb+datasource+ (like ``entro"). 
+
+The sub-attributes are stored in a list of type \verb+struct attr+ and the \verb+datasource+ object has a pointer to this list. Following is the new variable in \verb+fileset+ structure pointing to the \verb+datasource+ object.
+
+\lstset{language=C}
+\begin{lstlisting}
+typedef struct fileset { 
+struct fileset  *fs_next;  
+avd_t       fs_name; 
+avd_t       fs_path;   
+avd_t       fs_leafdirs; 
+..
+avd_t       fs_dirwidth;
+..
+struct attr *fs_datasource;
+..
+};
+\end{lstlisting}
+
+
+
+
+
+
