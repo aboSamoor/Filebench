@@ -14,18 +14,18 @@ yl="dummy"
 
 if(sys.argv[2] == 'ops'):
 	c1 = 1
-	yl="Ops/sec"
+	yl="Operations/sec"
 elif(sys.argv[2] == 'mb'):
 	c1 = 2
-	yl="Average Bandwidth (mb/sec)"
+	yl="Bandwidth (mb/sec)"
 elif(sys.argv[2] == 'latency'):
 	c1 = 3
 	yl="Latency (msec)"
 elif(sys.argv[2] == 'comp'):
 	c1 = 4
-	yl="Logarithm of Compression Ratio"
+	yl="Compression Ratio (%)"
 
-xl="File Entropy (bits)"
+xl="File Entropy (Bits/Byte)"
 
 fh=open(sys.argv[1])
 lines = fh.readlines()
@@ -34,12 +34,12 @@ e = [ float(line.split(',')[c2]) for line in lines]
 fig = figure()
 xlabel(xl)
 ylabel(yl)
-title(yl+" v/s "+xl+"\n for Filebench")
+title(yl+" v/s "+xl+"\n in Filebench")
 foo = fig.add_subplot(111)
-
 line_plots = foo.plot(e, s, 'o-')
 
 xlim(0,8)
+ylim(0,)
 
 grid(True)
 show()
