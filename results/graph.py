@@ -23,7 +23,7 @@ elif(sys.argv[2] == 'latency'):
 	yl="Latency (msec)"
 elif(sys.argv[2] == 'comp'):
 	c1 = 4
-	yl="Logarithm of Compression Ratio"
+	yl="Compression Ratio (Lograthmic scale)"
 
 xl="File Entropy (bits)"
 
@@ -36,8 +36,8 @@ xlabel(xl)
 ylabel(yl)
 title(yl+" v/s "+xl+"\n for Filebench")
 foo = fig.add_subplot(111)
-
-line_plots = foo.plot(e, s, 'o-')
+s.set_yscale("log", nonposy='clip')
+line_plots = foo.semilogy(e, s, 'd')
 
 xlim(0,8)
 
