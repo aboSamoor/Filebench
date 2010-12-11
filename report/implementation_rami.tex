@@ -19,7 +19,7 @@ struct source_operations {
  In \verb+sources.c+ we can find few declared instances of the later structure. Filebench uses \verb+dummy_operations+ by default unless an entropy is specified as a parameter to the fileset declaration statement.
  In that case, Filebench will assign \verb+entropy_operations+ to the fileset source structure. Both structures are minimal and can be expanded for any future needs.
 
-\subsection{Calculating the pdf}
+\subsection{Calculating the PDF}
 
 We explained in section \ref{sub:func} the algorithm that calculates the PDF.
 However, the algorithm generates an equation that is not easily solvable analytically.
@@ -80,5 +80,3 @@ random permutation using the \verb+permutate+ function of the given
     homogeneous entropy over the file. The overhead that this algorithm has is 4x, which means
     that \verb+entropy_cont_fill+ it is faster by a factor of 3.
 \end{itemize}
-
-
