@@ -23,13 +23,13 @@
 # Use is subject to license terms.
 
 set $dir=/media/sda7
-set $nfiles=10
+set $nfiles=10000
 set $meandirwidth=100
 set $filesize=2k
 set $iosize=1m
 set $nthreads=4
 
-set mode quit firstdone
+
 
 define fileset name=bigfileset,path=$dir,size=$filesize,entries=$nfiles,dirwidth=$meandirwidth,datasource=entro,entropy=1.0
 
@@ -38,7 +38,7 @@ define process name=filecreate,instances=1
   thread name=filecreatethread,memsize=10m,instances=$nthreads
   {
     flowop createfile name=createfile1,filesetname=bigfileset,fd=1
-    flowop writewholefile name=writefile1,filesetname=bigfileset,iosize=$iosize
+    flowop writewholefile name=writefile1,filesetname=bigfileset,iosize=$iosize,fd=1
     flowop closefile name=closefile1,fd=1
     flowop opslimit name=limit
   }
@@ -54,3 +54,5 @@ usage "       set \$meandirwidth=<size> defaults to $meandirwidth"
 usage "(sets mean dir width and dir depth is calculated as log (width, nfiles)"
 usage " "
 usage "       run"
+
+run 60

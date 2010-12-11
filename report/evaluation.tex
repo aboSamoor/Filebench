@@ -1,1 +1,61 @@
-\chapter{Evaluation}\label{chap:eval}
+\chapter{Setup}\label{chap:setup}
+
+
+\paragraph{}
+The simulations were run under the following conditions:
+\begin{enumerate}
+\item The machine specifications:
+\begin{itemize}
+\item 2 Intel Xeon 2.8 GHz, 2GB RAM
+\item 2 73G SCSI Disks. The second disk was used for benchmarking.
+\item Ubuntu 10.04 LTS Server Edition 64bit.
+\item Software stack: JDK 7 Early Access Build 117, Fuse 2.8.1, SDFS 1.0.1
+\end{itemize}
+\item The base filesystem that SDFS read and write from is formatted as ext2 partition.
+
+\item we mount the SDFS partition with default parameters. 
+\item Between any two runs of Filebench, prepare.sh and cleanup.sh are called to the do the following:
+    \begin{itemize}
+    \item The SDFS partition is unmounted
+    \item The chunkstore is cleared. 
+    \item The ext2 partition is unmounted and formatted.
+    \item Clear any filebench side effects stored at /var/tmp
+    \item Drop memory caches by running \verb+sync && echo 3 > /proc/sys/vm/drop_caches+
+    \end{itemize}
+
+\item The write workload scenario is \\
+\begin{lstlisting}
+set $dir=/mnt/sdfs
+define fileset name=rami_fileset,path=$dir,size=1m,entries=50000,dirwidth=100000,prealloc=0,datasource=entro,entropy=7.0
+define process name=filewriter,instances=1
+{
+  thread name=filewriterthread,memsize=10m,instances=10
+  {
+    flowop createfile name=createfile,filesetname=rami_fileset,fd=1
+    flowop write name=writtfile,fd=1,iosize=1m
+    flowop closefile name=closefile,fd=1
+  }
+}
+run 300
+\end{lstlisting}
+
+\item The read workload scenario is\\
+\begin{lstlisting}
+set $dir=/mnt/sdfs
+define fileset name=rami_fileset,path=$dir,size=1m,entries=50000,dirwidth=100000,prealloc,datasource=entro,entropy=3.0
+define process name=filereader,instances=1
+{
+  thread name=filereaderthread,memsize=10m,instances=10
+  {
+    flowop read name=readfile,filesetname=rami_fileset,iosize=1m
+  }
+}
+run 300
+\end{lstlisting}
+\item The python script \verb+robot.py+, is a command line tool that reads the workload files and replace the entropy to the specified value in a file named values, then generates a temporary file that will be fed to Filebench. For example: \\
+\lstset{language=bash}
+\begin{lstlisting}
+$./robot.py -v ./values -l results2 -d /mnt/sdfs/rami_fileset+ \
+-x /mnt/sdbdrive/dedupfs/files/rami_fileset -w work_write.f
+\end{lstlisting}
+\end{enumerate}
