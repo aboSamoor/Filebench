@@ -1,17 +1,11 @@
 \chapter{Design}\label{chap:des}
 
-\paragraph{}
-Currently Filebench initialize the files contents by assigning the files uninitialized memory segments.
- To control the entropy of the data written to the disk, we have to communicate more files data specific information to Filebench operations.
-
-\paragraph{}
-As the information we want to send to Filebench operations is data specific, it was ituitive to combine as this information as attributes to the structure that already keeps track of the files properities, \verb+fileset+.
-Making the entropy as attribute of the filesets and not a global variable in the \verb+f+ scenario script gives us the flexibility to have filesets with different entropies.
-
-
-
-
 \section{Filebench Interpreter}
+\noindent Currently Filebench initialize the files contents by assigning the files uninitialized memory segments.
+ To control the entropy of the data written to the disk, we have to communicate more files data specific information to Filebench operations.
+\newline
+\noindent As the information we want to send to Filebench operations is data specific, it was ituitive to combine as this information as attributes to the structure that already keeps track of the files properities, \verb+fileset+.
+Making the entropy as attribute of the filesets and not a global variable in the \verb+f+ scenario script gives us the flexibility to have filesets with different entropies.
 
 %Rami:
 %Can you please state the old and new grammars
