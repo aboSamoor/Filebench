@@ -26,11 +26,8 @@ The attribute \textbf{entropy} is not directly an attribute of \textbf{fileset} 
 
 The design of the parser has been made such that a new datasouce can be easily defined and any number of sub-attributes of this datasource can be specified without any significant amount of code change.
 
-
-\noindent
-
-%Rami:
-%Can you please state the old and new grammars
-%show snippets from the important code
-%describe the behavior in all the cases that can face the interpreter
-%datasource specified or not * entropy specified or not
+\verb+define fileset name=bigfileset,path=\$dir,...,entropy=3.4+\\
+\paragraph{}
+All attributes for command \verb+fileset+ have a place in the \verb+struct fileset+. The \verb+datasouce+ attribute has also been placed in the structure. A new place has been created in this structure for \verb+datasource+ attribute alone and not for \verb+entropy+ attribute. The logic is that, the only attribute that makes sense to be part of \verb+fileset+ is the type of data defined by datasource. The attributes which define the data itself of the \verb+datasource+ are irrelevant to be part of \verb+fileset+ datastructure.
+\paragraph{}
+Since the a datasource can have various attributes of the data constituting it, \verb+datasource+ object has a pointer to a list of attribute objects relevant to it. This is the reason \verb+datasource+ is of type \verb+attr+ and not \verb+avd_t+. To accommodate  a list of sub-attributes inside an attribute(like the \verb+datasource+), \verb+struct attr+ has been modified.
