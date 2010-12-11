@@ -78,3 +78,38 @@ Because the symbol table has constant size, the cost of the binary search is als
 This guarantees that the time complexity of our algorithm is linear. However, in \ref{sec:ent_imp} we will show that in practice the 
 constant factors of such algorithm is not good enough. Moreover, will will present other different modifications
 of the algorithm.
+
+
+\section{Design Principles}
+During the process of designing we tried our best to maintain the following principles. 
+
+\begin{itemize}
+
+\item \textbf{Minimal change} %suggest better name%
+
+The scope of the changes is as minimal as possible. This applies to the size of the patch counted by number of lines and the number of files modified that were modified. 
+
+The files that are modified
+\begin{itemize}
+\item fileset.c/fileset.h
+\item flowop\_library.c
+\item parser\_lex.l
+\item parser\_gram.y
+\end{itemize}
+Moreover, we used any already available structure instead of reinventing the wheel.
+
+\item \textbf{Extensibility} \\
+
+\item \textbf{Backward compatibility} \\
+The patched Filebench runs all the old workload model files without modification. The patch is triggered only when the data source attribute is specified.
+ The patch is surrounded by conditional compilation preprocessors,\verb+CONFIG_ENTROPY_DATA_EXPERIMENTAL+ , that enables the user to switch the functionality on or off at the compilation time.
+
+\item \textbf{Modularity}\\
+Any code that do not change the flow of the current Filebench code base, is separated and kept in separate \verb+C+ modules.
+ Files added
+\begin{itemize}
+\item sources.c/sources.h 
+\item entropy.c/entropy.h
+\end{itemize}
+
+\end{itemize}

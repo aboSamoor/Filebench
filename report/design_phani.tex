@@ -1,36 +1,13 @@
 \chapter{Design}\label{chap:des}
 
-In our design we tries the following principles:
+\paragraph{}
+Currently Filebench initialize the files contents by assigning the files uninitialized memory segments.
+ To control the entropy of the data written to the disk, we have to communicate more files data specific information to Filebench operations.
 
-\begin{itemize}
+\paragraph{}
+As the information we want to send to Filebench operations is data specific, it was ituitive to combine as this information as attributes to the structure that already keeps track of the files properities, \verb+fileset+.
+Making the entropy as attribute of the filesets and not a global variable in the \verb+f+ scenario script gives us the flexibility to have filesets with different entropies.
 
-\item \textbf{Minimal change} %suggest better name%
-
-We tried our best to make the scope of the changes as minimal as possible. This applies to the size of the patch counted by number of lines 
-and the number of files modified. 
-
-The files that are modified
-\begin{itemize}
-\item fileset.c
-\item flowop\_library.c
-\item parser\_lex.l
-\item parser\_gram.y
-\end{itemize} 
-
-\item \textbf{Extensibility} \\
-
-\item \textbf{Backward compatibility} \\
-The patched Filebench runs all the old workload model files without modification. The patch is triggered only when the data source attribute is specified. The patch is surrounded by conditional compilation preprocessors that enables the user to switch the functionality on or off at the compiling time.
-
-\item \textbf{Modularity}\\
-Any code that do not change the flow of the current Filebench code base, is separated and kept in separate \verb+C+ modules.
- Files added
-\begin{itemize}
-\item sources.c/sources.h 
-\item entropy.c/entropy.h
-\end{itemize}
-
-\end{itemize}
 
 
 
