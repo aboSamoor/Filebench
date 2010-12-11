@@ -1,0 +1,1119 @@
+diff -crNB go_filebench-1.4.8.fsl.0.7/entropy.c go_filebench-1.4.8.fsl.0.8/entropy.c
+*** go_filebench-1.4.8.fsl.0.7/entropy.c	1969-12-31 19:00:00.000000000 -0500
+--- go_filebench-1.4.8.fsl.0.8/entropy.c	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 0 ****
+--- 1,165 ----
++ #include <stdio.h>
++ #include <stdlib.h>
++ #include <math.h>
++ #include <string.h>
++ #include "entropy.h"
++ 
++ inline int random_int(int start, int end){
++ 	return start + rand()%(end - start);
++ }
++ inline void swap(unsigned char array[], int i, int j){
++ 	int temp = array[i];
++ 	array[i] = array[j];
++ 	array[j] = temp;
++ }
++ 
++ int permutate(unsigned char array[], unsigned int size){
++ 
++ 	int i,j;
++ 	if(size <= 0) return -1;
++ 	for(i=0; i < size; i++){
++ 		j = random_int(i,size);
++ 		swap(array, i, j);
++ 	}
++ 	return 0;
++ }
++ 
++ double pdf_entropy(double pdf[], unsigned int size){
++ 	
++ 	double entropy =0;
++ 	int i= 0;
++ 
++ 	if(size <= 0)
++ 		return -1;
++ 
++ 	for(i=0; i<size; i++){
++ 		if(pdf[i] > 0)
++ 			entropy+= pdf[i]*log2(1.0/pdf[i]);
++ 	}
++ 	return entropy;
++ }
++ 
++ double buf_entropy(void *buf, unsigned int size){
++ 	
++ 	int i=0;
++ 	double pdf[PDF_SIZE];
++ 	for(i=0; i < PDF_SIZE; i++)
++ 		pdf[i] = 0.0;
++ 	for(i=0; i < size; i++)
++ 		pdf[((unsigned char*)buf)[i]]+= 1.0/size;
++ 	print_pdf(pdf, 5);
++ 	return pdf_entropy(pdf, PDF_SIZE);
++ }
++ 
++ int binary_search(double key, double array[], unsigned int size){
++ 
++ 	int start = 0;
++ 	int end = size-1;
++ 	int mid;
++ 
++ 	if(size <= 0)
++ 		return -2;
++ 	if(key <= array[0])
++ 		return 0;
++ 	while(end-start > 1){
++ //		printf("End point is: %d\n", end);
++ 		mid = (end+start)/2;
++ 		if(key == array[mid])
++ 			return mid;
++ 		if(key < array[mid])
++ 			end = mid;
++ 		else
++ 			start = mid;
++ 	}
++ 	return end;	
++ }
++ 
++ int calculate_cdf(double pdf[], unsigned int size, double cdf[]){
++ 
++ 	int i;
++ 	if (size <= 0)
++ 		return -1;
++ 
++ 	cdf[0] = pdf[0];
++ 	for(i=1; i < size; i++){
++ 		cdf[i] = cdf[i-1] + pdf[i];
++ 	}
++ 	return 0;
++ }
++ 
++ double secant_method(double (*func)(double, double, double), double n, double e, double start, double end){
++ 	int i =0;
++ 	double d, temp;
++ 	for(i=0; i<20 ;i++){
++ 		temp = func(n, e, end);
++ 		d = (end-start) / (temp - func(n, e, start)) * temp;
++ 		if(fabs(d) < 5e-11)
++ 			return end;
++ 		start = end;
++ 		end = end - d;
++ 	}
++ 	return end;
++ }
++ 
++ double equation(double n, double e, double x){
++ 	double p = 1.0/n;
++     double residual = e - ((n-2.0)/n)*log2(1.0/p);
++     return (p+x)*log2(1.0/(p+x)) + (p-x)*log2(1.0/(p-x)) - residual;
++ }
++ 
++ double numerical_solve(double (*func)(double, double, double), double n, double e){
++ 	return secant_method(func, n, e, 1e-10, -1e-10+ 1.0/n);
++ }
++ 
++ int generate_pdf(double pdf[], int size , double e){
++ 	
++ 	int i = 0;
++ 	if(size <= 0)
++ 		return -1;
++ 	for(i=0; i< size; i++)
++ 		pdf[i]=0.0;
++     double num_sym = (int) ceil(pow(2.0,e));
++     for(i = 0; i < (int)num_sym; i++){
++         pdf[i] = 1.0/num_sym;
++ 	}
++     double epsilon = numerical_solve(equation, num_sym, e);
++     pdf[0] += epsilon;
++     pdf[1] -= epsilon;
++ 	return 0;
++ }
++ 
++ void print_pdf(double pdf[], unsigned int size){
++ 	int i;
++ 	for(i=0; i< size; i++)
++ 		printf("%f, ", pdf[i]);
++ 	printf("\n");
++ }
++ 
++ void print_array(unsigned char array[], unsigned int size){
++ 	int i;
++ 	for(i=0; i< size; i++)
++ 		printf("%d, ", (int)array[i]);
++ 	printf("\n");
++ }
++ 
++ /*
++ int main(int argc, char* argv[]){
++ 	//int i=0;
++ 	
++ 	double pdf[PDF_SIZE];
++ 	double cdf[PDF_SIZE];
++ 	double key = .99;
++ 	generate_pdf(pdf, PDF_SIZE, 7.5);
++ 	calculate_cdf(pdf, PDF_SIZE, cdf);
++ 	int index = binary_search(key, cdf, PDF_SIZE);
++ 	print_pdf(cdf, PDF_SIZE);
++ 	printf("%f is found at %d, which is between %f and %f\n", key, index, cdf[index-1], cdf[index]);
++ 
++ 	for(i=0; i< 801; i++){
++ 		generate_pdf(pdf, PDF_SIZE, i/100.0);
++ 		printf("Entropy requested: %f\n",i/100.0);
++ 		print_pdf(pdf, 5);
++ 		printf("Entropy generated: %f\n\n", pdf_entropy(pdf, PDF_SIZE));
++ 	}
++ 	return 0;
++ }*/
+diff -crNB go_filebench-1.4.8.fsl.0.7/entropy.h go_filebench-1.4.8.fsl.0.8/entropy.h
+*** go_filebench-1.4.8.fsl.0.7/entropy.h	1969-12-31 19:00:00.000000000 -0500
+--- go_filebench-1.4.8.fsl.0.8/entropy.h	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 0 ****
+--- 1,16 ----
++ #ifndef ENTROPY_H
++ #define ENTROPY_H
++ 
++ #define PDF_SIZE 256
++ 
++ 
++ int permutate(unsigned char array[], unsigned int size);
++ int generate_pdf(double pdf[], int, double);
++ int calculate_cdf(double pdf[], unsigned int size, double cdf[]);
++ double pdf_entropy(double pdf[], unsigned int size);
++ int binary_search(double key, double array[], unsigned int);
++ void print_pdf(double pdf[], unsigned int size);
++ void print_array(unsigned char array[], unsigned int size);
++ double buf_entropy(void *buf, unsigned int);
++ 
++ #endif
+diff -crNB go_filebench-1.4.8.fsl.0.7/filebench.h go_filebench-1.4.8.fsl.0.8/filebench.h
+*** go_filebench-1.4.8.fsl.0.7/filebench.h	2010-08-13 12:22:04.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/filebench.h	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 153,158 ****
+--- 152,162 ----
+  void filebench_shutdown(int error);
+  void filebench_plugin_funcvecinit(void);
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ #define ENTROPY_STRING "entro"
++ #define CONSTANT_STRING "constant"
++ #endif
++ 
+  #define	FILEBENCH_RANDMAX64 UINT64_MAX
+  #define	FILEBENCH_RANDMAX32 UINT32_MAX
+  
+***************
+*** 196,199 ****
+--- 200,206 ----
+  #define	FILEBENCH_ERROR -1
+  #define	FILEBENCH_NORSC -2
+  
++ #define DBG filebench_log(LOG_VERBOSE, "%s:%s:%d\n",__FILE__,__func__,__LINE__)
++ 
++ 
+  #endif	/* _FB_FILEBENCH_H */
+diff -crNB go_filebench-1.4.8.fsl.0.7/fileset.c go_filebench-1.4.8.fsl.0.8/fileset.c
+*** go_filebench-1.4.8.fsl.0.7/fileset.c	2010-08-13 12:22:04.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/fileset.c	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 34,44 ****
+--- 34,49 ----
+  #include <sys/shm.h>
+  
+  #include "filebench.h"
++ #include "parsertypes.h"
+  #include "fileset.h"
+  #include "gamma_dist.h"
+  #include "utils.h"
+  #include "fsplug.h"
++ #include "sources.h"
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ #include "sources.h"
++ #endif
+  /*
+   * File sets, of type fileset_t, are entities which contain
+   * information about collections of files and subdirectories in Filebench.
+***************
+*** 254,259 ****
+--- 259,289 ----
+  	avl_add(dst_tree, entry);
+  }
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ /*
++  * Initialize the fs_ds member in struct fileset depending on
++  * the values in fs_datasource that is populated by the parser.
++  * If fs_datasource is NULL, fs_ds is initialized with dummy values
++  * that do not affect filebench operation.
++  */
++ static void
++ fileset_init_datasource(fileset_t *fs)
++ {
++ 	fs->fs_ds.s_entropy = 0.0f;
++ 
++ 	if (fs->fs_datasource != NULL) {
++ 		fs->fs_ds.s_entropy = avd_get_dbl(fs->fs_datasource->sub_attr_list->attr_avd);
++ 		if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),ENTROPY_STRING) == 0) {
++ 			fs->fs_ds.s_ops = &entropy_operations;
++ 		} else if (strcmp(avd_get_str(fs->fs_datasource->attr_avd),CONSTANT_STRING) == 0) {
++ 			fs->fs_ds.s_ops = &constant_operations;
++ 		}
++ 	} else {
++ 		fs->fs_ds.s_ops = &dummy_operations;
++ 	}
++ }
++ #endif
++ 
+  /*
+   * given a fileset entry, determines if the associated leaf directory
+   * needs to be made or not, and if so does the mkdir.
+***************
+*** 392,397 ****
+--- 422,432 ----
+  		 */
+  		wsize = MIN(entry->fse_size - seek, FILE_ALLOC_BLOCK);
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ 		fileset_init_datasource(fileset);
++ 		fileset->fs_ds.s_ops->fill(&fileset->fs_ds, buf, wsize);
++ #endif
++ 
+  		ret = FB_WRITE(&fdesc, buf, wsize);
+  		if (ret != wsize) {
+  			filebench_log(LOG_ERROR,
+***************
+*** 1175,1180 ****
+--- 1210,1218 ----
+  	    fileset_entity_name(fileset), fileset_name,
+  	    (u_longlong_t)(((gethrtime() - start) / 1000000000) + 1));
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ 	fileset_init_datasource(fileset);
++ #endif
+  	return (FILEBENCH_OK);
+  }
+  
+diff -crNB go_filebench-1.4.8.fsl.0.7/fileset.h go_filebench-1.4.8.fsl.0.8/fileset.h
+*** go_filebench-1.4.8.fsl.0.7/fileset.h	2010-08-13 12:22:04.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/fileset.h	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 28,33 ****
+--- 28,35 ----
+  
+  #include "filebench.h"
+  
++ #include "sources.h"
++ 
+  #define	FILE_ALLOC_BLOCK (off64_t)(1024 * 1024)
+  
+  #define	FSE_MAXTID 16384
+***************
+*** 106,111 ****
+--- 108,115 ----
+  	avd_t		fs_reuse;	/* Attr */
+  	avd_t		fs_readonly;	/* Attr */
+  	avd_t		fs_trust_tree;	/* Attr */
++ 	struct attr	*fs_datasource;	/* datasource attribute e.g. entropy */
++ 	struct source	fs_ds;		/* datasource internal representation */
+  	double		fs_meandepth;	/* Computed mean depth */
+  	double		fs_meanwidth;	/* Specified mean dir width */
+  	double		fs_meansize;	/* Specified mean file size */
+diff -crNB go_filebench-1.4.8.fsl.0.7/flowop_library.c go_filebench-1.4.8.fsl.0.8/flowop_library.c
+*** go_filebench-1.4.8.fsl.0.7/flowop_library.c	2010-06-18 17:53:27.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/flowop_library.c	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 45,54 ****
+--- 45,59 ----
+  #include "filebench.h"
+  #include "flowop.h"
+  #include "fileset.h"
++ #include "parsertypes.h"
+  #include "fb_random.h"
+  #include "utils.h"
+  #include "fsplug.h"
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ #include "sources.h"
++ #endif
++ 
+  /*
+   * These routines implement the flowops from the f language. Each
+   * flowop has has a name such as "read", and a set of function pointers
+***************
+*** 469,474 ****
+--- 472,478 ----
+  		*iobufp = threadflow->tf_mem + memoffset;
+  
+  	} else {
++ 		//DBG;
+  		/* use private I/O buffer */
+  		if ((flowop->fo_buf != NULL) &&
+  		    (flowop->fo_buf_size < iosize)) {
+***************
+*** 487,492 ****
+--- 491,498 ----
+  			return (FILEBENCH_ERROR);
+  
+  		flowop->fo_buf_size = iosize;
++ 
++ 		/* Code to call entropy-based buffer fill */
+  		*iobufp = flowop->fo_buf;
+  	}
+  
+***************
+*** 2333,2338 ****
+--- 2339,2349 ----
+  			fb_urandom64(&fileoffset, wss, iosize, NULL);
+  		}
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ 		int fd = flowop->fo_fdnumber;
++ 		struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
++ 		fs->fs_ds.s_ops->fill(&fs->fs_ds, iobuf, iosize);
++ #endif
+  		flowop_beginop(threadflow, flowop);
+  		if (FB_PWRITE(fdesc, iobuf,
+  		    iosize, (off64_t)fileoffset) == -1) {
+***************
+*** 2344,2349 ****
+--- 2355,2365 ----
+  		}
+  		flowop_endop(threadflow, flowop, iosize);
+  	} else {
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ 		int fd = flowop->fo_fdnumber;
++ 		struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
++ 		fs->fs_ds.s_ops->fill(&fs->fs_ds, iobuf, iosize);
++ #endif
+  		flowop_beginop(threadflow, flowop);
+  		if (FB_WRITE(fdesc, iobuf, iosize) == -1) {
+  			filebench_log(LOG_ERROR,
+***************
+*** 2417,2422 ****
+--- 2433,2444 ----
+  
+  	wsize = (int)MIN(wss, iosize);
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ 	int fd = flowop->fo_fdnumber;
++ 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
++ 	fs->fs_ds.s_ops->fill(&fs->fs_ds, iobuf, iosize);
++ #endif
++ 
+  	/* Measure time to write bytes */
+  	flowop_beginop(threadflow, flowop);
+  	for (seek = 0; seek < wss; seek += wsize) {
+***************
+*** 2469,2474 ****
+--- 2491,2501 ----
+  
+  	/* XXX wss is not being used */
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ 	int fd = flowop->fo_fdnumber;
++ 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
++ 	fs->fs_ds.s_ops->fill(&fs->fs_ds, iobuf, iosize);
++ #endif
+  	/* Measure time to write bytes */
+  	flowop_beginop(threadflow, flowop);
+  	(void) FB_LSEEK(fdesc, 0, SEEK_END);
+***************
+*** 2532,2537 ****
+--- 2559,2569 ----
+  
+  	/* XXX wss is not being used */
+  
++ #ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL
++ 	int fd = flowop->fo_fdnumber;
++ 	struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
++ 	fs->fs_ds.s_ops->fill(&fs->fs_ds, iobuf, iosize);
++ #endif
+  	/* Measure time to write bytes */
+  	flowop_beginop(threadflow, flowop);
+  
+diff -crNB go_filebench-1.4.8.fsl.0.7/Makefile.am go_filebench-1.4.8.fsl.0.8/Makefile.am
+*** go_filebench-1.4.8.fsl.0.7/Makefile.am	2010-05-11 16:09:12.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/Makefile.am	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 9,27 ****
+  		    gamma_dist.c ipc.c misc.c multi_client_sync.c \
+  		    parser_gram.y parser_lex.l procflow.c stats.c \
+  		    threadflow.c utils.c vars.c posset.c \
+  		    eventgen.h  fb_random.h  fileset.h  fsplug.h \
+  		    ipc.h   multi_client_sync.h  parsertypes.h  stats.h \
+  		    utils.h config.h fb_avl.h filebench.h flowop.h gamma_dist.h \
+! 		    misc.h procflow.h threadflow.h vars.h posset.h
+  
+  if AUTOCOMP_LIBTECLA
+  go_filebench_SOURCES += auto_comp.c auto_comp.h
+  endif
+  
+  AM_YFLAGS = -d
+  #AM_LDFLAGS = 
+  if GCC_USED
+  AM_CFLAGS = -Wall -Wno-unknown-pragmas
+  endif
+  
+! DEFS = -D_REENTRANT -DYYDEBUG -DYY_NO_INPUT -DFILEBENCHDIR=\"$(datadir)/filebench\" -D_LARGEFILE64_SOURCE -D_GNU_SOURCE
+--- 9,30 ----
+  		    gamma_dist.c ipc.c misc.c multi_client_sync.c \
+  		    parser_gram.y parser_lex.l procflow.c stats.c \
+  		    threadflow.c utils.c vars.c posset.c \
++ 			entropy.c sources.c \
+  		    eventgen.h  fb_random.h  fileset.h  fsplug.h \
+  		    ipc.h   multi_client_sync.h  parsertypes.h  stats.h \
+  		    utils.h config.h fb_avl.h filebench.h flowop.h gamma_dist.h \
+! 		    misc.h procflow.h threadflow.h vars.h posset.h \
+! 			entropy.h sources.h
+  
+  if AUTOCOMP_LIBTECLA
+  go_filebench_SOURCES += auto_comp.c auto_comp.h
+  endif
+  
+  AM_YFLAGS = -d
++ YFLAGS=
+  #AM_LDFLAGS = 
+  if GCC_USED
+  AM_CFLAGS = -Wall -Wno-unknown-pragmas
+  endif
+  
+! DEFS = -D_REENTRANT -DYYDEBUG -DYY_NO_INPUT -DFILEBENCHDIR=\"$(datadir)/filebench\" -D_LARGEFILE64_SOURCE -D_GNU_SOURCE $(ENTROPY)
+diff -crNB go_filebench-1.4.8.fsl.0.7/parser_gram.y go_filebench-1.4.8.fsl.0.8/parser_gram.y
+*** go_filebench-1.4.8.fsl.0.7/parser_gram.y	2010-06-18 17:53:27.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/parser_gram.y	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 1,6 ****
+  /*
+   * CDDL HEADER START
+!  *
+   * The contents of this file are subject to the terms of the
+   * Common Development and Distribution License (the "License").
+   * You may not use this file except in compliance with the License.
+--- 1,6 ----
+  /*
+   * CDDL HEADER START
+!  * asdfasdf
+   * The contents of this file are subject to the terms of the
+   * Common Development and Distribution License (the "License").
+   * You may not use this file except in compliance with the License.
+***************
+*** 169,174 ****
+--- 169,175 ----
+  	int64_t		 ival;
+  	unsigned char	 bval;
+  	char *		 sval;
++ 	double       dbl;
+  	fs_u		 val;
+  	avd_t		 avd;
+  	cmd_t		*cmd;
+***************
+*** 207,212 ****
+--- 208,215 ----
+  %token FSA_ALLDONE FSA_FIRSTDONE FSA_TIMEOUT
+  %token FSC_OSPROF_ENABLE FSC_OSPROF_DISABLE
+  %token FSA_NOREADAHEAD 
++ %token FSA_DSRC FSA_ENTROPY
++ %token FSV_VAL_DBL
+  
+  %type <ival> FSV_VAL_INT
+  %type <bval> FSV_VAL_BOOLEAN
+***************
+*** 216,221 ****
+--- 219,225 ----
+  %type <sval> FSV_RANDVAR
+  %type <sval> FSK_ASSIGN
+  %type <sval> FSV_SET_LOCAL_VAR
++ %type <dbl>  FSV_VAL_DBL
+  
+  %type <ival> FSC_LIST FSC_DEFINE FSC_SET FSC_LOAD FSC_RUN FSC_ENABLE
+  %type <ival> FSC_DOMULTISYNC
+***************
+*** 237,242 ****
+--- 241,247 ----
+  %type <cmd> set_integer_command set_other_command
+  %type <cmd> osprof_enable_command osprof_disable_command
+  
++ %type <attr> source_define_params source_define_param source_type
+  %type <attr> files_attr_op files_attr_ops posset_attr_ops posset_attr_op pt_attr_op pt_attr_ops
+  %type <attr> fo_attr_op fo_attr_ops ev_attr_op ev_attr_ops
+  %type <attr> randvar_attr_op randvar_attr_ops randvar_attr_typop
+***************
+*** 253,258 ****
+--- 258,264 ----
+  %type <ival> randsrc_name FSA_RANDSRC randvar_attr_tsp em_attr_name
+  %type <ival> FSS_TYPE FSS_SEED FSS_GAMMA FSS_MEAN FSS_MIN FSS_SRC
+  %type <ival> fscheck_attr_name FSA_FSTYPE binary_op
++ %type <ival> source_params_name
+  
+  %type <rndtb>  probtabentry_list probtabentry
+  %type <avd> var_int_val
+***************
+*** 326,332 ****
+  | osprof_disable_command
+  | enable_command
+  | multisync_command
+! | quit_command;
+  
+  foreach_command: FSC_FOREACH
+  {
+--- 332,338 ----
+  | osprof_disable_command
+  | enable_command
+  | multisync_command
+! | quit_command
+  
+  foreach_command: FSC_FOREACH
+  {
+***************
+*** 1103,1109 ****
+  | files_define_command files_attr_ops
+  {
+  	$1->cmd_attr_list = $2;
+! };
+  
+  posset_define_command: FSC_DEFINE FSE_POSSET
+  {
+--- 1109,1128 ----
+  | files_define_command files_attr_ops
+  {
+  	$1->cmd_attr_list = $2;
+! }
+! | files_define_command files_attr_ops FSK_SEPLST source_type
+! {
+!  	 $1->cmd_attr_list = $2;
+!      attr_t *attr = NULL;
+!      attr_t *list_end = NULL; 
+!      for (attr = $2; attr != NULL;
+!          attr = attr->attr_next)
+! 	 {
+! 		printf("%d->",attr->attr_name);
+!          list_end = attr; /* Find end of list */
+! 	 }
+!      list_end->attr_next = $4;
+! } 
+  
+  posset_define_command: FSC_DEFINE FSE_POSSET
+  {
+***************
+*** 1343,1348 ****
+--- 1363,1408 ----
+  		YYERROR;
+  	$$->attr_name = $1;
+  };
++ source_type: FSA_DSRC FSK_ASSIGN FSV_STRING
++ {
++ 	//printf("no param dsrc:%d\n",$1);
++ 	if(($$=alloc_attr()) == NULL)
++ 		YYERROR;
++ 	$$->attr_avd = avd_str_alloc($3);
++ 	$$->attr_name=FSA_DSRC;
++ }
++ | FSA_DSRC FSK_ASSIGN FSV_STRING FSK_SEPLST source_define_params
++ {
++ 	if(($$=alloc_attr()) == NULL)
++ 		YYERROR;
++ 	$$->attr_avd = avd_str_alloc($3);
++ 	$$->attr_name=FSA_DSRC;
++ 	$$->sub_attr_list = $5;
++ };
++ 
++ source_define_params: source_define_param
++ {
++ 	$$ = $1;
++ } 
++ | source_define_params FSK_SEPLST source_define_param
++ {
++ 	attr_t *attr = NULL;
++ 	attr_t *list_end = NULL;
++ 
++ 	for (attr = $1; attr != NULL;
++ 	    attr = attr->attr_next)
++ 		list_end = attr; /* Find end of list */
++ 
++ 	list_end->attr_next = $3;
++ 
++ 	$$ = $1;
++ };
++ 
++ source_define_param: source_params_name FSK_ASSIGN attr_value
++ {
++ 	$$ = $3;
++ 	$$->attr_name = $1;
++ };
+  
+  /* attribute parsing for random variables */
+  randvar_attr_ops: randvar_attr_op
+***************
+*** 1624,1630 ****
+  | FSA_DIRGAMMA { $$ = FSA_DIRGAMMA;}
+  | FSA_CACHED { $$ = FSA_CACHED;}
+  | FSA_ENTRIES { $$ = FSA_ENTRIES;}
+! | FSA_LEAFDIRS { $$ = FSA_LEAFDIRS;};
+  
+  attrs_define_posset:
+    FSA_NAME { $$ = FSA_NAME;}
+--- 1684,1694 ----
+  | FSA_DIRGAMMA { $$ = FSA_DIRGAMMA;}
+  | FSA_CACHED { $$ = FSA_CACHED;}
+  | FSA_ENTRIES { $$ = FSA_ENTRIES;}
+! | FSA_LEAFDIRS { $$ = FSA_LEAFDIRS;}
+! | FSA_DSRC { $$ = FSA_DSRC;};
+! 
+! source_params_name:         
+!   FSA_ENTROPY {$$ = FSA_ENTROPY;};
+  
+  attrs_define_posset:
+    FSA_NAME { $$ = FSA_NAME;}
+***************
+*** 1808,1813 ****
+--- 1872,1881 ----
+  	if (($$ = alloc_attr()) == NULL)
+  		YYERROR;
+  	$$->attr_avd = var_ref_attr($1);
++ } | FSV_VAL_DBL {
++ 	if(($$ = alloc_attr()) == NULL)
++ 		YYERROR;
++ 	$$->attr_avd=avd_dbl_alloc($1);
+  };
+  
+  attr_list_value: var_string_list {
+***************
+*** 2861,2867 ****
+  	}
+  }
+  
+! 
+  /*
+   * Calls fileset_define() to allocate a fileset with the supplied name and
+   * initializes the fileset's pathname attribute, and optionally the
+--- 2929,2943 ----
+  	}
+  }
+  
+! /*static void
+! source_file_define(cmd_t *cmd)
+! {
+! 	attr_t *attr;
+! 	if((attr = get_attr_fileset(cmd,FSA_DSRC)))
+! 	{
+! 		printf("\nfound attr:");
+! 	}
+! }*/
+  /*
+   * Calls fileset_define() to allocate a fileset with the supplied name and
+   * initializes the fileset's pathname attribute, and optionally the
+***************
+*** 3083,3088 ****
+--- 3160,3172 ----
+  		fileset->fs_sizegamma = attr->attr_avd;
+  	} else
+  		fileset->fs_sizegamma = avd_int_alloc(1500);
++ 	/* Get the Data Source parameters if present */
++ 	if ((attr = get_attr_fileset(cmd, FSA_DSRC)))
++ 	{
++ 		fileset->fs_datasource = attr;
++ 	}
++ 	else
++ 		fileset->fs_datasource=NULL;
+  }
+  
+  static void
+diff -crNB go_filebench-1.4.8.fsl.0.7/parser_lex.l go_filebench-1.4.8.fsl.0.8/parser_lex.l
+*** go_filebench-1.4.8.fsl.0.7/parser_lex.l	2010-06-18 17:53:27.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/parser_lex.l	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 116,127 ****
+--- 116,129 ----
+  blocking                { return FSA_BLOCKING; }
+  cached                  { return FSA_CACHED; }
+  client			{ return FSA_CLIENT; }
++ datasource              { return FSA_DSRC;}       
+  dirwidth                { return FSA_DIRWIDTH; }
+  dirdepthrv              { return FSA_DIRDEPTHRV; }
+  directio                { return FSA_DIRECTIO; }
+  dirgamma                { return FSA_DIRGAMMA; }
+  dsync                   { return FSA_DSYNC;  }
+  entries                 { return FSA_ENTRIES;}
++ entropy                 { return FSA_ENTROPY;}
+  fd                      { return FSA_FD; }
+  filename                { return FSA_FILE; }
+  filesetname             { return FSA_FILE; }
+***************
+*** 243,248 ****
+--- 244,259 ----
+  				}
+                                  return FSV_VAL_INT;
+  }
++ <INITIAL>[0-9]*\.[0-9]+  {
++                                 errno = 0;
++ 				yylval.dbl = strtod(yytext,NULL);
++ 				if (errno == EINVAL || errno == ERANGE) {
++                                         (void) filebench_log(LOG_ERROR, 
++ 						"Invalid I value '%s':%s", yytext,
++ 						strerror(errno));
++ 				}
++                                 return FSV_VAL_DBL;
++ }
+  
+  <INITIAL>[0-9]+k	{
+                                  errno = 0;
+diff -crNB go_filebench-1.4.8.fsl.0.7/parsertypes.h go_filebench-1.4.8.fsl.0.8/parsertypes.h
+*** go_filebench-1.4.8.fsl.0.7/parsertypes.h	2010-08-13 12:22:05.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/parsertypes.h	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 46,51 ****
+--- 46,52 ----
+  	struct attr	*attr_next;
+  	avd_t		 attr_avd;
+  	list_t		*attr_param_list;
++ 	struct attr *sub_attr_list;
+  	void		*attr_obj;
+  } attr_t;
+  
+diff -crNB go_filebench-1.4.8.fsl.0.7/sources.c go_filebench-1.4.8.fsl.0.8/sources.c
+*** go_filebench-1.4.8.fsl.0.7/sources.c	1969-12-31 19:00:00.000000000 -0500
+--- go_filebench-1.4.8.fsl.0.8/sources.c	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 0 ****
+--- 1,259 ----
++ #include <stdlib.h>
++ #include <stdio.h>
++ #include <string.h>
++ #include <time.h>
++ #include "entropy.h"
++ #include "filebench.h"
++ #include "sources.h"
++ 
++ struct source *ds;
++ 
++ #ifdef _FB_FILEBENCH_H
++ /* Register the data source to be used for writing */
++ int register_datasource(struct source **source) {
++ 	if (verify_ds(*source)) {
++ 		printf("Could not verify datasource");
++ 		return (FILEBENCH_ERROR);
++ 	}
++ 
++ 	ds = *source;
++ 	return 0;
++ }
++ 
++ /* Verify that the data source is valid */
++ int verify_ds(struct source *source) {
++ 	if (source->s_entropy < 0.00 || source->s_entropy > 8.00 || source->s_ops == NULL) {
++ 		return (FILEBENCH_ERROR);
++ 	}
++ 
++ 	return 0;
++ }
++ #endif
++ /*
++ 	This function will not change the buffer allocated in the memory.
++ 	This is the current behavior of io_buf fill. Most proabably the
++ 	buffer is filled with zeros
++ */
++ int dummy_fill(struct source *ds, void *buf, unsigned int size){
++ 	
++ 	return 0;
++ }
++ 
++ /*
++ 	This function will fill the buffer with zeros. Can be changed
++ 	to fill with a specific constat.
++ */
++ int constant_fill(struct source *ds, void *buf, unsigned int size){
++ 
++ 	int i=0;
++ 	for(i=0; i < size; i++){
++ 		((char *)buf)[i] = 0;
++ 	}
++ 	return 0;
++ }
++ 
++ /*
++ 	_search_fill fills the buffer with random data according to
++ 	a pdf has the entropy specified in the source. It calculates
++     the cdf then populate the buffer by searching in the cdf for 
++     the random number. Sometimes this approach is called roulette
++     algorithm. The binary search is expected to add 8x factor.
++ */
++ int entropy_search_fill(struct source *ds, void *buf, unsigned int size){
++ 	
++ 	int i = 0;
++ 	double pdf[PDF_SIZE];
++ 	double cdf[PDF_SIZE];
++ 	unsigned char symbols_table[PDF_SIZE];
++ 
++ 	//Calculate pdf according to the given entropy
++ 	generate_pdf(pdf, PDF_SIZE, ds-> s_entropy);
++ #ifndef _FB_FILEBENCH_H
++ 	print_pdf(pdf, 5);
++ 	printf("PDF entropy is: %f\n" ,pdf_entropy(pdf, PDF_SIZE));
++ #endif
++ 	//Calculate cdf from the pdf
++ 	calculate_cdf(pdf, PDF_SIZE, cdf);
++ 
++ 	//initializing the symbol table
++ 	for(i=0; i< PDF_SIZE; i++)
++ 		symbols_table[i] = (unsigned char)i;
++ 
++ 	//shuffle the symbols table
++ 	permutate(symbols_table, PDF_SIZE);
++ 
++ 	for(i=0; i < size; i++){
++ 		((unsigned char*)buf)[i] = symbols_table[binary_search(rand()/(double)RAND_MAX, cdf, PDF_SIZE)];
++ 	}
++ 	return 0;
++ }
++ 
++ /*
++ 	_cont_fill fills the buffer with random data according to
++ 	the pdf. It will generate contigouos segements of data in the
++     buffer to make different same size buffer look different, we
++     shuffle the symbols table. It takes less time but it does not
++     give homogeous entropy data stream. Because of rounding errors
++     we will have some remaining elements are not filled, so we will
++     use the search method to fill them.
++ */
++ int entropy_cont_fill(struct source *ds, void *buf, unsigned int size){
++ 	
++ 	int i = 0;
++ 	double pdf[PDF_SIZE];
++ 	double cdf[PDF_SIZE];
++ 	unsigned char symbols_table[PDF_SIZE];
++ 
++ 	//Calculate pdf according to the given entropy
++ 	generate_pdf(pdf, PDF_SIZE, ds-> s_entropy);
++ #ifndef _FB_FILEBENCH_H
++ 	print_pdf(pdf, 5);
++ 	printf("PDF entropy is: %f\n" ,pdf_entropy(pdf, PDF_SIZE));
++ #endif
++ 
++ 	//Calculate cdf from the pdf
++ 	calculate_cdf(pdf, PDF_SIZE, cdf);
++ 
++ 	//initializing the symbol table
++ 	for(i=0; i< PDF_SIZE; i++)
++ 		symbols_table[i] = (unsigned char)i;
++ 
++ 	//shuffle the symbols table
++     permutate(symbols_table, PDF_SIZE);
++ 
++ 	int k=0;
++ 	int j=0;
++ 	
++ 	for(i=0; i< PDF_SIZE; i++){
++ 		//printf("values %u %f %u",i,pdf[i],size);
++ 		for(j=0; j < (int)(pdf[i]*size); j++){
++ 			((unsigned char*)buf)[k] = symbols_table[i];
++ 			k++;
++ 		}
++ 	}
++ 	//remaining elements
++ 	for(; k < size; k++){
++ 		((unsigned char *)buf)[k] = symbols_table[binary_search(rand()/(double)RAND_MAX, cdf, PDF_SIZE)];
++ 	}
++     
++ 	return 0;
++ }
++ 
++ /*
++ 	_permutate_fill fills the buffer with random data according to
++ 	the pdf. It will generate contigouos segements of data in the
++     buffer. After that a permutation function will be called to make
++     the buffer looks with homogenous entropy. The permutation
++     function has high overhead, because it is not cache friendly.
++     tests show 16x overhead
++     
++ */
++ 
++ int entropy_permutate_fill(struct source *ds, void *buf, unsigned int size){
++     int err = entropy_cont_fill(ds, buf, size);
++     permutate((unsigned char*)buf,size); 
++ 	return err;
++ }
++ 
++ /*
++     _lookup_fill initializes a vector using _*_fill method then
++     using that vector we will initilize our buffer by lookuping
++     differnt elements using a random index.The fastest method 
++     after cont_fill it is slower by a factor of 3. 
++ */
++ 
++ int entropy_lookup_fill(struct source *ds, void *buf, unsigned int size){
++ 	
++ 	int i = 0;
++ 
++     //initilize the vector
++     int lookup_size = 16*1024;
++     void *lookup_table = malloc(lookup_size);
++     int err = entropy_cont_fill(ds, lookup_table,lookup_size);
++ 
++ #ifndef _FB_FILEBENCH_H
++ 	printf("The entropy of the lookup table: %f\n", buf_entropy(lookup_table, lookup_size));
++ #endif
++ 	for(i=0; i <size ; i++){
++ 		((unsigned char*)buf)[i] = ((unsigned char*)lookup_table)[rand()%lookup_size];
++ 		}
++     
++     free(lookup_table);
++     //copy the tmp buffer to the target one
++ 	return err;
++ }
++ 
++ /*
++     To help the permutate function overcome the caching problem. Benchmarks
++     shows 3x speedup. However, _4k_fill should be sure that the pages filling
++     algorithm is using the same set of symbols for each page, otherwise the
++     entropy of the whole file will increase more than the specified value. If
++     you are using permutate_fill that will call cont_fill then comment the 
++     symbols shuffle step. Still slower that _lookup_fill by a factor of 2.
++ */
++ int entropy_4k_fill(struct source *ds, void *buf, unsigned int size){
++     int _4k = 4 * 1024;
++     int pages = size / _4k;
++     int remaining_size = size % _4k;
++ 
++     void *tmp = malloc(_4k);
++     int i =0;
++     for(i=0; i<pages; i++){
++         entropy_permutate_fill(ds, tmp, _4k);
++ //        printf("The entropy of 4k buffer: %f\n", buf_entropy(tmp, _4k));
++         memcpy(&((unsigned char *)buf)[i*_4k], tmp, _4k);
++     }
++ 
++     void *rem = malloc(remaining_size);
++     memcpy(&((unsigned char *)buf)[pages*_4k], rem, remaining_size);
++ 
++     free(tmp);
++     free(rem);
++     return 0;
++ }
++ 
++ /*
++     This function will create a tmp buffer and call the actual
++     function to fill the tmp buffer with the specific entropy.
++     Creating a tmp buffer is because of a weird error happens
++     in filebench in case we manipulate the original buffer directly.
++ */
++ 
++ int entropy_fill(struct source *ds, void *buf, unsigned int size){
++ 	void *tmp = malloc(size);
++     int err = entropy_lookup_fill(ds, tmp, size);
++     memcpy(buf, tmp, size);
++     free(tmp);
++     return err;
++ }
++ 
++ struct source_operations constant_operations = {
++ 	.fill = constant_fill,
++ };
++ 
++ struct source_operations entropy_operations = {
++ 	.fill = entropy_fill,
++ };
++ 
++ struct source_operations dummy_operations = {
++ 	.fill = dummy_fill,
++ };
++ 
++ 
++ #ifndef _FB_FILEBENCH_H
++ 
++ int main(int argc, char **argv){
++ 	
++ 	struct source ds;
++ 	unsigned int size = 256*1024*1024;
++ 	unsigned char* buf=malloc(size);
++ 	clock_t start = clock();
++ 	ds.s_entropy = 7.84;
++ 	entropy_fill(&ds, buf, size);
++ 	printf("Time elapsed: %f\n", ((double)clock() - start) / CLOCKS_PER_SEC);
++ 	printf("The entropy of buf: %f\n", buf_entropy(buf, size));
++ 	free(buf);
++ 	return 0;
++ }
++ 
++ #endif
+diff -crNB go_filebench-1.4.8.fsl.0.7/sources.h go_filebench-1.4.8.fsl.0.8/sources.h
+*** go_filebench-1.4.8.fsl.0.7/sources.h	1969-12-31 19:00:00.000000000 -0500
+--- go_filebench-1.4.8.fsl.0.8/sources.h	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 0 ****
+--- 1,23 ----
++ #ifndef SOURCES_H
++ #define SOURCES_H
++ 
++ struct source {
++ 	double s_entropy;
++ 	struct source_operations *s_ops; 
++ };
++ 
++ struct source_operations {
++ 	int (*fill)(struct source *, void *, unsigned int);
++ };
++ 
++ extern struct source_operations dummy_operations;
++ extern struct source_operations constant_operations;
++ extern struct source_operations entropy_operations;
++ 
++ int dummy_fill(struct source *ds, void *buf, unsigned int size);
++ int constant_fill(struct source *ds, void *buf, unsigned int size);
++ int entropy_fill(struct source *ds, void *buf, unsigned int size);
++ int register_datasource(struct source **source);
++ int verify_ds(struct source *source);
++ 
++ #endif
+diff -crNB go_filebench-1.4.8.fsl.0.7/vars.c go_filebench-1.4.8.fsl.0.8/vars.c
+*** go_filebench-1.4.8.fsl.0.7/vars.c	2009-12-16 13:32:20.000000000 -0500
+--- go_filebench-1.4.8.fsl.0.8/vars.c	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 373,378 ****
+--- 373,399 ----
+  
+  	return (avd);
+  }
++ /*
++  * pre-loads the allocated avd_t with the fbint_t "integer".
++  * Returns the avd_t on success, NULL on failure.
++  */
++ avd_t
++ avd_dbl_alloc(double dblval)
++ {
++ 	avd_t avd;
++ 
++ 	if ((avd = avd_alloc_cmn()) == NULL)
++ 		return (NULL);
++ 
++ 	avd->avd_type = AVD_VAL_DBL;
++ 	avd->avd_val.dblval = dblval;
++ 	
++ 	filebench_log(LOG_DEBUG_IMPL, "Alloc integer %llu",
++ 	    (u_longlong_t)dblval);
++ 
++ 	return (avd);
++ }
++ 
+  
+  /*
+   * Gets a avd_t and points it to the var that
+diff -crNB go_filebench-1.4.8.fsl.0.7/vars.h go_filebench-1.4.8.fsl.0.8/vars.h
+*** go_filebench-1.4.8.fsl.0.7/vars.h	2010-06-18 17:53:27.000000000 -0400
+--- go_filebench-1.4.8.fsl.0.8/vars.h	2010-12-11 03:16:33.000000000 -0500
+***************
+*** 223,228 ****
+--- 223,229 ----
+  avd_t avd_bool_alloc(boolean_t bool);
+  avd_t avd_int_alloc(fbint_t integer);
+  avd_t avd_str_alloc(char *string);
++ avd_t avd_dbl_alloc(double dblval);
+  boolean_t avd_get_bool(avd_t);
+  fbint_t avd_get_int(avd_t);
+  double avd_get_dbl(avd_t);
