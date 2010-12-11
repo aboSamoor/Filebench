@@ -53,8 +53,9 @@ define process name=filereader,instances=1
 run 300
 \end{lstlisting}
 \item The python script \verb+robot.py+, is a command line tool that reads the workload files and replace the entropy to the specified value in a file named values, then generates a temporary file that will be fed to Filebench. For example: \\
-\verb+$./robot.py -v ./values -l results2 -d /mnt/sdfs/rami_fileset+
-\\
-\verb&-x /mnt/sdbdrive/dedupfs/files/rami_fileset -w work_write.f&
-
+\lstset{language=bash}
+\begin{lstlisting}
+$./robot.py -v ./values -l results2 -d /mnt/sdfs/rami_fileset+ \
+-x /mnt/sdbdrive/dedupfs/files/rami_fileset -w work_write.f
+\end{lstlisting}
 \end{enumerate}
