@@ -35,6 +35,29 @@ Any code that do not change the flow of the current Filebench code base, is sepa
 
 
 \section{Filebench Interpreter}
+The changes in the Filebench Interpreter have been designed to enable Filebench to optionally accept various datasources. These datasources are meant to be used to populate files created during benchmarking process. The Interpreter has thus been modified to accept new attributes called \textbf{datasource} and \textbf{entropy} as a part of the fileset command. For example a valid fileset command is:\\
+\indent \verb+define fileset name=bigfileset,path=\$dir,...,datasource=entro,entropy=3.4+
+
+The attribute \textbf{entropy} is not directly an attribute of \textbf{fileset} command. It is a subattribute of the datasource type. For example the below is an invalid fileset definition.\\
+\indent \verb+define fileset name=bigfileset,path=\$dir,...,entropy=3.4+
+
+\noindent All attributes for command \verb+fileset+ have a place in the \verb+struct fileset+. The \verb+datasouce+ attribute has also been placed in the structure.
+
+\noindent A new place has been created in this structure for \textbf{datasource} attribute alone and not for \textbf{entropy} attribute. The logic is that, the only attribute that makes sense to be part of \textbf{fileset} is the type of data. The attributes which define the data itself of the \textbf{datasource} are irrelevant to be part of \textbf{fileset} datastructure.\\
+\noindent Since the a datasource can have various attributes of the data constituting it, \verb+datasource+ object has a pointer to a list of attribute objects relevant to it. This is the reason \verb+datasource+ is of type attr and not avd\_t. \\
+\noindent To accommodate  a list of sub-attributes inside an attribute(like the \verb+datasource+), \verb+struct attr+ has been modified.
+
+
+
+
+\textbf{extensibility}
+
+The design of the parser has been made such that a new datasouce can be easily defined and any number of sub-attributes of this datasource can be specified without any significant amount of code change.
+
+
+\noindent 
+
+
 
 %Rami:
 %Can you please state the old and new grammars

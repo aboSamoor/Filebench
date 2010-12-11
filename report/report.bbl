@@ -1,0 +1,25 @@
+\begin{thebibliography}{1}
+
+\bibitem{web:fb-main}
+Open~Solaris Community.
+\newblock Filebench.
+\newblock \url{http://www.solarisinternals.com/wiki/index.php/FileBench},
+  December 2010.
+
+\bibitem{usenix}
+Petros Efstathopoulos and Fanglu Guo.
+\newblock Rethinking deduplication scalability.
+\newblock {\em HotStorage '10 Proceedings}, 2010.
+
+\bibitem{web:opendedup}
+Opendedup.
+\newblock Sdfs architecture.
+\newblock \url{http://www.opendedup.org/}, December 2010.
+
+\bibitem{web:wiki-fuse}
+Wikipedia.
+\newblock Filesystem in userspace.
+\newblock \url{http://en.wikipedia.org/wiki/Filesystem_in_Userspace/}, December
+  2010.
+
+\end{thebibliography}
