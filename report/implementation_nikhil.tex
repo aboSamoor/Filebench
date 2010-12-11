@@ -9,7 +9,7 @@ We defined an additional function \verb+fileset_init_datasource+ that will initi
 \item \verb+fileset_create+
 \item \verb+fileset_alloc_file+
 \end{enumerate}
-The function \verb+fileset_alloc_file+ performs an I/O operation to populate the created file with data. Initializing the \verb+struct source fs_ds+ member ensures that preallocated files are created with the desired entropy. Initializing the \verb+struct source fs_ds+ in \verb+fileset_create+ ensures that all operations that will be done on files in this fileset will use the appropriate function to populate data in their buffers. This provides a generic way of populating data in files that is independent of the actual mechanism of populating data.
+The function \verb+fileset_alloc_file+ performs an I/O operation to populate the created file with data. Initializing the \verb+struct+ \verb+source fs_ds+ member ensures that preallocated files are created with the desired entropy. Initializing the \verb+struct source fs_ds+ in \newline\verb+fileset_create+ ensures that all operations that will be done on files in this fileset will use the appropriate function to populate data in their buffers. This provides a generic way of populating data in files that is independent of the actual mechanism of populating data.
 
 \subsection{flowop\_library.c}
 We support the following filesets with entropy specifications:
