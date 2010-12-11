@@ -2,11 +2,8 @@
 
 \section{Filebench Interpreter}
 The implementation of the Interpreter has been done in fashion that future extensibility of Filebench to accept different datasources with optional and variable number of sub-attributes is easy. Most of the code changes have been made to the \verb+parser_gram.y+ and \verb+parser_lex.l+ files. \verb+parser_lex.l+ file has a list of valid tokens. Two tokens (\verb+datasource+ and \verb+entropy+) have been added to this file. Since the parser never recognized decimal numbers e.g. 3.4 earlier, the file has also been modified to accept decimal values. New tokens in the \verb+parser_lex.l+ are as below:
-
 \lstset{language=C}
 \begin{lstlisting}
-#include "utils.h"
-#include "parser_gram.h"
 ..
 %%
 ..
@@ -20,10 +17,8 @@ entropy                 { return FSA_ENTROPY;}
 \end{lstlisting}
 
 \noindent \verb+parser_gram.y+ file has been modified to accept \verb+datasource+ as a parameter. \verb+entropy+ attribute is accepted by the grammar only if \verb+datasource+ parameter is present.\\ Following are the key rules in the grammar.
-
 \lstset{language=C}
 \begin{lstlisting}
-
 ..
 %%
 ..

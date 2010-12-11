@@ -3,17 +3,15 @@ The integration in Filebench workflow can be logically divided into the followin
 
 \subsection{Data Specification}
 
-Data intended to be written to or read from files could be specified in many ways for benchmarking purposes. One approach is by specifying its \textit{entropy}.
- However, in future, users may have more specific requirements like populating a certain character in the data or a specific distribution for the data.
- We currently support only entropy based data population, but keeping possible future requirements in mind we chose to create a separate structure which is dedicated to store all the specifications about the data itself.
-One of its fields is a function pointer that is set \textit{dynamically} depending on the type of data requested. Since data specification is made per \textit{fileset}, we put this structure as a member of \verb+struct fileset+.
+Data intended to be written to or read from files could be specified in many ways for benchmarking purposes. One approach is by specifying its \textit{entropy}. However, this is not the only way to specify a property of data. We currently support only entropy based data population, but keeping possible future requirements in mind we chose to create a separate structure which is dedicated to store all the specifications about the data itself. This way, more attributes of the data can be captured in this structure itself as and when new requirements arise. One of the fields of this structure is a function pointer that is set \textit{dynamically} depending on the data specification. In our current implementation, this function pointer can be made to point to a function that populates a buffer with a certain entropy value.
 
 \subsection{Fileset Initialization}
-The \texttt{struct fileset} structure holds information that is relevant to a set of files. Entropy is specified per \textit{fileset} and it is recorded in this structure by the parser, as explained in section \ref{sec:parse_des}. This information is used to appropriately initialize the structure described above. Its function pointer is dynamically pointed to a function that provides data in the desired format. Once initialized, this function pointer can be used by the corresponding \textit{flow operations} to populate their buffers in a generic manner.
+The \texttt{struct fileset} structure holds information that is relevant to a set of files. Entropy, and other information spceific to a \textit{fileset} is recorded in this structure by the parser, as explained in section \ref{sec:parse_des}. Hence, we put the above described structure as one of the members of \verb+struct fileset+. The information recorded by the parser is used to appropriately initialize this structure by pointing its function pointer dynamically to a function that provides data in the desired format, while also initializing other data members as necessary. Once initialized, this function pointer can be used by the corresponding \textit{flow operations} to populate their buffers in a generic manner.
 
 \subsection{Flow Operations}
 Flow operations represent workload actions and they carry out buffered I/O on the files. Using the dynamically set function pointer, we populate the buffer (in this case with the specified entropy) just before writing it to an open file in the following flow operations:
 \begin{enumerate}
+\item createfiles
 \item write
 \item writewholefile
 \item appendfile

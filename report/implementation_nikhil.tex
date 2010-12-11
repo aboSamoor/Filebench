@@ -1,1 +1,41 @@
-\section{Filebench workflow}
+\section{Filebench Workflow Integration}
+We used an \verb+#ifdef CONFIG_ENTROPY_DATA_EXPERIMENTAL+ construct to optionally include our code at make time. We primarily modified three of the existing files in filebench to integrate our entropy generation logic into the main workflow:
+\subsection{fileset.h}
+We added a \verb+struct source fs_ds+ as a member of \verb+struct fileset+. Although certain data is recorded by the parser into another member of \verb+struct fileset+ which is \verb+struct+ \verb+attr* fs_datasource+, we found it necessary to store this information again in \verb+struct+ \verb+source fs_ds+. The reasons for this were twofold. Firstly, all other attributes of a fileset are captured using the \verb+struct attr+ data structure. We decided not to modify this structure to remain compliant with the exising implementation. Secondly, it might be necessary to store derived results in the \verb+struct source fs_ds+. To store such derived results would modify the original \verb+struct attr* fs_datasource+ even more.
+
+\subsection{fileset.c}
+We defined an additional function \verb+fileset_init_datasource+ that will initialize the \verb+struct+ \verb+source fs_ds+ data structure depending on the information available in \verb+struct attr*+ \verb+fs_datasource+. A call to this function was added to two existing functions in this file:
+\begin{enumerate}
+\item \verb+fileset_create+
+\item \verb+fileset_alloc_file+
+\end{enumerate}
+The function \verb+fileset_alloc_file+ performs an I/O operation to populate the created file with data. Initializing the \verb+struct source fs_ds+ member ensures that preallocated files are created with the desired entropy. Initializing the \verb+struct source fs_ds+ in \verb+fileset_create+ ensures that all operations that will be done on files in this fileset will use the appropriate function to populate data in their buffers. This provides a generic way of populating data in files that is independent of the actual mechanism of populating data.
+
+\subsection{flowop\_library.c}
+We support the following filesets with entropy specifications:
+\begin{enumerate}
+\item createfiles
+\item write
+\item writewholefile
+\item appendfile
+\item appendfilerand
+\end{enumerate}
+
+\noindent These flow operations use the following functions in \verb+flowop_library.c+ to populate data in buffers:
+\begin{enumerate}
+\item \verb+flowoplib_write+
+\item \verb+flowoplib_writewholefile+
+\item \verb+flowoplib_appendfile+
+\item \verb+flowoplib_appendfilerand+
+\end{enumerate}
+
+\noindent We inserted a call using the dynamically set function pointer to fill the buffer with the specified entropy value. An example of this is shown below:
+\newline
+\lstset{language=C}
+\begin{lstlisting}
+		int fd = flowop->fo_fdnumber;
+		struct fileset *fs = threadflow->tf_fse[fd]->fse_fileset;
+		fs->fs_ds.s_ops->fill(&fs->fs_ds, iobuf, iosize);
+\end{lstlisting}
+
+\noindent In the example shown above, the existing \verb+flowop+ and \verb+threadflow+ variables are used to get the corresponding fileset. Once a handle on the fileset is procured, its \verb+fill+ function is used to populate the preallocated buffer \verb+iobuf+ with the entropy value specified in \verb+fs_ds+.

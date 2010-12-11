@@ -92,13 +92,17 @@ The scope of the changes is as minimal as possible. This applies to the size of 
 The files that are modified
 \begin{itemize}
 \item fileset.c/fileset.h
+\item vars.c/vars.h
 \item flowop\_library.c
 \item parser\_lex.l
 \item parser\_gram.y
+\item filebench.h
+\item Makefile.am
 \end{itemize}
 Moreover, we used any already available structure instead of reinventing the wheel.
 
 \item \textbf{Extensibility} \\
+The design of the parser has been made such that a new datasouce can be easily defined and any number of sub-attributes of this datasource can be specified without any significant amount of code change.
 
 \item \textbf{Backward compatibility} \\
 The patched Filebench runs all the old workload model files without modification. The patch is triggered only when the data source attribute is specified.
