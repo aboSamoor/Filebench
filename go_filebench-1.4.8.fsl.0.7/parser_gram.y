@@ -1,6 +1,6 @@
 /*
  * CDDL HEADER START
- * asdfasdf
+ * 
  * The contents of this file are subject to the terms of the
  * Common Development and Distribution License (the "License").
  * You may not use this file except in compliance with the License.
@@ -332,7 +332,7 @@ command:
 | osprof_disable_command
 | enable_command
 | multisync_command
-| quit_command
+| quit_command;
 
 foreach_command: FSC_FOREACH
 {
@@ -1118,7 +1118,6 @@ files_define_command: FSC_DEFINE FSE_FILE
      for (attr = $2; attr != NULL;
          attr = attr->attr_next)
 	 {
-		printf("%d->",attr->attr_name);
          list_end = attr; /* Find end of list */
 	 }
      list_end->attr_next = $4;
